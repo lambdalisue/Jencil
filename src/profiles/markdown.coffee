@@ -1,14 +1,20 @@
-class @JencilProfile
-  buttons: [
-    ['simplewrap', 'H1', 'h1', '\n', '\n=================================']
-    ['simplewrap', 'H2', 'h2', '\n', '\n---------------------------------']
-    ['simplewrap', 'H3', 'h3', '\n### ', '\n']
-    ['simplewrap', 'H4', 'h4', '\n#### ', '\n']
-    ['simplewrap', 'H5', 'h5', '\n##### ', '\n']
-    ['simplewrap', 'H6', 'h6', '\n######', '\n']
+namespace 'Jencil.profile', (exports) ->
+  exports.buttonsets = [
+    ['s', 'H1', 'h1', '\n', '\n=================================']
+    ['s', 'H2', 'h2', '\n', '\n---------------------------------']
+    ['s', 'H3', 'h3', '\n### ', '\n']
+    ['s', 'H4', 'h4', '\n#### ', '\n']
+    ['s', 'H5', 'h5', '\n##### ', '\n']
+    ['s', 'H6', 'h6', '\n######', '\n']
     ['-']
-    ['simplewrap', 'Quote', 'quote', '    ', '']
-    ['simplewrap', 'Bold', 'bold', '**', '**']
-    ['simplewrap', 'Italic', 'italic', '*', '*']
+    ['s', 'Quote', 'quote', '    ', '']
+    ['s', 'Bold', 'bold', '**', '**']
+    ['s', 'Italic', 'italic', '*', '*']
+    ['-']
+    ['l', '[{{label}}]({{href}} "{{title}}")']
+    ['i', '![{{alt}}]({{src}} "{{title}}")']
+    ['-']
+    ['u', '*   ', '']
+    ['o', '{{i}}.  ', '']
   ]
 
