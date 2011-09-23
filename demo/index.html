@@ -1,0 +1,54 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js"></script>
+        <link rel="stylesheet" href="../css/style.css" type="text/css">
+        <!--[if IE]>
+            <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <title>Jencil Demo - Cross browser Markup and WYSIWYG editor</title>
+        <script type="text/javascript" src="../lib/jquery.jencil.js"></script>
+        <link rel="stylesheet" href="../css/jquery.jencil.css" type="text/css">
+        <script type="text/javascript">
+            $(function(){
+                $('textarea#document-body').jencil({
+                    documentTypeElement: $('select#document-type')
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <header>
+                <h1>Jencil Demo</h1>
+                <p>Cross browser Markup and WYSIWIG (not yet) editor written in CoffeeScript</p>
+            </header>
+            <section id="content">
+                <p>
+                    <select id="document-type">
+                        <option value="html">HTML</option>
+                        <option value="markdown">Markdown</option>
+                        <option value="rst">reStructuredText</option>
+                        <option value="wysiwyg">WYSIWYG</option>
+                    </select>
+                    <textarea id="document-body">
+When I find myself in times of trouble
+Mother Mary comes to me
+Speaking words of wisdom, let it be.
+And in my hour of darkness
+She is standing right in front of me
+Speaking words of wisdom, let it be.
+Let it be, let it be.
+Let it be, let it be.
+Whisper words of wisdom, let it be.
+                    </textarea>
+                </p>
+            </section>
+            <footer>
+                <span id="copyright">Copyright &copy; 2011 lambdalisue allright reserved.</span>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,81 @@
+.jencil{
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+.jencil .jencil-function-bar{
+    width: 100%;
+    margin-top: -5px;
+}
+.jencil .jencil-function-bar .jencil-function-button-holder{
+    float: left;
+}
+.jencil .jencil-function-bar .jencil-function-button-holder span.jencil-function-separator{
+    display: inline-block;
+    height: 14px;
+    margin: 2px 0 2px 0;
+    margin-left: 6px;
+    padding-right: 6px;
+    border-left: 1px solid #e4e4e4;
+    text-indent: -10000px;
+}
+.jencil .jencil-function-bar .jencil-function-button-holder a.jencil-function-button{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin: 0 1px;
+    padding: 2px;
+    outline: none;
+    border: 1px solid #f9f9f9;
+    border-radius: 5px;
+}
+.jencil .jencil-function-bar .jencil-function-button-holder a.jencil-function-button:hover{
+    background: #f0f0f0;
+    border: 1px solid #e4e4e4;
+    border-radius: 5px;
+}
+.jencil .jencil-function-bar .jencil-function-button-holder a.jencil-function-button span{
+    display: block;
+    width: 16px;
+    height: 16px;
+    text-indent: -10000px;
+    background: url(image/csssprite.png) no-repeat;
+}
+.jencil .jencil-function-bar .jencil-function-button-holder a.h1 span{ background-position: -0px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.h2 span{ background-position: -16px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.h3 span{ background-position: -32px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.h4 span{ background-position: -48px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.h5 span{ background-position: -64px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.h6 span{ background-position: -80px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.quote span{ background-position: -96px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.bold span{ background-position: -112px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.italic span{ background-position: -128px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.link span{ background-position: -144px 0px; }
+.jencil .jencil-function-bar .jencil-function-button-holder a.img span{ background-position: -160px 0px; }
+
+.jencil .jencil-function-bar .jencil-function-document-type{
+    float: right;
+}
+.jencil .jencil-function-bar .jencil-function-document-type:before{
+    content: "Edit mode:";
+    margin-right: 10px;
+    font-size: 0.8em;
+    color: #ababab;
+}
+.jencil .jencil-function-bar .jencil-function-document-type select{
+    border: none;
+    background: #f9f9f9;
+    color: #3c3c3c;
+}
+.jencil textarea.jencil-textarea{
+    clear: both;
+    width: 100%;
+    height: 480px;
+    padding: 10px;
+    border: 1px solid #dedede;
+    color: #3c3c3c;
+    resize: vertical;
+}
