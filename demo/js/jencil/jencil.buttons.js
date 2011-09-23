@@ -8,7 +8,7 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var Button, FormatMarkupButton, ImageMarkupButton, LinkMarkupButton, ListMarkupButton, OrderedListMarkupButton, Separator, SimpleMarkupButton, UnorderedListMarkupButton, Widget, createButton;
+    var Button, FormatMarkupButton, ImageMarkupButton, LinkMarkupButton, ListMarkupButton, OrderedListMarkupButton, PreviewButton, Separator, SimpleMarkupButton, UnorderedListMarkupButton, Widget, createButton;
     Widget = Jencil.widgets.Widget;
     exports.createButton = createButton = function(jencil, type, args) {
       var after, before, blockAfter, blockBefore, cls, formatstr, insert, name;
@@ -36,6 +36,9 @@
         case 'orderedlist':
           before = args[0], after = args[1], blockBefore = args[2], blockAfter = args[3];
           return new OrderedListMarkupButton(jencil, before, after, blockBefore, blockAfter);
+        case 'p':
+        case 'preview':
+          return new PreviewButton(jencil);
         default:
           throw new Error("Unknown button type is passed (type: " + type + ")");
       }
@@ -187,12 +190,22 @@
       }
       return UnorderedListMarkupButton;
     })();
-    return exports.OrderedListMarkupButton = OrderedListMarkupButton = (function() {
+    exports.OrderedListMarkupButton = OrderedListMarkupButton = (function() {
       __extends(OrderedListMarkupButton, ListMarkupButton);
       function OrderedListMarkupButton(jencil, before, after, blockBefore, blockAfter) {
         OrderedListMarkupButton.__super__.constructor.call(this, jencil, 'ol', 'Ordered List', before, after, blockBefore, blockAfter);
       }
       return OrderedListMarkupButton;
+    })();
+    return exports.PreviewButton = PreviewButton = (function() {
+      __extends(PreviewButton, Button);
+      function PreviewButton(jencil) {
+        PreviewButton.__super__.constructor.call(this, jencil, 'preview', 'Preview');
+        this.$element.click(__bind(function() {
+          return this.jencil.preview.toggle();
+        }, this));
+      }
+      return PreviewButton;
     })();
   });
 }).call(this);

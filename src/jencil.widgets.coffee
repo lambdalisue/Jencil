@@ -20,19 +20,19 @@ namespace 'Jencil.widgets', (exports) ->
       @$documentTypeElement = @jencil.options.documentTypeElement
       if @$documentTypeElement?
         @$element.append @$documentTypeElement
-        @$documentTypeElement.change @update
+        @$documentTypeElement.change =>
+          @update()
         @update()
     update: ->
       profileName = @$documentTypeElement.val()
       @jencil.buttonHolder.update profileName
-
   exports.ButtonHolder = class ButtonHolder extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-button-holder'
       @update @jencil.options.defaultProfileName
     update: (profileName) ->
       delete Jencil.profile # force reload
-      url = "#{@jencil.options.profilesetPath}/#{profileName}.js"
+      url = "#{@jencil.options.profileSetUrl}/#{profileName}.js"
       check = 'Jencil.profile'
       Jencil.utils.load [[url, check]], =>
         @$element.children().remove()
@@ -44,3 +44,7 @@ namespace 'Jencil.widgets', (exports) ->
   exports.Toolbar = class Toolbar extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-toolbar'
+  exports.EditorArea = class EditorArea extends Widget
+    constructor: (jencil) ->
+      super jencil, 'jencil-editor-area'
+      @$element.addClass "preview-#{@jencil.options.previewPosition}"

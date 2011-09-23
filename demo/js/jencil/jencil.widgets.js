@@ -8,7 +8,7 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var ButtonHolder, DocumentType, Toolbar, Widget;
+    var ButtonHolder, DocumentType, EditorArea, Toolbar, Widget;
     exports.Widget = Widget = (function() {
       function Widget(jencil, cls, type) {
         this.jencil = jencil;
@@ -44,7 +44,9 @@
         this.$documentTypeElement = this.jencil.options.documentTypeElement;
         if (this.$documentTypeElement != null) {
           this.$element.append(this.$documentTypeElement);
-          this.$documentTypeElement.change(this.update);
+          this.$documentTypeElement.change(__bind(function() {
+            return this.update();
+          }, this));
           this.update();
         }
       }
@@ -64,7 +66,7 @@
       ButtonHolder.prototype.update = function(profileName) {
         var check, url;
         delete Jencil.profile;
-        url = "" + this.jencil.options.profilesetPath + "/" + profileName + ".js";
+        url = "" + this.jencil.options.profileSetUrl + "/" + profileName + ".js";
         check = 'Jencil.profile';
         return Jencil.utils.load([[url, check]], __bind(function() {
           var args, button, buttonset, type, _i, _len, _ref, _results;
@@ -83,12 +85,20 @@
       };
       return ButtonHolder;
     })();
-    return exports.Toolbar = Toolbar = (function() {
+    exports.Toolbar = Toolbar = (function() {
       __extends(Toolbar, Widget);
       function Toolbar(jencil) {
         Toolbar.__super__.constructor.call(this, jencil, 'jencil-toolbar');
       }
       return Toolbar;
+    })();
+    return exports.EditorArea = EditorArea = (function() {
+      __extends(EditorArea, Widget);
+      function EditorArea(jencil) {
+        EditorArea.__super__.constructor.call(this, jencil, 'jencil-editor-area');
+        this.$element.addClass("preview-" + this.jencil.options.previewPosition);
+      }
+      return EditorArea;
     })();
   });
 }).call(this);

@@ -11,3 +11,5 @@ link.png    .jencil .jencil-toolbar .jencil-button-holder a.link span
 image.png   .jencil .jencil-toolbar .jencil-button-holder a.img span
 ul.png      .jencil .jencil-toolbar .jencil-button-holder a.ul span
 ol.png      .jencil .jencil-toolbar .jencil-button-holder a.ol span
+code.png    .jencil .jencil-toolbar .jencil-button-holder a.code span
+preview.png .jencil .jencil-toolbar .jencil-button-holder a.preview span

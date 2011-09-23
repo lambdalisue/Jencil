@@ -19,6 +19,8 @@ namespace 'Jencil.widgets', (exports) ->
       when 'o', 'orderedlist'
         [before, after, blockBefore, blockAfter] = args
         return new OrderedListMarkupButton jencil, before, after, blockBefore, blockAfter
+      when 'p', 'preview'
+        return new PreviewButton jencil
       else
         throw new Error "Unknown button type is passed (type: #{type})"
   exports.Separator = class Separator extends Widget
@@ -106,3 +108,10 @@ namespace 'Jencil.widgets', (exports) ->
   exports.OrderedListMarkupButton = class OrderedListMarkupButton extends ListMarkupButton
     constructor: (jencil, before, after, blockBefore, blockAfter) ->
       super jencil, 'ol', 'Ordered List', before, after, blockBefore, blockAfter
+  exports.PreviewButton = class PreviewButton extends Button
+    constructor: (jencil) ->
+      super jencil, 'preview', 'Preview'
+      @$element.click =>
+        @jencil.preview.toggle()
+
+

@@ -4,17 +4,20 @@
         <meta charset="utf-8">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         <script type="text/javascript" src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js"></script>
-        <link rel="stylesheet" href="../css/style.css" type="text/css">
         <!--[if IE]>
             <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
+        <link rel="stylesheet" href="css/style.css" type="text/css">
         <title>Jencil Demo - Cross browser Markup and WYSIWYG editor</title>
-        <script type="text/javascript" src="../lib/jencil.js"></script>
-        <link rel="stylesheet" href="../css/jencil.css" type="text/css">
+        <script type="text/javascript" src="js/jencil/jencil.js"></script>
+        <link type="text/css" rel="stylesheet" href="js/jencil/theme/bw/style.css">
         <script type="text/javascript">
             $(function(){
                 $('textarea#document-body').jencil({
-                    documentTypeElement: $('select#document-type')
+                    documentTypeElement: $('select#document-type'),
+                    previewTemplateUrl: 'js/jencil/templates/preview.html',
+                    //previewPosition: 'bottom'
+                    previewPosition: 'right'
                 });
             });
         </script>
@@ -30,8 +33,8 @@
                     <select id="document-type">
                         <option value="html">HTML</option>
                         <option value="markdown">Markdown</option>
-                        <option value="rst">reStructuredText</option>
-                        <option value="wysiwyg">WYSIWYG</option>
+                        <option value="rst">reStructuredText (not supported yet)</option>
+                        <option value="wysiwyg">WYSIWYG (not supported yet)</option>
                     </select>
                     <textarea id="document-body">
 When I find myself in times of trouble

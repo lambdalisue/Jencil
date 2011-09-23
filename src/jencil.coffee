@@ -16,11 +16,17 @@ $ = jQuery
 $.fn.jencil = (options) ->
   options = $.extend true, {
     root: undefined
-    profilesetPath: '~/profiles'
+    profileSetUrl: '~/profiles'
+    previewTemplateUrl: '~/templates/preview.html'
+    previewPosition: 'right'
     defaultProfileName: 'html'
     defaultInsertText: '*'
     documentTypeElement: undefined
     }, options
+  toAbsoluteUrl = (url) ->
+    if url.startsWith '~/'
+      url = "#{options.root}/#{url[2..url.length]}"
+    return url
   # compute root path
   if not options.root?
     $('script').each (a, tag) ->
@@ -28,14 +34,15 @@ $.fn.jencil = (options) ->
       if match?
         options.root = match[1]
         options.root = options.root[0...options.root.length-1]
-  # compute profileset path
-  if options.profilesetPath.lastIndexOf('~/', 0) is 0
-    path = options.profilesetPath[2...options.profilesetPath.length]
-    options.profilesetPath = "#{options.root}/#{path}"
+  # toAbsoluteUrl
+  options.profileSetUrl = toAbsoluteUrl options.profileSetUrl
+  options.previewTemplateUrl = toAbsoluteUrl options.previewTemplateUrl
+
   requires = [
-    ["#{options.root}/textarea.js", 'window.Textarea']
+    ["https://raw.github.com/lambdalisue/textarea.coffee/master/lib/textarea.js", 'window.Textarea']
     ["#{options.root}/jencil.widgets.js", 'window.Jencil.widgets']
     ["#{options.root}/jencil.buttons.js", 'window.Jencil.widgets.Button']
+    ["#{options.root}/jencil.preview.js", 'window.Jencil.widgets.Preview']
   ]
   return @each ->
     Jencil.utils.load requires, =>
@@ -44,16 +51,21 @@ $.fn.jencil = (options) ->
           super textarea
           @options = options
           # --- construct textarea
-          $textarea = $(@textarea)
-          $textarea.addClass 'jencil-textarea'
-          $textarea.wrap $('<div>').addClass 'jencil'
+          @$textarea = $(@textarea)
+          @$textarea.addClass 'jencil-textarea'
+          @$textarea.wrap $('<div>').addClass 'jencil'
+          # --- toolbar
           @buttonHolder = new Jencil.widgets.ButtonHolder @
           @documentType = new Jencil.widgets.DocumentType @
           @toolbar = new Jencil.widgets.Toolbar @
-          # functionBar
           @toolbar.append @buttonHolder
           @toolbar.append @documentType
-          $textarea.before @toolbar.$element
+          @$textarea.before @toolbar.$element
+          # --- editor-area
+          @editorArea = new Jencil.widgets.EditorArea @
+          @preview = new Jencil.widgets.Preview @
+          @$textarea.wrap @editorArea.$element
+          @$textarea.after @preview.$element
       new JencilEditor @, options
 
 String.prototype.startsWith = (prefix) ->

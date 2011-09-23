@@ -32,14 +32,22 @@
   };
   $ = jQuery;
   $.fn.jencil = function(options) {
-    var path, requires;
+    var requires, toAbsoluteUrl;
     options = $.extend(true, {
       root: void 0,
-      profilesetPath: '~/profiles',
+      profileSetUrl: '~/profiles',
+      previewTemplateUrl: '~/templates/preview.html',
+      previewPosition: 'right',
       defaultProfileName: 'html',
       defaultInsertText: '*',
       documentTypeElement: void 0
     }, options);
+    toAbsoluteUrl = function(url) {
+      if (url.startsWith('~/')) {
+        url = "" + options.root + "/" + url.slice(2, (url.length + 1) || 9e9);
+      }
+      return url;
+    };
     if (!(options.root != null)) {
       $('script').each(function(a, tag) {
         var match;
@@ -50,29 +58,30 @@
         }
       });
     }
-    if (options.profilesetPath.lastIndexOf('~/', 0) === 0) {
-      path = options.profilesetPath.slice(2, options.profilesetPath.length);
-      options.profilesetPath = "" + options.root + "/" + path;
-    }
-    requires = [["" + options.root + "/textarea.js", 'window.Textarea'], ["" + options.root + "/jencil.widgets.js", 'window.Jencil.widgets'], ["" + options.root + "/jencil.buttons.js", 'window.Jencil.widgets.Button']];
+    options.profileSetUrl = toAbsoluteUrl(options.profileSetUrl);
+    options.previewTemplateUrl = toAbsoluteUrl(options.previewTemplateUrl);
+    requires = [["https://raw.github.com/lambdalisue/textarea.coffee/master/lib/textarea.js", 'window.Textarea'], ["" + options.root + "/jencil.widgets.js", 'window.Jencil.widgets'], ["" + options.root + "/jencil.buttons.js", 'window.Jencil.widgets.Button'], ["" + options.root + "/jencil.preview.js", 'window.Jencil.widgets.Preview']];
     return this.each(function() {
       return Jencil.utils.load(requires, __bind(function() {
         var JencilEditor;
         JencilEditor = (function() {
           __extends(JencilEditor, Textarea);
           function JencilEditor(textarea, options) {
-            var $textarea;
             JencilEditor.__super__.constructor.call(this, textarea);
             this.options = options;
-            $textarea = $(this.textarea);
-            $textarea.addClass('jencil-textarea');
-            $textarea.wrap($('<div>').addClass('jencil'));
+            this.$textarea = $(this.textarea);
+            this.$textarea.addClass('jencil-textarea');
+            this.$textarea.wrap($('<div>').addClass('jencil'));
             this.buttonHolder = new Jencil.widgets.ButtonHolder(this);
             this.documentType = new Jencil.widgets.DocumentType(this);
             this.toolbar = new Jencil.widgets.Toolbar(this);
             this.toolbar.append(this.buttonHolder);
             this.toolbar.append(this.documentType);
-            $textarea.before(this.toolbar.$element);
+            this.$textarea.before(this.toolbar.$element);
+            this.editorArea = new Jencil.widgets.EditorArea(this);
+            this.preview = new Jencil.widgets.Preview(this);
+            this.$textarea.wrap(this.editorArea.$element);
+            this.$textarea.after(this.preview.$element);
           }
           return JencilEditor;
         })();
