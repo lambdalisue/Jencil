@@ -54,6 +54,7 @@
         this.$textarea.after(this.wysiwyg.$element);
         this.$textarea.wrap(this.wysiwym.$element);
         this.$textarea.after(this.wysiwym.preview.$element);
+        this.$textarea.wrap(this.wysiwym.textarea.$element);
       }
       JencilCore.prototype.abspath = function(path) {
         return Jencil.core.abspath(path, this.options.root);

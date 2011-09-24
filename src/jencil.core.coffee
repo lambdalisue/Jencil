@@ -44,13 +44,8 @@ namespace 'Jencil.core', (exports) ->
       @$textarea.after @wysiwyg.$element
       @$textarea.wrap @wysiwym.$element
       @$textarea.after @wysiwym.preview.$element
+      @$textarea.wrap @wysiwym.textarea.$element
     abspath: (path) ->
       return Jencil.core.abspath path, @options.root
     editor: ->
       return @wysiwym
-
-
-
-      
-
-

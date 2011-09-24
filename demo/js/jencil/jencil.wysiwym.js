@@ -15,8 +15,9 @@
       __extends(TextArea, Widget);
       function TextArea(jencil, wysiwym) {
         this.wysiwym = wysiwym;
-        TextArea.__super__.constructor.call(this, jencil, 'jencil-wysiwym-textarea', jencil.$textarea);
-        this.controller = new Textarea(this.$element);
+        TextArea.__super__.constructor.call(this, jencil, 'jencil-wysiwym-textarea');
+        this.jencil.$textarea.addClass('surface');
+        this.controller = new Textarea(this.jencil.$textarea);
       }
       return TextArea;
     })();

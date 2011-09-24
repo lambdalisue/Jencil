@@ -3,8 +3,9 @@ namespace 'Jencil.widgets', (exports) ->
   Editor = Jencil.widgets.Editor
   class TextArea extends Widget
     constructor: (jencil, @wysiwym) ->
-      super jencil, 'jencil-wysiwym-textarea', jencil.$textarea
-      @controller = new Textarea @$element
+      super jencil, 'jencil-wysiwym-textarea'
+      @jencil.$textarea.addClass 'surface'
+      @controller = new Textarea @jencil.$textarea
   class Preview extends Widget
     constructor: (jencil, @wysiwym) ->
       super jencil, 'jencil-wysiwym-preview', 'div'
