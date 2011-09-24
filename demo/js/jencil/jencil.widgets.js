@@ -79,18 +79,17 @@
         url = "" + this.jencil.options.profileSetPath + "/" + profileName + ".js";
         check = 'Jencil.profile';
         return Jencil.utils.load([[url, check]], __bind(function() {
-          var args, button, buttonset, type, _i, _len, _ref, _results;
+          var args, button, buttonset, type, _i, _len, _ref;
           this.$element.children().remove();
           _ref = Jencil.profile.buttonsets;
-          _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             buttonset = _ref[_i];
             type = buttonset[0];
             args = buttonset.slice(1, (buttonset.length + 1) || 9e9);
             button = Jencil.widgets.createButton(this.jencil, type, args);
-            _results.push(this.append(button));
+            this.append(button);
           }
-          return _results;
+          return this.jencil.wysiwym.preview.update();
         }, this));
       };
       return ButtonHolder;

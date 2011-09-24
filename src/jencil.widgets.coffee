@@ -49,6 +49,9 @@ namespace 'Jencil.widgets', (exports) ->
           args = buttonset[1..buttonset.length]
           button = Jencil.widgets.createButton @jencil, type, args
           @append button
+        # Update preview as well
+        @jencil.wysiwym.preview.update()
+
   exports.Toolbar = class Toolbar extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-toolbar'
