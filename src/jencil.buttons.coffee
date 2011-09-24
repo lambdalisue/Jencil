@@ -37,6 +37,16 @@ namespace 'Jencil.widgets', (exports) ->
       @$element.attr 'href', '#'
       @$element.attr 'title', name
       @$element.append $("<span>#{name}</span>")
+      @clickBeforeCallback = undefined
+      @clickCallback = undefined
+      @clickAfterCallback = =>
+        console.log 'clickAfterCallback'
+        # Update preview
+        @jencil.wysiwym.preview.update()
+      @$element.click =>
+        if @clickBeforeCallback? then @clickBeforeCallback()
+        if @clickCallback? then @clickCallback()
+        if @clickAfterCallback? then @clickAfterCallback()
   exports.FormatMarkupButton = class FormatMarkupButton extends Button
     format: (formatstr, kwargs) ->
       for key, value of kwargs
@@ -45,12 +55,12 @@ namespace 'Jencil.widgets', (exports) ->
   exports.SimpleMarkupButton = class SimpleMarkupButton extends Button
     constructor: (jencil, cls, name, before, after, insert) ->
       super jencil, cls, name
-      @$element.click =>
+      @clickCallback = =>
         @jencil.editor().wrapSelected before, after, true, insert or @jencil.options.defaultInsertText
   exports.EachlineMarkupButton = class EachlineMarkupButton extends Button
     constructor: (jencil, cls, name, before, after, blockBefore, blockAfter) ->
       super jencil, cls, name
-      @$element.click =>
+      @clickCallback = =>
         selectedLines = @jencil.editor().getSelected().split '\n'
         for i in [0...selectedLines.length]
           _before = before.replace '{{i}}', i+1
@@ -79,7 +89,7 @@ namespace 'Jencil.widgets', (exports) ->
   exports.LinkMarkupButton = class LinkMarkupButton extends FormatMarkupButton
     constructor: (jencil, formatstr) ->
       super jencil, 'link', 'Link'
-      @$element.click =>
+      @clickCallback = =>
         href = prompt "Please input link url"
         if href is null then return
         label = prompt "Please input link label", @jencil.editor().getSelected()
@@ -94,7 +104,7 @@ namespace 'Jencil.widgets', (exports) ->
   exports.ImageMarkupButton = class ImageMarkupButton extends FormatMarkupButton
     constructor: (jencil, formatstr) ->
       super jencil, 'img', 'Image'
-      @$element.click =>
+      @clickCallback = =>
         src = prompt "Please input image src url"
         if src is null then return
         alt = prompt "(Optional) Please input image alt label", @jencil.editor().getSelected()
@@ -115,7 +125,8 @@ namespace 'Jencil.widgets', (exports) ->
   exports.PreviewButton = class PreviewButton extends Button
     constructor: (jencil) ->
       super jencil, 'preview', 'Preview'
-      @$element.click =>
+      @clickCallback = =>
         @jencil.wysiwym.preview.toggle()
+      @clickAfterCallback = undefined
 
 

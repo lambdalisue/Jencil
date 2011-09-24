@@ -17,14 +17,14 @@ namespace 'Jencil.widgets', (exports) ->
     show: ->
       @update()
       # Quickfix to set attr twice with different instance
-      @$element.parent().attr 'preview', 'preview'
-      @wysiwym.$element.attr 'preview', 'preview'
+      @$element.parent().addClass 'preview-enable'
+      @wysiwym.$element.addClass 'preview-enable'
       @$element.show()
     hide: ->
       @$element.hide()
       # Quickfix to set attr twice with different instance
-      @$element.parent().removeAttr 'preview'
-      @wysiwym.$element.attr 'preview', 'preview'
+      @$element.parent().removeClass 'preview-enable'
+      @wysiwym.$element.removeClass 'preview-enable'
     toggle: ->
       if @$element.is ':visible'
         @hide()
@@ -64,7 +64,7 @@ namespace 'Jencil.widgets', (exports) ->
   exports.Wysiwym = class Wysiwym extends Editor
     constructor: (jencil) ->
       super jencil, 'jencil-wysiwym-editor', 'div'
-      @$element.attr 'preview-position', @jencil.options.previewPosition
+      @$element.addClass "preview-position-#{@jencil.options.previewPosition}"
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
     getValue: ->

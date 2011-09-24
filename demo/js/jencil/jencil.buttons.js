@@ -63,6 +63,23 @@
         this.$element.attr('href', '#');
         this.$element.attr('title', name);
         this.$element.append($("<span>" + name + "</span>"));
+        this.clickBeforeCallback = void 0;
+        this.clickCallback = void 0;
+        this.clickAfterCallback = __bind(function() {
+          console.log('clickAfterCallback');
+          return this.jencil.wysiwym.preview.update();
+        }, this);
+        this.$element.click(__bind(function() {
+          if (this.clickBeforeCallback != null) {
+            this.clickBeforeCallback();
+          }
+          if (this.clickCallback != null) {
+            this.clickCallback();
+          }
+          if (this.clickAfterCallback != null) {
+            return this.clickAfterCallback();
+          }
+        }, this));
       }
       return Button;
     })();
@@ -85,9 +102,9 @@
       __extends(SimpleMarkupButton, Button);
       function SimpleMarkupButton(jencil, cls, name, before, after, insert) {
         SimpleMarkupButton.__super__.constructor.call(this, jencil, cls, name);
-        this.$element.click(__bind(function() {
+        this.clickCallback = __bind(function() {
           return this.jencil.editor().wrapSelected(before, after, true, insert || this.jencil.options.defaultInsertText);
-        }, this));
+        }, this);
       }
       return SimpleMarkupButton;
     })();
@@ -95,7 +112,7 @@
       __extends(EachlineMarkupButton, Button);
       function EachlineMarkupButton(jencil, cls, name, before, after, blockBefore, blockAfter) {
         EachlineMarkupButton.__super__.constructor.call(this, jencil, cls, name);
-        this.$element.click(__bind(function() {
+        this.clickCallback = __bind(function() {
           var i, insert, selectedLine, selectedLines, _after, _before, _ref;
           selectedLines = this.jencil.editor().getSelected().split('\n');
           for (i = 0, _ref = selectedLines.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
@@ -127,7 +144,7 @@
           }
           insert = selectedLines.join('\n');
           return this.jencil.editor().replaceSelected(insert, true);
-        }, this));
+        }, this);
       }
       return EachlineMarkupButton;
     })();
@@ -135,7 +152,7 @@
       __extends(LinkMarkupButton, FormatMarkupButton);
       function LinkMarkupButton(jencil, formatstr) {
         LinkMarkupButton.__super__.constructor.call(this, jencil, 'link', 'Link');
-        this.$element.click(__bind(function() {
+        this.clickCallback = __bind(function() {
           var href, insert, label, title;
           href = prompt("Please input link url");
           if (href === null) {
@@ -155,7 +172,7 @@
             title: title
           });
           return this.jencil.editor().replaceSelected(insert);
-        }, this));
+        }, this);
       }
       return LinkMarkupButton;
     })();
@@ -163,7 +180,7 @@
       __extends(ImageMarkupButton, FormatMarkupButton);
       function ImageMarkupButton(jencil, formatstr) {
         ImageMarkupButton.__super__.constructor.call(this, jencil, 'img', 'Image');
-        this.$element.click(__bind(function() {
+        this.clickCallback = __bind(function() {
           var alt, insert, src, title;
           src = prompt("Please input image src url");
           if (src === null) {
@@ -183,7 +200,7 @@
             title: title
           });
           return this.jencil.editor().replaceSelected(insert);
-        }, this));
+        }, this);
       }
       return ImageMarkupButton;
     })();
@@ -205,9 +222,10 @@
       __extends(PreviewButton, Button);
       function PreviewButton(jencil) {
         PreviewButton.__super__.constructor.call(this, jencil, 'preview', 'Preview');
-        this.$element.click(__bind(function() {
+        this.clickCallback = __bind(function() {
           return this.jencil.wysiwym.preview.toggle();
-        }, this));
+        }, this);
+        this.clickAfterCallback = void 0;
       }
       return PreviewButton;
     })();

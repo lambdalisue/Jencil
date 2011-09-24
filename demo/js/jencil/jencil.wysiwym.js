@@ -35,14 +35,14 @@
       }
       Preview.prototype.show = function() {
         this.update();
-        this.$element.parent().attr('preview', 'preview');
-        this.wysiwym.$element.attr('preview', 'preview');
+        this.$element.parent().addClass('preview-enable');
+        this.wysiwym.$element.addClass('preview-enable');
         return this.$element.show();
       };
       Preview.prototype.hide = function() {
         this.$element.hide();
-        this.$element.parent().removeAttr('preview');
-        return this.wysiwym.$element.attr('preview', 'preview');
+        this.$element.parent().removeClass('preview-enable');
+        return this.wysiwym.$element.removeClass('preview-enable');
       };
       Preview.prototype.toggle = function() {
         if (this.$element.is(':visible')) {
@@ -98,7 +98,7 @@
       __extends(Wysiwym, Editor);
       function Wysiwym(jencil) {
         Wysiwym.__super__.constructor.call(this, jencil, 'jencil-wysiwym-editor', 'div');
-        this.$element.attr('preview-position', this.jencil.options.previewPosition);
+        this.$element.addClass("preview-position-" + this.jencil.options.previewPosition);
         this.textarea = new TextArea(this.jencil, this);
         this.preview = new Preview(this.jencil, this);
       }
