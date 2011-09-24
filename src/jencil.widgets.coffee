@@ -1,7 +1,11 @@
 namespace 'Jencil.widgets', (exports) ->
   exports.Widget = class Widget
     constructor: (@jencil, cls, type='div') ->
-      @$element = $("<#{type}>").addClass cls
+      if type instanceof jQuery
+        @$element = type.addClass cls
+      else
+        @$element = $("<#{type}>").addClass cls
+
     after: (widget) ->
       @$element.after widget.$element
     append: (widget) ->
@@ -23,8 +27,12 @@ namespace 'Jencil.widgets', (exports) ->
         @$documentTypeElement.change =>
           @update()
         @update()
+    getProfileName: ->
+      if @$documentTypeElement?
+        return @$documentTypeElement.val()
+      return @jencil.defaultProfileName
     update: ->
-      profileName = @$documentTypeElement.val()
+      profileName = @getProfileName()
       @jencil.buttonHolder.update profileName
   exports.ButtonHolder = class ButtonHolder extends Widget
     constructor: (jencil) ->
@@ -32,7 +40,7 @@ namespace 'Jencil.widgets', (exports) ->
       @update @jencil.options.defaultProfileName
     update: (profileName) ->
       delete Jencil.profile # force reload
-      url = "#{@jencil.options.profileSetUrl}/#{profileName}.js"
+      url = "#{@jencil.options.profileSetPath}/#{profileName}.js"
       check = 'Jencil.profile'
       Jencil.utils.load [[url, check]], =>
         @$element.children().remove()
@@ -44,7 +52,28 @@ namespace 'Jencil.widgets', (exports) ->
   exports.Toolbar = class Toolbar extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-toolbar'
-  exports.EditorArea = class EditorArea extends Widget
+  exports.Workspace = class Workspace extends Widget
     constructor: (jencil) ->
-      super jencil, 'jencil-editor-area'
-      @$element.addClass "preview-#{@jencil.options.previewPosition}"
+      super jencil, 'jencil-workspace'
+  exports.Editor = class Editor extends Widget
+    constructor: (jencil, cls, type) ->
+      super jencil, cls, type
+    getValue: ->
+      throw new Error "Subclass must override this method."
+    getSelection: ->
+      throw new Error "Subclass must override this method."
+    setSelection: (start, end) ->
+      throw new Error "Subclass must override this method."
+    getSelected: ->
+      throw new Error "Subclass must override this method."
+    replaceSelected: (str, select=false) ->
+      throw new Error "Subclass must override this method."
+    insertBeforeSelected: (str, select=false) ->
+      throw new Error "Subclass must override this method."
+    insertAfterSelected: (str, select=false) ->
+      throw new Error "Subclass must override this method."
+    wrapSelected: (before, after, select=false, additional=undefined) ->
+      throw new Error "Subclass must override this method."
+      
+
+

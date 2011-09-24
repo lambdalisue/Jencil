@@ -8,14 +8,18 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var ButtonHolder, DocumentType, EditorArea, Toolbar, Widget;
+    var ButtonHolder, DocumentType, Editor, Toolbar, Widget, Workspace;
     exports.Widget = Widget = (function() {
       function Widget(jencil, cls, type) {
         this.jencil = jencil;
         if (type == null) {
           type = 'div';
         }
-        this.$element = $("<" + type + ">").addClass(cls);
+        if (type instanceof jQuery) {
+          this.$element = type.addClass(cls);
+        } else {
+          this.$element = $("<" + type + ">").addClass(cls);
+        }
       }
       Widget.prototype.after = function(widget) {
         return this.$element.after(widget.$element);
@@ -50,9 +54,15 @@
           this.update();
         }
       }
+      DocumentType.prototype.getProfileName = function() {
+        if (this.$documentTypeElement != null) {
+          return this.$documentTypeElement.val();
+        }
+        return this.jencil.defaultProfileName;
+      };
       DocumentType.prototype.update = function() {
         var profileName;
-        profileName = this.$documentTypeElement.val();
+        profileName = this.getProfileName();
         return this.jencil.buttonHolder.update(profileName);
       };
       return DocumentType;
@@ -66,7 +76,7 @@
       ButtonHolder.prototype.update = function(profileName) {
         var check, url;
         delete Jencil.profile;
-        url = "" + this.jencil.options.profileSetUrl + "/" + profileName + ".js";
+        url = "" + this.jencil.options.profileSetPath + "/" + profileName + ".js";
         check = 'Jencil.profile';
         return Jencil.utils.load([[url, check]], __bind(function() {
           var args, button, buttonset, type, _i, _len, _ref, _results;
@@ -92,13 +102,58 @@
       }
       return Toolbar;
     })();
-    return exports.EditorArea = EditorArea = (function() {
-      __extends(EditorArea, Widget);
-      function EditorArea(jencil) {
-        EditorArea.__super__.constructor.call(this, jencil, 'jencil-editor-area');
-        this.$element.addClass("preview-" + this.jencil.options.previewPosition);
+    exports.Workspace = Workspace = (function() {
+      __extends(Workspace, Widget);
+      function Workspace(jencil) {
+        Workspace.__super__.constructor.call(this, jencil, 'jencil-workspace');
       }
-      return EditorArea;
+      return Workspace;
+    })();
+    return exports.Editor = Editor = (function() {
+      __extends(Editor, Widget);
+      function Editor(jencil, cls, type) {
+        Editor.__super__.constructor.call(this, jencil, cls, type);
+      }
+      Editor.prototype.getValue = function() {
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.getSelection = function() {
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.setSelection = function(start, end) {
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.getSelected = function() {
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.replaceSelected = function(str, select) {
+        if (select == null) {
+          select = false;
+        }
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.insertBeforeSelected = function(str, select) {
+        if (select == null) {
+          select = false;
+        }
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.insertAfterSelected = function(str, select) {
+        if (select == null) {
+          select = false;
+        }
+        throw new Error("Subclass must override this method.");
+      };
+      Editor.prototype.wrapSelected = function(before, after, select, additional) {
+        if (select == null) {
+          select = false;
+        }
+        if (additional == null) {
+          additional = void 0;
+        }
+        throw new Error("Subclass must override this method.");
+      };
+      return Editor;
     })();
   });
 }).call(this);

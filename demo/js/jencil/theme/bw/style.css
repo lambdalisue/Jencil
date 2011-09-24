@@ -86,8 +86,8 @@ element:after {content:"";} /* clearfix */
     background: #f9f9f9;
     color: #3c3c3c;
 }
-.jencil .jencil-editor-area:after{ content: "";}
-.jencil .jencil-editor-area .jencil-textarea{
+.jencil .jencil-workspace .jencil-wysiwym-editor:after{ content: "";}
+.jencil .jencil-workspace .jencil-wysiwym-editor .jencil-wysiwym-textarea{
     width: 100%;
     height: 480px;
     padding: 10px;
@@ -95,27 +95,27 @@ element:after {content:"";} /* clearfix */
     color: #3c3c3c;
     resize: vertical;
 }
-.jencil .jencil-editor-area .jencil-preview{
+.jencil .jencil-workspace .jencil-wysiwym-editor .jencil-wysiwym-preview{
     width: 100%;
     height: 480px;
     padding: 0;
     border: 1px solid #e4e4e4;
     background: #fff;
 }
-.jencil .jencil-editor-area .jencil-preview .jencil-preview-surface{
+.jencil .jencil-workspace .jencil-wysiwym-editor .jencil-wysiwym-preview .surface{
     height: auto;
     margin: 10px;
     overflow: hidden;
 }
-.jencil .jencil-editor-area.preview-right{
+.jencil .jencil-workspace .jencil-wysiwym-editor.preview-right{
     height: 480px;
 }
-.jencil .jencil-editor-area.preview-right .jencil-textarea{
+.jencil .jencil-workspace .jencil-wysiwym-editor.preview-right .jencil-wysiwym-textarea{
     float: left;
     width: 49.5%;
     height: 100%;
 }
-.jencil .jencil-editor-area.preview-right .jencil-preview{
+.jencil .jencil-workspace .jencil-wysiwym-editor.preview-right .jencil-wysiwym-preview{
     float: right;
     width: 49.8%;
     height: 100%;

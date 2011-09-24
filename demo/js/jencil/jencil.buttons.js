@@ -67,7 +67,7 @@
       function SimpleMarkupButton(jencil, cls, name, before, after, insert) {
         SimpleMarkupButton.__super__.constructor.call(this, jencil, cls, name);
         this.$element.click(__bind(function() {
-          return this.jencil.wrapSelected(before, after, true, insert || this.jencil.options.defaultInsertText);
+          return this.jencil.editor().wrapSelected(before, after, true, insert || this.jencil.options.defaultInsertText);
         }, this));
       }
       return SimpleMarkupButton;
@@ -97,7 +97,7 @@
           if (href === null) {
             return;
           }
-          label = prompt("Please input link label", this.jencil.getSelected());
+          label = prompt("Please input link label", this.jencil.editor().getSelected());
           if (label === null) {
             return;
           }
@@ -110,7 +110,7 @@
             label: label,
             title: title
           });
-          return this.jencil.replaceSelected(insert);
+          return this.jencil.editor().replaceSelected(insert);
         }, this));
       }
       return LinkMarkupButton;
@@ -125,7 +125,7 @@
           if (src === null) {
             return;
           }
-          alt = prompt("(Optional) Please input image alt label", this.jencil.getSelected());
+          alt = prompt("(Optional) Please input image alt label", this.jencil.editor().getSelected());
           if (alt === null) {
             return;
           }
@@ -138,7 +138,7 @@
             alt: alt,
             title: title
           });
-          return this.jencil.replaceSelected(insert);
+          return this.jencil.editor().replaceSelected(insert);
         }, this));
       }
       return ImageMarkupButton;
@@ -149,7 +149,7 @@
         ListMarkupButton.__super__.constructor.call(this, jencil, cls, name);
         this.$element.click(__bind(function() {
           var i, insert, selectedLine, selectedLines, _after, _before, _ref;
-          selectedLines = this.jencil.getSelected().split('\n');
+          selectedLines = this.jencil.editor().getSelected().split('\n');
           for (i = 0, _ref = selectedLines.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
             _before = before.replace('{{i}}', i + 1);
             _after = after.replace('{{i}}', i + 1);
@@ -178,7 +178,7 @@
             }
           }
           insert = selectedLines.join('\n');
-          return this.jencil.replaceSelected(insert, true);
+          return this.jencil.editor().replaceSelected(insert, true);
         }, this));
       }
       return ListMarkupButton;
@@ -202,7 +202,7 @@
       function PreviewButton(jencil) {
         PreviewButton.__super__.constructor.call(this, jencil, 'preview', 'Preview');
         this.$element.click(__bind(function() {
-          return this.jencil.preview.toggle();
+          return this.jencil.wysiwym.preview.toggle();
         }, this));
       }
       return PreviewButton;

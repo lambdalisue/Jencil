@@ -38,7 +38,7 @@ namespace 'Jencil.widgets', (exports) ->
     constructor: (jencil, cls, name, before, after, insert) ->
       super jencil, cls, name
       @$element.click =>
-        @jencil.wrapSelected before, after, true, insert or @jencil.options.defaultInsertText
+        @jencil.editor().wrapSelected before, after, true, insert or @jencil.options.defaultInsertText
   exports.FormatMarkupButton = class FormatMarkupButton extends Button
     format: (formatstr, kwargs) ->
       for key, value of kwargs
@@ -50,7 +50,7 @@ namespace 'Jencil.widgets', (exports) ->
       @$element.click =>
         href = prompt "Please input link url"
         if href is null then return
-        label = prompt "Please input link label", @jencil.getSelected()
+        label = prompt "Please input link label", @jencil.editor().getSelected()
         if label is null then return
         title = prompt "(Optional) Please input link title"
         if title is null then return
@@ -58,14 +58,14 @@ namespace 'Jencil.widgets', (exports) ->
           href: href
           label: label
           title: title
-        @jencil.replaceSelected insert
+        @jencil.editor().replaceSelected insert
   exports.ImageMarkupButton = class ImageMarkupButton extends FormatMarkupButton
     constructor: (jencil, formatstr) ->
       super jencil, 'img', 'Image'
       @$element.click =>
         src = prompt "Please input image src url"
         if src is null then return
-        alt = prompt "(Optional) Please input image alt label", @jencil.getSelected()
+        alt = prompt "(Optional) Please input image alt label", @jencil.editor().getSelected()
         if alt is null then return
         title = prompt "(Optional) Please input image title"
         if title is null then return
@@ -73,12 +73,12 @@ namespace 'Jencil.widgets', (exports) ->
           src: src
           alt: alt
           title: title
-        @jencil.replaceSelected insert
+        @jencil.editor().replaceSelected insert
   exports.ListMarkupButton = class ListMarkupButton extends Button
     constructor: (jencil, cls, name, before, after, blockBefore, blockAfter) ->
       super jencil, cls, name
       @$element.click =>
-        selectedLines = @jencil.getSelected().split '\n'
+        selectedLines = @jencil.editor().getSelected().split '\n'
         for i in [0...selectedLines.length]
           _before = before.replace '{{i}}', i+1
           _after = after.replace '{{i}}', i+1
@@ -101,7 +101,7 @@ namespace 'Jencil.widgets', (exports) ->
           else
             selectedLines.push blockAfter
         insert = selectedLines.join '\n'
-        @jencil.replaceSelected insert, true
+        @jencil.editor().replaceSelected insert, true
   exports.UnorderedListMarkupButton = class UnorderedListMarkupButton extends ListMarkupButton
     constructor: (jencil, before, after, blockBefore, blockAfter) ->
       super jencil, 'ul', 'Unordered List', before, after, blockBefore, blockAfter
@@ -112,6 +112,6 @@ namespace 'Jencil.widgets', (exports) ->
     constructor: (jencil) ->
       super jencil, 'preview', 'Preview'
       @$element.click =>
-        @jencil.preview.toggle()
+        @jencil.wysiwym.preview.toggle()
 
 

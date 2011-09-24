@@ -13,19 +13,22 @@
     return exports.Preview = Preview = (function() {
       __extends(Preview, Widget);
       function Preview(jencil) {
-        Preview.__super__.constructor.call(this, jencil, 'jencil-preview', 'div');
+        Preview.__super__.constructor.call(this, jencil, 'jencil-preview-area', 'div');
         this.$surface = $('<div>').addClass('jencil-preview-surface');
         this.$element.append(this.$surface);
+        this.wysiwym = this.jencil.wysiwym;
         this.enable();
       }
-      Preview.prototype.enable = function() {
+      Preview.prototype.show = function() {
         this.update();
+        this.jencil.editorArea.$element.addClass('with-preview');
         this.jencil.$textarea.bind('keyup change click blur enter', __bind(function() {
           return this.update();
         }, this));
         return this.$element.show('fast');
       };
-      Preview.prototype.disable = function() {
+      Preview.prototype.hide = function() {
+        this.jencil.editorArea.$element.removeClass('with-preview');
         this.jencil.$textarea.unbind('keyup change click blur enter', __bind(function() {
           return this.update();
         }, this));
@@ -39,8 +42,28 @@
         }
       };
       Preview.prototype.update = function() {
-        var content;
+        var content, method, parserSet, profileName, url, val;
         content = this.jencil.getValue();
+        profileName = this.jencil.documentType.getProfileName();
+        parserSet = this.jencil.options.previewParserSets.markdown;
+        if (parserSet != null) {
+          url = parserSet[0];
+          val = parserSet[1];
+          method = parserSet[2];
+          return $.ajax({
+            type: method,
+            dataType: 'text',
+            url: url,
+            data: "" + val + "=" + (encodeURIComponent(content)),
+            success: __bind(function(data) {
+              return this.write(data);
+            }, this)
+          });
+        } else {
+          return this.write(content);
+        }
+      };
+      Preview.prototype.write = function(content) {
         return this.$surface.load(this.jencil.options.previewTemplateUrl, function(response, status, xhr) {
           return $(this).html($(this).html().replace('{{content}}', content));
         });

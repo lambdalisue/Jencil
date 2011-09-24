@@ -12,67 +12,6 @@ window.namespace = (target, name, block) ->
   top    = target
   target = target[item] or= {} for item in name.split '.'
   block target, top
-$ = jQuery
-$.fn.jencil = (options) ->
-  options = $.extend true, {
-    root: undefined
-    profileSetUrl: '~/profiles'
-    previewTemplateUrl: '~/templates/preview.html'
-    previewPosition: 'right'
-    defaultProfileName: 'html'
-    defaultInsertText: '*'
-    documentTypeElement: undefined
-    }, options
-  toAbsoluteUrl = (url) ->
-    if url.startsWith '~/'
-      url = "#{options.root}/#{url[2..url.length]}"
-    return url
-  # compute root path
-  if not options.root?
-    $('script').each (a, tag) ->
-      match = $(tag).get(0).src.match /(.*)jencil(\.min)?\.js$/
-      if match?
-        options.root = match[1]
-        options.root = options.root[0...options.root.length-1]
-  # toAbsoluteUrl
-  options.profileSetUrl = toAbsoluteUrl options.profileSetUrl
-  options.previewTemplateUrl = toAbsoluteUrl options.previewTemplateUrl
-
-  requires = [
-    ["https://raw.github.com/lambdalisue/textarea.coffee/master/lib/textarea.js", 'window.Textarea']
-    ["#{options.root}/jencil.widgets.js", 'window.Jencil.widgets']
-    ["#{options.root}/jencil.buttons.js", 'window.Jencil.widgets.Button']
-    ["#{options.root}/jencil.preview.js", 'window.Jencil.widgets.Preview']
-  ]
-  return @each ->
-    Jencil.utils.load requires, =>
-      class JencilEditor extends Textarea
-        constructor: (textarea, options) ->
-          super textarea
-          @options = options
-          # --- construct textarea
-          @$textarea = $(@textarea)
-          @$textarea.addClass 'jencil-textarea'
-          @$textarea.wrap $('<div>').addClass 'jencil'
-          # --- toolbar
-          @buttonHolder = new Jencil.widgets.ButtonHolder @
-          @documentType = new Jencil.widgets.DocumentType @
-          @toolbar = new Jencil.widgets.Toolbar @
-          @toolbar.append @buttonHolder
-          @toolbar.append @documentType
-          @$textarea.before @toolbar.$element
-          # --- editor-area
-          @editorArea = new Jencil.widgets.EditorArea @
-          @preview = new Jencil.widgets.Preview @
-          @$textarea.wrap @editorArea.$element
-          @$textarea.after @preview.$element
-      new JencilEditor @, options
-
-String.prototype.startsWith = (prefix) ->
-  return this.lastIndexOf(prefix, 0) is 0
-String.prototype.endsWith = (suffix) ->
-  return this.indexOf(suffix, this.length - suffix.length) isnt -1
-
 namespace 'Jencil.utils', (exports) ->
   exports.load = load = (sets, callback=undefined) ->
     _import = (url) ->
@@ -81,6 +20,7 @@ namespace 'Jencil.utils', (exports) ->
       script.src = url
       document.head.appendChild script
     _load = (url, check, callback) ->
+      console.log "Loading #{url} ..."
       _check = new Function "return !!(#{check})"
       if not _check()
         _import url
@@ -103,3 +43,33 @@ namespace 'Jencil.utils', (exports) ->
         _load url, check, _next
     _next()
     return null
+$ = jQuery
+$.fn.jencil = (options) ->
+  options = $.extend true, {
+    root: undefined
+    profileSetPath: '~/profiles'
+    previewTemplatePath: '~/templates/preview.html'
+    previewParserSets: 
+      http: undefined
+      markdown: undefined
+    previewPosition: 'right'
+    defaultProfileName: 'html'
+    defaultInsertText: '*'
+    documentTypeElement: undefined
+  }, options
+  # --- develop mode code
+  requires = [
+    ['js/textarea.min.js', 'window.Textarea']
+    ['js/jencil/jencil.core.js', 'window.Jencil.core']
+    ['js/jencil/jencil.widgets.js', 'window.Jencil.widgets']
+    ['js/jencil/jencil.buttons.js', 'window.Jencil.widgets.Button']
+    ['js/jencil/jencil.wysiwym.js', 'window.Jencil.widgets.Wysiwym']
+    ['js/jencil/jencil.wysiwyg.js', 'window.Jencil.widgets.Wysiwyg']
+  ]
+  # --- /develop mode code
+  Jencil.utils.load requires, =>
+    options = Jencil.core.parse options
+    return @each ->
+      new Jencil.core.Jencil $(@), options
+
+
