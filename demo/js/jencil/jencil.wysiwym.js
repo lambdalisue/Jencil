@@ -27,22 +27,21 @@
         Preview.__super__.constructor.call(this, jencil, 'jencil-wysiwym-preview', 'div');
         this.$surface = $('<div>').addClass('surface');
         this.$element.append(this.$surface);
+        this.wysiwym.textarea.$element.bind('keyup change click blur enter', __bind(function() {
+          return this.update();
+        }, this));
         this.show();
       }
       Preview.prototype.show = function() {
         this.update();
+        this.$element.parent().attr('preview', 'preview');
         this.wysiwym.$element.attr('preview', 'preview');
-        this.wysiwym.textarea.$element.bind('keyup change click blur enter', __bind(function() {
-          return this.update();
-        }, this));
-        return this.$element.show('fast');
+        return this.$element.show();
       };
       Preview.prototype.hide = function() {
-        this.wysiwym.$element.attr('preview', '');
-        this.wysiwym.textarea.$element.unbind('keyup change click blur enter', __bind(function() {
-          return this.update();
-        }, this));
-        return this.$element.hide('fast');
+        this.$element.hide();
+        this.$element.parent().removeAttr('preview');
+        return this.wysiwym.$element.attr('preview', 'preview');
       };
       Preview.prototype.toggle = function() {
         if (this.$element.is(':visible')) {
@@ -84,6 +83,7 @@
       __extends(Wysiwym, Editor);
       function Wysiwym(jencil) {
         Wysiwym.__super__.constructor.call(this, jencil, 'jencil-wysiwym-editor', 'div');
+        this.$element.attr('preview-position', this.jencil.options.previewPosition);
         this.textarea = new TextArea(this.jencil, this);
         this.preview = new Preview(this.jencil, this);
       }

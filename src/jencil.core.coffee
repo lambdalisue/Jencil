@@ -38,8 +38,6 @@ namespace 'Jencil.core', (exports) ->
       @workspace = new Jencil.widgets.Workspace @
       @wysiwym = new Jencil.widgets.Wysiwym @
       @wysiwyg = new Jencil.widgets.Wysiwyg @
-      @workspace.append @wysiwym
-      @workspace.append @wysiwyg
       # --- arrange
       @$textarea.before @toolbar.$element
       @$textarea.wrap @workspace.$element

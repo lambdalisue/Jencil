@@ -107,15 +107,19 @@ element:after {content:"";} /* clearfix */
     margin: 10px;
     overflow: hidden;
 }
-.jencil .jencil-workspace .jencil-wysiwym-editor.preview-right{
+.jencil .jencil-workspace .jencil-wysiwym-editor[preview-position=right]{
     height: 480px;
 }
-.jencil .jencil-workspace .jencil-wysiwym-editor.preview-right .jencil-wysiwym-textarea{
+.jencil .jencil-workspace .jencil-wysiwym-editor[preview-position=right] .jencil-wysiwym-textarea{
     float: left;
     width: 49.5%;
     height: 100%;
 }
-.jencil .jencil-workspace .jencil-wysiwym-editor.preview-right .jencil-wysiwym-preview{
+.jencil .jencil-workspace .jencil-wysiwym-editor[preview-position=right]:not([preview=preview]) .jencil-wysiwym-textarea{
+    width: 100%;
+    height: 100%;
+}
+.jencil .jencil-workspace .jencil-wysiwym-editor[preview-position=right] .jencil-wysiwym-preview{
     float: right;
     width: 49.8%;
     height: 100%;

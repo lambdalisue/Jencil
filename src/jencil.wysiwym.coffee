@@ -10,18 +10,20 @@ namespace 'Jencil.widgets', (exports) ->
       super jencil, 'jencil-wysiwym-preview', 'div'
       @$surface = $('<div>').addClass 'surface'
       @$element.append @$surface
+      @wysiwym.textarea.$element.bind 'keyup change click blur enter', =>
+        @update()
       @show()
     show: ->
       @update()
+      # Quickfix to set attr twice with different instance
+      @$element.parent().attr 'preview', 'preview'
       @wysiwym.$element.attr 'preview', 'preview'
-      @wysiwym.textarea.$element.bind 'keyup change click blur enter', =>
-        @update()
-      @$element.show 'fast'
+      @$element.show()
     hide: ->
-      @wysiwym.$element.attr 'preview', ''
-      @wysiwym.textarea.$element.unbind 'keyup change click blur enter', =>
-        @update()
-      @$element.hide 'fast'
+      @$element.hide()
+      # Quickfix to set attr twice with different instance
+      @$element.parent().removeAttr 'preview'
+      @wysiwym.$element.attr 'preview', 'preview'
     toggle: ->
       if @$element.is ':visible'
         @hide()
@@ -53,6 +55,7 @@ namespace 'Jencil.widgets', (exports) ->
   exports.Wysiwym = class Wysiwym extends Editor
     constructor: (jencil) ->
       super jencil, 'jencil-wysiwym-editor', 'div'
+      @$element.attr 'preview-position', @jencil.options.previewPosition
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
     getValue: ->
@@ -71,7 +74,3 @@ namespace 'Jencil.widgets', (exports) ->
       @textarea.controller.insertAfterSelected str, select
     wrapSelected: (before, after, select=false, additional=undefined) ->
       @textarea.controller.wrapSelected before, after, select, additional
-
-
-
-

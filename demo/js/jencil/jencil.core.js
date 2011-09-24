@@ -49,8 +49,6 @@
         this.workspace = new Jencil.widgets.Workspace(this);
         this.wysiwym = new Jencil.widgets.Wysiwym(this);
         this.wysiwyg = new Jencil.widgets.Wysiwyg(this);
-        this.workspace.append(this.wysiwym);
-        this.workspace.append(this.wysiwyg);
         this.$textarea.before(this.toolbar.$element);
         this.$textarea.wrap(this.workspace.$element);
         this.$textarea.after(this.wysiwyg.$element);
