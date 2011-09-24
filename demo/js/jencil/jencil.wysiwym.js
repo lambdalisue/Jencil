@@ -53,7 +53,7 @@
       Preview.prototype.update = function() {
         return $.ajax({
           type: 'GET',
-          dataType: 'text',
+          dataType: 'html',
           url: 'js/jencil/parsers/markdown.cgi',
           data: {
             data: encodeURIComponent(content)

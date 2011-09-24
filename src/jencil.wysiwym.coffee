@@ -32,7 +32,7 @@ namespace 'Jencil.widgets', (exports) ->
     update: ->
       $.ajax
         type: 'GET'
-        dataType: 'text'
+        dataType: 'html'
         url: 'js/jencil/parsers/markdown.cgi'
         data: {data: encodeURIComponent content}
         success: (response) =>
