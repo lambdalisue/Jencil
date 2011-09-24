@@ -13,9 +13,8 @@ if 'data' not in form:
     print "<h1>Markdown Online Parser</h1>"
     print "<h2>Usage</h2>"
     print "   Access <a href=\"?data=**Markdown**\">?data=**Markdown**</a>"
-    return
+else:
+    data = form.getvalue('data', '')
+    html = markdown.markdown(data)
 
-data = form.getvalue('data', '')
-html = markdown.markdown(data)
-
-print html
+    print html
