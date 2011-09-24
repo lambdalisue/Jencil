@@ -51,22 +51,39 @@
         }
       };
       Preview.prototype.update = function() {
-        var content;
-        content = this.wysiwym.getValue();
-        console.log(content);
-        return $.ajax({
-          type: 'GET',
-          dataType: 'html',
-          url: 'js/jencil/parsers/markdown.cgi',
-          data: "data=" + (encodeURIComponent(content)),
-          success: __bind(function(response) {
-            console.log(response);
-            return this.write(response);
-          }, this),
-          error: function(xhr, status, error) {
-            return console.log(xhr, status, error);
+        var _update;
+        _update = __bind(function() {
+          var content;
+          content = this.wysiwym.getValue();
+          if (Jencil.profile.previewPraserPath != null) {
+            return $.ajax({
+              type: 'GET',
+              dataType: 'html',
+              url: 'js/jencil/parsers/markdown.cgi',
+              data: "data=" + (encodeURIComponent(content)),
+              success: __bind(function(response) {
+                console.log(response);
+                return this.write(response);
+              }, this),
+              error: function(xhr, status, error) {
+                return console.log(xhr, status, error);
+              }
+            });
+          } else {
+            return this.write(content);
           }
-        });
+        }, this);
+        if (Jencil.profile != null) {
+          return _update();
+        } else {
+          return setTimeout(__bind(function() {
+            if (Jencil.profile != null) {
+              return _update();
+            } else {
+              return setTimeout(arguments.callee, 100);
+            }
+          }, this), 100);
+        }
       };
       Preview.prototype.write = function(content) {
         return this.$surface.load(this.jencil.options.previewTemplatePath, function(response, status, xhr) {

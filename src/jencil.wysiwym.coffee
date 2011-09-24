@@ -30,44 +30,42 @@ namespace 'Jencil.widgets', (exports) ->
       else
         @show()
     update: ->
-      content = @wysiwym.getValue()
-      console.log content
-      $.ajax
-        type: 'GET'
-        dataType: 'html'
-        url: 'js/jencil/parsers/markdown.cgi'
-        data: "data=#{encodeURIComponent content}"
-        success: (response) =>
-          console.log response
-          @write response
-        error: (xhr, status, error) ->
-          console.log xhr, status, error
-      #_update = =>
-      #  content = @wysiwym.getValue()
-      #  if Jencil.profile.previewPraserPath?
-      #    #$.ajax(
-      #    #  type: Jencil.profile.previewParserMethod ? 'GET'
-      #    #  dataType: 'text'
-      #    #  global: false
-      #    #  url: @jencil.abspath Jencil.profile.previewParserPath
-      #    #  data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
-      #    #  success: (data) =>
-      #    #    @write data
-      #    #  error: (xhr, status, error) ->
-      #    #    console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
-      #    #    throw new Error error
-      #    #)
-      #  else
-      #    @write content
-      #if Jencil.profile?
-      #  _update()
-      #else
-      #  setTimeout =>
-      #    if Jencil.profile?
-      #      _update()
-      #    else
-      #      setTimeout arguments.callee, 100
-      #  , 100
+      _update = =>
+        content = @wysiwym.getValue()
+        if Jencil.profile.previewPraserPath?
+          $.ajax
+            type: 'GET'
+            dataType: 'html'
+            url: 'js/jencil/parsers/markdown.cgi'
+            data: "data=#{encodeURIComponent content}"
+            success: (response) =>
+              console.log response
+              @write response
+            error: (xhr, status, error) ->
+              console.log xhr, status, error
+          #$.ajax(
+          #  type: Jencil.profile.previewParserMethod ? 'GET'
+          #  dataType: 'text'
+          #  global: false
+          #  url: @jencil.abspath Jencil.profile.previewParserPath
+          #  data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+          #  success: (data) =>
+          #    @write data
+          #  error: (xhr, status, error) ->
+          #    console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
+          #    throw new Error error
+          #)
+        else
+          @write content
+      if Jencil.profile?
+        _update()
+      else
+        setTimeout =>
+          if Jencil.profile?
+            _update()
+          else
+            setTimeout arguments.callee, 100
+        , 100
     write: (content) ->
       @$surface.load @jencil.options.previewTemplatePath, (response, status, xhr) ->
         $(this).html $(this).html().replace '{{content}}', content
