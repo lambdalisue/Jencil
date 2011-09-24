@@ -36,7 +36,7 @@ namespace 'Jencil.widgets', (exports) ->
         type: 'GET'
         dataType: 'html'
         url: 'js/jencil/parsers/markdown.cgi'
-        data: "#{data}=#{encodeURIComponent content}"
+        data: "#data=#{encodeURIComponent content}"
         success: (response) =>
           console.log response
           @write response
