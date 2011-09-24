@@ -30,32 +30,41 @@ namespace 'Jencil.widgets', (exports) ->
       else
         @show()
     update: ->
-      _update = =>
-        content = @wysiwym.getValue()
-        if Jencil.profile.previewPraserPath?
-          $.ajax(
-            type: Jencil.profile.previewParserMethod ? 'GET'
-            dataType: 'text'
-            global: false
-            url: @jencil.abspath Jencil.profile.previewParserPath
-            data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
-            success: (data) =>
-              @write data
-            error: (xhr, status, error) ->
-              console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
-              throw new Error error
-          )
-        else
-          @write content
-      if Jencil.profile?
-        _update()
-      else
-        setTimeout ->
-          if Jencil.profile?
-            _update()
-          else
-            setTimeout arguments.callee, 100
-        , 100
+      $.ajax
+        type: 'GET'
+        dataType: 'text'
+        url: 'js/jencil/parsers/markdown.cgi'
+        data: {data: encodeURIComponent content}
+        success: (response) =>
+          @write response
+        error: (xhr, status, error) ->
+          console.log xhr, status, error
+      #_update = =>
+      #  content = @wysiwym.getValue()
+      #  if Jencil.profile.previewPraserPath?
+      #    #$.ajax(
+      #    #  type: Jencil.profile.previewParserMethod ? 'GET'
+      #    #  dataType: 'text'
+      #    #  global: false
+      #    #  url: @jencil.abspath Jencil.profile.previewParserPath
+      #    #  data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+      #    #  success: (data) =>
+      #    #    @write data
+      #    #  error: (xhr, status, error) ->
+      #    #    console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
+      #    #    throw new Error error
+      #    #)
+      #  else
+      #    @write content
+      #if Jencil.profile?
+      #  _update()
+      #else
+      #  setTimeout =>
+      #    if Jencil.profile?
+      #      _update()
+      #    else
+      #      setTimeout arguments.callee, 100
+      #  , 100
     write: (content) ->
       @$surface.load @jencil.options.previewTemplatePath, (response, status, xhr) ->
         $(this).html $(this).html().replace '{{content}}', content

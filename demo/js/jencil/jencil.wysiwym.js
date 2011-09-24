@@ -51,40 +51,20 @@
         }
       };
       Preview.prototype.update = function() {
-        var _update;
-        _update = __bind(function() {
-          var content, _ref, _ref2;
-          content = this.wysiwym.getValue();
-          if (Jencil.profile.previewPraserPath != null) {
-            return $.ajax({
-              type: (_ref = Jencil.profile.previewParserMethod) != null ? _ref : 'GET',
-              dataType: 'text',
-              global: false,
-              url: this.jencil.abspath(Jencil.profile.previewParserPath),
-              data: "" + ((_ref2 = Jencil.profile.previewParserVal) != null ? _ref2 : 'data') + "=" + (encodeURIComponent(content)),
-              success: __bind(function(data) {
-                return this.write(data);
-              }, this),
-              error: function(xhr, status, error) {
-                console.log("xhr: " + xhr + ", status: " + status + ", error: " + error);
-                throw new Error(error);
-              }
-            });
-          } else {
-            return this.write(content);
+        return $.ajax({
+          type: 'GET',
+          dataType: 'text',
+          url: 'js/jencil/parsers/markdown.cgi',
+          data: {
+            data: encodeURIComponent(content)
+          },
+          success: __bind(function(response) {
+            return this.write(response);
+          }, this),
+          error: function(xhr, status, error) {
+            return console.log(xhr, status, error);
           }
-        }, this);
-        if (Jencil.profile != null) {
-          return _update();
-        } else {
-          return setTimeout(function() {
-            if (Jencil.profile != null) {
-              return _update();
-            } else {
-              return setTimeout(arguments.callee, 100);
-            }
-          }, 100);
-        }
+        });
       };
       Preview.prototype.write = function(content) {
         return this.$surface.load(this.jencil.options.previewTemplatePath, function(response, status, xhr) {
