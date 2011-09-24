@@ -59,6 +59,7 @@
             data: encodeURIComponent(content)
           },
           success: __bind(function(response) {
+            console.log(response);
             return this.write(response);
           }, this),
           error: function(xhr, status, error) {
