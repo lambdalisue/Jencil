@@ -31,11 +31,12 @@ namespace 'Jencil.widgets', (exports) ->
         @show()
     update: ->
       content = @wysiwym.getValue()
+      console.log content
       $.ajax
         type: 'GET'
         dataType: 'html'
         url: 'js/jencil/parsers/markdown.cgi'
-        data: {data: encodeURIComponent content}
+        data: "#{data}=#{encodeURIComponent content}"
         success: (response) =>
           console.log response
           @write response
