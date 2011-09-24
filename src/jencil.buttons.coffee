@@ -10,6 +10,9 @@ namespace 'Jencil.widgets', (exports) ->
       when 'e', 'eachline'
         [cls, name, before, after, blockBefore, blockAfter] = args
         return new EachlineMarkupButton jencil, cls, name, before, after, blockBefore, blockAfter
+      when 'c', 'callback'
+        [cls, name, callback, before, after] = args
+        return new CallbackButton jencil, cls, name, callback, before, after
       when 'l', 'link'
         [formatstr] = args
         return new LinkMarkupButton jencil, formatstr
@@ -85,6 +88,12 @@ namespace 'Jencil.widgets', (exports) ->
             selectedLines.push blockAfter
         insert = selectedLines.join '\n'
         @jencil.editor().replaceSelected insert, true
+  exports.CallbackButton = class CallbackButton extends Button
+    constructor: (jencil, cls, name, callback, before, after) ->
+      super jencil, cls, name
+      @clickBeforeCallback = before
+      @clickCallback = callback
+      @clickAfterCallback = after
   # --- special case buttons
   exports.LinkMarkupButton = class LinkMarkupButton extends FormatMarkupButton
     constructor: (jencil, formatstr) ->

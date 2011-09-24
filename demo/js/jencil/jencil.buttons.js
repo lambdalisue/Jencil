@@ -8,10 +8,10 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var Button, EachlineMarkupButton, FormatMarkupButton, ImageMarkupButton, LinkMarkupButton, OrderedListMarkupButton, PreviewButton, Separator, SimpleMarkupButton, UnorderedListMarkupButton, Widget, createButton;
+    var Button, CallbackButton, EachlineMarkupButton, FormatMarkupButton, ImageMarkupButton, LinkMarkupButton, OrderedListMarkupButton, PreviewButton, Separator, SimpleMarkupButton, UnorderedListMarkupButton, Widget, createButton;
     Widget = Jencil.widgets.Widget;
     exports.createButton = createButton = function(jencil, type, args) {
-      var after, before, blockAfter, blockBefore, cls, formatstr, insert, name;
+      var after, before, blockAfter, blockBefore, callback, cls, formatstr, insert, name;
       switch (type) {
         case '-':
         case 'separator':
@@ -24,6 +24,10 @@
         case 'eachline':
           cls = args[0], name = args[1], before = args[2], after = args[3], blockBefore = args[4], blockAfter = args[5];
           return new EachlineMarkupButton(jencil, cls, name, before, after, blockBefore, blockAfter);
+        case 'c':
+        case 'callback':
+          cls = args[0], name = args[1], callback = args[2], before = args[3], after = args[4];
+          return new CallbackButton(jencil, cls, name, callback, before, after);
         case 'l':
         case 'link':
           formatstr = args[0];
@@ -147,6 +151,16 @@
         }, this);
       }
       return EachlineMarkupButton;
+    })();
+    exports.CallbackButton = CallbackButton = (function() {
+      __extends(CallbackButton, Button);
+      function CallbackButton(jencil, cls, name, callback, before, after) {
+        CallbackButton.__super__.constructor.call(this, jencil, cls, name);
+        this.clickBeforeCallback = before;
+        this.clickCallback = callback;
+        this.clickAfterCallback = after;
+      }
+      return CallbackButton;
     })();
     exports.LinkMarkupButton = LinkMarkupButton = (function() {
       __extends(LinkMarkupButton, FormatMarkupButton);
