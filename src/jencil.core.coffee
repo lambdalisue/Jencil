@@ -5,6 +5,10 @@ String.prototype.endsWith = (suffix) ->
   return @indexOf(suffix, this.length - suffix.length) isnt -1
 # --- core
 namespace 'Jencil.core', (exports) ->
+  exports.abspath = abspath = (path, root, prefix='~/') ->
+    if path.startsWith '~/'
+      path = "#{root}/#{path[2..path.length]}"
+    return path
   exports.parse = parse = (options) ->
     findroot = (options) ->
       $('script').each (a, tag) ->
@@ -13,10 +17,6 @@ namespace 'Jencil.core', (exports) ->
           options.root = match[1]
           # remove trailing slush
           return options.root[0..options.root.length-1]
-    abspath = (path, root, prefix='~/') ->
-      if path.startsWith '~/'
-        path = "#{root}/#{path[2..path.length]}"
-      return path
     # findroot if required
     if not options.root? then findroot options
     # convert to abspath
@@ -44,6 +44,8 @@ namespace 'Jencil.core', (exports) ->
       @$textarea.after @wysiwyg.$element
       @$textarea.wrap @wysiwym.$element
       @$textarea.after @wysiwym.preview.$element
+    abspath: (path) ->
+      return Jencil.core.abspath path, @options.root
     editor: ->
       return @wysiwym
 

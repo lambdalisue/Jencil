@@ -51,25 +51,34 @@
         }
       };
       Preview.prototype.update = function() {
-        var content, method, parserSet, profileName, url, val;
-        content = this.wysiwym.getValue();
-        profileName = this.jencil.documentType.getProfileName();
-        parserSet = this.jencil.options.previewParserSets.markdown;
-        if (parserSet != null) {
-          url = parserSet[0];
-          val = parserSet[1];
-          method = parserSet[2];
-          return $.ajax({
-            type: method,
-            dataType: 'text',
-            url: url,
-            data: "" + val + "=" + (encodeURIComponent(content)),
-            success: __bind(function(data) {
-              return this.write(data);
-            }, this)
-          });
+        var _update;
+        _update = __bind(function() {
+          var content, _ref, _ref2;
+          content = this.wysiwym.getValue();
+          if (Jencil.profile.previewPraserPath != null) {
+            return $.ajax({
+              type: (_ref = Jencil.profile.previewParserMethod) != null ? _ref : 'GET',
+              dataType: 'text',
+              url: this.jencil.abspath(Jencil.profile.previewParserPath),
+              data: "" + ((_ref2 = Jencil.profile.previewParserVal) != null ? _ref2 : 'data') + "=" + (encodeURIComponent(content)),
+              success: __bind(function(data) {
+                return this.write(data);
+              }, this)
+            });
+          } else {
+            return this.write(content);
+          }
+        }, this);
+        if (Jencil.profile != null) {
+          return _update();
         } else {
-          return this.write(content);
+          return setTimeout(function() {
+            if (Jencil.profile != null) {
+              return _update();
+            } else {
+              return setTimeout(arguments.callee, 100);
+            }
+          }, 100);
         }
       };
       Preview.prototype.write = function(content) {

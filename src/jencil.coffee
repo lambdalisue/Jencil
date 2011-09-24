@@ -49,9 +49,6 @@ $.fn.jencil = (options) ->
     root: undefined
     profileSetPath: '~/profiles'
     previewTemplatePath: '~/templates/preview.html'
-    previewParserSets: 
-      http: undefined
-      markdown: undefined
     previewPosition: 'right'
     defaultProfileName: 'html'
     defaultInsertText: '*'

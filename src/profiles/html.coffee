@@ -1,4 +1,7 @@
 namespace 'Jencil.profile', (exports) ->
+  exports.previewParserMethod = undefined
+  exports.previewParserPath = undefined
+  exports.previewParserVal = undefined
   exports.buttonsets = [
     ['s', 'h1', 'H1', '<h1>', '</h1>']
     ['s', 'h2', 'H2', '<h2>', '</h2>']

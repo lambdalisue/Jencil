@@ -6,9 +6,18 @@
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
   };
   namespace('Jencil.core', function(exports) {
-    var JencilCore, parse;
+    var JencilCore, abspath, parse;
+    exports.abspath = abspath = function(path, root, prefix) {
+      if (prefix == null) {
+        prefix = '~/';
+      }
+      if (path.startsWith('~/')) {
+        path = "" + root + "/" + path.slice(2, (path.length + 1) || 9e9);
+      }
+      return path;
+    };
     exports.parse = parse = function(options) {
-      var abspath, findroot;
+      var findroot;
       findroot = function(options) {
         return $('script').each(function(a, tag) {
           var match;
@@ -18,15 +27,6 @@
             return options.root.slice(0, (options.root.length - 1 + 1) || 9e9);
           }
         });
-      };
-      abspath = function(path, root, prefix) {
-        if (prefix == null) {
-          prefix = '~/';
-        }
-        if (path.startsWith('~/')) {
-          path = "" + root + "/" + path.slice(2, (path.length + 1) || 9e9);
-        }
-        return path;
       };
       if (!(options.root != null)) {
         findroot(options);
@@ -55,6 +55,9 @@
         this.$textarea.wrap(this.wysiwym.$element);
         this.$textarea.after(this.wysiwym.preview.$element);
       }
+      JencilCore.prototype.abspath = function(path) {
+        return Jencil.core.abspath(path, this.options.root);
+      };
       JencilCore.prototype.editor = function() {
         return this.wysiwym;
       };

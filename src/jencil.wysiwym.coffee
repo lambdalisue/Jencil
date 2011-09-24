@@ -30,24 +30,28 @@ namespace 'Jencil.widgets', (exports) ->
       else
         @show()
     update: ->
-      content = @wysiwym.getValue()
-      # Parse value
-      profileName = @jencil.documentType.getProfileName()
-      parserSet = @jencil.options.previewParserSets.markdown
-      if parserSet?
-        url = parserSet[0]
-        val = parserSet[1]
-        method = parserSet[2]
-        $.ajax(
-          type: method
-          dataType: 'text'
-          url: url
-          data: "#{val}=#{encodeURIComponent content}"
-          success: (data) =>
-            @write data
-        )
+      _update = =>
+        content = @wysiwym.getValue()
+        if Jencil.profile.previewPraserPath?
+          $.ajax(
+            type: Jencil.profile.previewParserMethod ? 'GET'
+            dataType: 'text'
+            url: @jencil.abspath Jencil.profile.previewParserPath
+            data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+            success: (data) =>
+              @write data
+          )
+        else
+          @write content
+      if Jencil.profile?
+        _update()
       else
-        @write content
+        setTimeout ->
+          if Jencil.profile?
+            _update()
+          else
+            setTimeout arguments.callee, 100
+        , 100
     write: (content) ->
       @$surface.load @jencil.options.previewTemplatePath, (response, status, xhr) ->
         $(this).html $(this).html().replace '{{content}}', content

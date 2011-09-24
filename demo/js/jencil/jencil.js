@@ -79,10 +79,6 @@
       root: void 0,
       profileSetPath: '~/profiles',
       previewTemplatePath: '~/templates/preview.html',
-      previewParserSets: {
-        http: void 0,
-        markdown: void 0
-      },
       previewPosition: 'right',
       defaultProfileName: 'html',
       defaultInsertText: '*',
