@@ -7,6 +7,9 @@ namespace 'Jencil.widgets', (exports) ->
       when 's', 'simple'
         [cls, name, before, after, insert] = args
         return new SimpleMarkupButton jencil, cls, name, before, after, insert
+      when 'e', 'eachline'
+        [cls, name, before, after, blockBefore, blockAfter] = args
+        return new EachlineMarkupButton jencil, cls, name, before, after, blockBefore, blockAfter
       when 'l', 'link'
         [formatstr] = args
         return new LinkMarkupButton jencil, formatstr
@@ -34,16 +37,45 @@ namespace 'Jencil.widgets', (exports) ->
       @$element.attr 'href', '#'
       @$element.attr 'title', name
       @$element.append $("<span>#{name}</span>")
-  exports.SimpleMarkupButton = class SimpleMarkupButton extends Button
-    constructor: (jencil, cls, name, before, after, insert) ->
-      super jencil, cls, name
-      @$element.click =>
-        @jencil.editor().wrapSelected before, after, true, insert or @jencil.options.defaultInsertText
   exports.FormatMarkupButton = class FormatMarkupButton extends Button
     format: (formatstr, kwargs) ->
       for key, value of kwargs
         formatstr = formatstr.replace "{{#{key}}}", value
       return formatstr
+  exports.SimpleMarkupButton = class SimpleMarkupButton extends Button
+    constructor: (jencil, cls, name, before, after, insert) ->
+      super jencil, cls, name
+      @$element.click =>
+        @jencil.editor().wrapSelected before, after, true, insert or @jencil.options.defaultInsertText
+  exports.EachlineMarkupButton = class EachlineMarkupButton extends Button
+    constructor: (jencil, cls, name, before, after, blockBefore, blockAfter) ->
+      super jencil, cls, name
+      @$element.click =>
+        selectedLines = @jencil.editor().getSelected().split '\n'
+        for i in [0...selectedLines.length]
+          _before = before.replace '{{i}}', i+1
+          _after = after.replace '{{i}}', i+1
+          selectedLine = selectedLines[i]
+          if selectedLine is blockBefore or selectedLine is blockAfter
+            continue
+          if selectedLine.startsWith(_before) and selectedLine.endsWith(_after)
+            # Unlist
+            selectedLines[i] = selectedLine.substring(_before.length, selectedLine.length-_after.length)
+          else
+            selectedLines[i] = "#{_before}#{selectedLines[i]}#{_after}"
+        if blockBefore?
+          if selectedLines[0] is blockBefore
+            selectedLines.shift()
+          else
+            selectedLines.unshift blockBefore
+        if blockAfter?
+          if selectedLines[selectedLines.length-1] is blockAfter
+            selectedLines.pop()
+          else
+            selectedLines.push blockAfter
+        insert = selectedLines.join '\n'
+        @jencil.editor().replaceSelected insert, true
+  # --- special case buttons
   exports.LinkMarkupButton = class LinkMarkupButton extends FormatMarkupButton
     constructor: (jencil, formatstr) ->
       super jencil, 'link', 'Link'
@@ -74,38 +106,10 @@ namespace 'Jencil.widgets', (exports) ->
           alt: alt
           title: title
         @jencil.editor().replaceSelected insert
-  exports.ListMarkupButton = class ListMarkupButton extends Button
-    constructor: (jencil, cls, name, before, after, blockBefore, blockAfter) ->
-      super jencil, cls, name
-      @$element.click =>
-        selectedLines = @jencil.editor().getSelected().split '\n'
-        for i in [0...selectedLines.length]
-          _before = before.replace '{{i}}', i+1
-          _after = after.replace '{{i}}', i+1
-          selectedLine = selectedLines[i]
-          if selectedLine is blockBefore or selectedLine is blockAfter
-            continue
-          if selectedLine.startsWith(_before) and selectedLine.endsWith(_after)
-            # Unlist
-            selectedLines[i] = selectedLine.substring(_before.length, selectedLine.length-_after.length)
-          else
-            selectedLines[i] = "#{_before}#{selectedLines[i]}#{_after}"
-        if blockBefore?
-          if selectedLines[0] is blockBefore
-            selectedLines.shift()
-          else
-            selectedLines.unshift blockBefore
-        if blockAfter?
-          if selectedLines[selectedLines.length-1] is blockAfter
-            selectedLines.pop()
-          else
-            selectedLines.push blockAfter
-        insert = selectedLines.join '\n'
-        @jencil.editor().replaceSelected insert, true
-  exports.UnorderedListMarkupButton = class UnorderedListMarkupButton extends ListMarkupButton
+  exports.UnorderedListMarkupButton = class UnorderedListMarkupButton extends EachlineMarkupButton
     constructor: (jencil, before, after, blockBefore, blockAfter) ->
       super jencil, 'ul', 'Unordered List', before, after, blockBefore, blockAfter
-  exports.OrderedListMarkupButton = class OrderedListMarkupButton extends ListMarkupButton
+  exports.OrderedListMarkupButton = class OrderedListMarkupButton extends EachlineMarkupButton
     constructor: (jencil, before, after, blockBefore, blockAfter) ->
       super jencil, 'ol', 'Ordered List', before, after, blockBefore, blockAfter
   exports.PreviewButton = class PreviewButton extends Button

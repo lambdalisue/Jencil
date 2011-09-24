@@ -8,7 +8,7 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var Button, FormatMarkupButton, ImageMarkupButton, LinkMarkupButton, ListMarkupButton, OrderedListMarkupButton, PreviewButton, Separator, SimpleMarkupButton, UnorderedListMarkupButton, Widget, createButton;
+    var Button, EachlineMarkupButton, FormatMarkupButton, ImageMarkupButton, LinkMarkupButton, OrderedListMarkupButton, PreviewButton, Separator, SimpleMarkupButton, UnorderedListMarkupButton, Widget, createButton;
     Widget = Jencil.widgets.Widget;
     exports.createButton = createButton = function(jencil, type, args) {
       var after, before, blockAfter, blockBefore, cls, formatstr, insert, name;
@@ -20,6 +20,10 @@
         case 'simple':
           cls = args[0], name = args[1], before = args[2], after = args[3], insert = args[4];
           return new SimpleMarkupButton(jencil, cls, name, before, after, insert);
+        case 'e':
+        case 'eachline':
+          cls = args[0], name = args[1], before = args[2], after = args[3], blockBefore = args[4], blockAfter = args[5];
+          return new EachlineMarkupButton(jencil, cls, name, before, after, blockBefore, blockAfter);
         case 'l':
         case 'link':
           formatstr = args[0];
@@ -62,16 +66,6 @@
       }
       return Button;
     })();
-    exports.SimpleMarkupButton = SimpleMarkupButton = (function() {
-      __extends(SimpleMarkupButton, Button);
-      function SimpleMarkupButton(jencil, cls, name, before, after, insert) {
-        SimpleMarkupButton.__super__.constructor.call(this, jencil, cls, name);
-        this.$element.click(__bind(function() {
-          return this.jencil.editor().wrapSelected(before, after, true, insert || this.jencil.options.defaultInsertText);
-        }, this));
-      }
-      return SimpleMarkupButton;
-    })();
     exports.FormatMarkupButton = FormatMarkupButton = (function() {
       __extends(FormatMarkupButton, Button);
       function FormatMarkupButton() {
@@ -86,6 +80,56 @@
         return formatstr;
       };
       return FormatMarkupButton;
+    })();
+    exports.SimpleMarkupButton = SimpleMarkupButton = (function() {
+      __extends(SimpleMarkupButton, Button);
+      function SimpleMarkupButton(jencil, cls, name, before, after, insert) {
+        SimpleMarkupButton.__super__.constructor.call(this, jencil, cls, name);
+        this.$element.click(__bind(function() {
+          return this.jencil.editor().wrapSelected(before, after, true, insert || this.jencil.options.defaultInsertText);
+        }, this));
+      }
+      return SimpleMarkupButton;
+    })();
+    exports.EachlineMarkupButton = EachlineMarkupButton = (function() {
+      __extends(EachlineMarkupButton, Button);
+      function EachlineMarkupButton(jencil, cls, name, before, after, blockBefore, blockAfter) {
+        EachlineMarkupButton.__super__.constructor.call(this, jencil, cls, name);
+        this.$element.click(__bind(function() {
+          var i, insert, selectedLine, selectedLines, _after, _before, _ref;
+          selectedLines = this.jencil.editor().getSelected().split('\n');
+          for (i = 0, _ref = selectedLines.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
+            _before = before.replace('{{i}}', i + 1);
+            _after = after.replace('{{i}}', i + 1);
+            selectedLine = selectedLines[i];
+            if (selectedLine === blockBefore || selectedLine === blockAfter) {
+              continue;
+            }
+            if (selectedLine.startsWith(_before) && selectedLine.endsWith(_after)) {
+              selectedLines[i] = selectedLine.substring(_before.length, selectedLine.length - _after.length);
+            } else {
+              selectedLines[i] = "" + _before + selectedLines[i] + _after;
+            }
+          }
+          if (blockBefore != null) {
+            if (selectedLines[0] === blockBefore) {
+              selectedLines.shift();
+            } else {
+              selectedLines.unshift(blockBefore);
+            }
+          }
+          if (blockAfter != null) {
+            if (selectedLines[selectedLines.length - 1] === blockAfter) {
+              selectedLines.pop();
+            } else {
+              selectedLines.push(blockAfter);
+            }
+          }
+          insert = selectedLines.join('\n');
+          return this.jencil.editor().replaceSelected(insert, true);
+        }, this));
+      }
+      return EachlineMarkupButton;
     })();
     exports.LinkMarkupButton = LinkMarkupButton = (function() {
       __extends(LinkMarkupButton, FormatMarkupButton);
@@ -143,55 +187,15 @@
       }
       return ImageMarkupButton;
     })();
-    exports.ListMarkupButton = ListMarkupButton = (function() {
-      __extends(ListMarkupButton, Button);
-      function ListMarkupButton(jencil, cls, name, before, after, blockBefore, blockAfter) {
-        ListMarkupButton.__super__.constructor.call(this, jencil, cls, name);
-        this.$element.click(__bind(function() {
-          var i, insert, selectedLine, selectedLines, _after, _before, _ref;
-          selectedLines = this.jencil.editor().getSelected().split('\n');
-          for (i = 0, _ref = selectedLines.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-            _before = before.replace('{{i}}', i + 1);
-            _after = after.replace('{{i}}', i + 1);
-            selectedLine = selectedLines[i];
-            if (selectedLine === blockBefore || selectedLine === blockAfter) {
-              continue;
-            }
-            if (selectedLine.startsWith(_before) && selectedLine.endsWith(_after)) {
-              selectedLines[i] = selectedLine.substring(_before.length, selectedLine.length - _after.length);
-            } else {
-              selectedLines[i] = "" + _before + selectedLines[i] + _after;
-            }
-          }
-          if (blockBefore != null) {
-            if (selectedLines[0] === blockBefore) {
-              selectedLines.shift();
-            } else {
-              selectedLines.unshift(blockBefore);
-            }
-          }
-          if (blockAfter != null) {
-            if (selectedLines[selectedLines.length - 1] === blockAfter) {
-              selectedLines.pop();
-            } else {
-              selectedLines.push(blockAfter);
-            }
-          }
-          insert = selectedLines.join('\n');
-          return this.jencil.editor().replaceSelected(insert, true);
-        }, this));
-      }
-      return ListMarkupButton;
-    })();
     exports.UnorderedListMarkupButton = UnorderedListMarkupButton = (function() {
-      __extends(UnorderedListMarkupButton, ListMarkupButton);
+      __extends(UnorderedListMarkupButton, EachlineMarkupButton);
       function UnorderedListMarkupButton(jencil, before, after, blockBefore, blockAfter) {
         UnorderedListMarkupButton.__super__.constructor.call(this, jencil, 'ul', 'Unordered List', before, after, blockBefore, blockAfter);
       }
       return UnorderedListMarkupButton;
     })();
     exports.OrderedListMarkupButton = OrderedListMarkupButton = (function() {
-      __extends(OrderedListMarkupButton, ListMarkupButton);
+      __extends(OrderedListMarkupButton, EachlineMarkupButton);
       function OrderedListMarkupButton(jencil, before, after, blockBefore, blockAfter) {
         OrderedListMarkupButton.__super__.constructor.call(this, jencil, 'ol', 'Ordered List', before, after, blockBefore, blockAfter);
       }
