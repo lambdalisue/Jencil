@@ -18,7 +18,7 @@ See `Demo <http://demos.jencil.hashnote.net>`_ for what this editor can do.
 
 Screenshots
 ======================
-.. image:: http://raw.github.com/lambdalisue/Jencil/master/img/screenshot01.png
+.. image:: https://raw.github.com/lambdalisue/Jencil/master/img/screenshot01.png
 
-.. image:: http://raw.github.com/lambdalisue/Jencil/master/img/screenshot02.png
+.. image:: https://raw.github.com/lambdalisue/Jencil/master/img/screenshot02.png
 
