@@ -32,29 +32,19 @@ namespace 'Jencil.widgets', (exports) ->
     update: ->
       _update = =>
         content = @wysiwym.getValue()
-        if Jencil.profile.previewPraserPath?
-          $.ajax
-            type: 'GET'
-            dataType: 'html'
-            url: 'js/jencil/parsers/markdown.cgi'
-            data: "data=#{encodeURIComponent content}"
-            success: (response) =>
-              console.log response
-              @write response
+        if Jencil.profile.previewParserPath?
+          $.ajax(
+            type: Jencil.profile.previewParserMethod ? 'GET'
+            dataType: 'text'
+            global: false
+            url: @jencil.abspath Jencil.profile.previewParserPath
+            data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+            success: (data) =>
+              @write data
             error: (xhr, status, error) ->
-              console.log xhr, status, error
-          #$.ajax(
-          #  type: Jencil.profile.previewParserMethod ? 'GET'
-          #  dataType: 'text'
-          #  global: false
-          #  url: @jencil.abspath Jencil.profile.previewParserPath
-          #  data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
-          #  success: (data) =>
-          #    @write data
-          #  error: (xhr, status, error) ->
-          #    console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
-          #    throw new Error error
-          #)
+              console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
+              throw new Error error
+          )
         else
           @write content
       if Jencil.profile?

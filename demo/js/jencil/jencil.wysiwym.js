@@ -53,20 +53,21 @@
       Preview.prototype.update = function() {
         var _update;
         _update = __bind(function() {
-          var content;
+          var content, _ref, _ref2;
           content = this.wysiwym.getValue();
-          if (Jencil.profile.previewPraserPath != null) {
+          if (Jencil.profile.previewParserPath != null) {
             return $.ajax({
-              type: 'GET',
-              dataType: 'html',
-              url: 'js/jencil/parsers/markdown.cgi',
-              data: "data=" + (encodeURIComponent(content)),
-              success: __bind(function(response) {
-                console.log(response);
-                return this.write(response);
+              type: (_ref = Jencil.profile.previewParserMethod) != null ? _ref : 'GET',
+              dataType: 'text',
+              global: false,
+              url: this.jencil.abspath(Jencil.profile.previewParserPath),
+              data: "" + ((_ref2 = Jencil.profile.previewParserVal) != null ? _ref2 : 'data') + "=" + (encodeURIComponent(content)),
+              success: __bind(function(data) {
+                return this.write(data);
               }, this),
               error: function(xhr, status, error) {
-                return console.log(xhr, status, error);
+                console.log("xhr: " + xhr + ", status: " + status + ", error: " + error);
+                throw new Error(error);
               }
             });
           } else {
