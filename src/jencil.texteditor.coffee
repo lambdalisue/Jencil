@@ -4,13 +4,20 @@ namespace 'Jencil.widgets', (exports) ->
   class TextArea extends Widget
     constructor: (jencil, @holder) ->
       super jencil, 'jencil-textarea'
-      @jencil.$textarea.addClass 'surface'
-      @controller = new Textarea @jencil.$textarea
+      @$source = @jencil.$textarea
+      @$surface = new $('<textarea>').addClass 'surface'
+      @$surface.val @$source.val()
+      @$surface.bind 'keyup change click blur enter', =>
+        @update()
+      @$surface.appendTo @$element
+      @controller = new Textarea @$surface
+    update: ->
+      @$source.val @$surface.val()
   class Preview extends Widget
     constructor: (jencil, @holder) ->
-      super jencil, 'jencil-preview', 'div'
-      @$surface = $('<div>').addClass 'surface'
-      @$element.append @$surface
+      super jencil, 'jencil-preview'
+      @$surface = new $('<div>').addClass 'surface'
+      @$surface.appendTo @$element
       @holder.textarea.$element.bind 'keyup change click blur enter', =>
         @update()
       @show()
@@ -55,8 +62,10 @@ namespace 'Jencil.widgets', (exports) ->
             setTimeout arguments.callee, 100
         , 100
     write: (content) ->
-      @$surface.load @jencil.options.previewTemplatePath, (response, status, xhr) ->
-        $(this).html $(this).html().replace '{{content}}', content
+      url = @jencil.options.previewTemplatePath
+      @$surface.load url, (response, status, xhr) ->
+        $$ = $(this)
+        $$.html $$.html().replace '{{content}}', content
   # What You See Is What You Mean (Markup text)
   exports.TextEditor = class TextEditor extends Editor
     constructor: (jencil) ->
@@ -64,7 +73,10 @@ namespace 'Jencil.widgets', (exports) ->
       @$element.addClass "preview-position-#{@jencil.options.previewPosition}"
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
+      @append @textarea
+      @append @preview
     update: ->
+      @textarea.update()
       @preview.update()
     getValue: ->
       return @textarea.controller.getValue()

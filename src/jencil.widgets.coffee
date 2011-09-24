@@ -1,10 +1,7 @@
 namespace 'Jencil.widgets', (exports) ->
   exports.Widget = class Widget
     constructor: (@jencil, cls, type='div') ->
-      if type instanceof window.jQuery
-        @$element = type.addClass cls
-      else
-        @$element = $("<#{type}>").addClass cls
+      @$element = $("<#{type}>").addClass cls
     after: (widget) ->
       @$element.after widget.$element
     append: (widget) ->

@@ -15,11 +15,7 @@
         if (type == null) {
           type = 'div';
         }
-        if (type instanceof window.jQuery) {
-          this.$element = type.addClass(cls);
-        } else {
-          this.$element = $("<" + type + ">").addClass(cls);
-        }
+        this.$element = $("<" + type + ">").addClass(cls);
       }
       Widget.prototype.after = function(widget) {
         return this.$element.after(widget.$element);

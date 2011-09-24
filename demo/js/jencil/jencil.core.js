@@ -40,7 +40,8 @@
         this.$textarea = $textarea;
         this.options = options;
         this.$element = $('<div>').addClass('jencil');
-        this.$textarea.wrap(this.$element);
+        this.$textarea.after(this.$element);
+        this.$textarea.hide();
         this.buttonHolder = new Jencil.widgets.ButtonHolder(this);
         this.documentType = new Jencil.widgets.DocumentType(this);
         this.toolbar = new Jencil.widgets.Toolbar(this);
@@ -49,12 +50,10 @@
         this.workspace = new Jencil.widgets.Workspace(this);
         this.texteditor = new Jencil.widgets.TextEditor(this);
         this.richeditor = new Jencil.widgets.RichEditor(this);
-        this.$textarea.before(this.toolbar.$element);
-        this.$textarea.wrap(this.workspace.$element);
-        this.$textarea.after(this.richeditor.$element);
-        this.$textarea.wrap(this.texteditor.$element);
-        this.$textarea.after(this.texteditor.preview.$element);
-        this.$textarea.wrap(this.texteditor.textarea.$element);
+        this.workspace.append(this.texteditor);
+        this.workspace.append(this.richeditor);
+        this.$element.append(this.toolbar.$element);
+        this.$element.append(this.workspace.$element);
       }
       JencilCore.prototype.abspath = function(path) {
         return Jencil.core.abspath(path, this.options.root);

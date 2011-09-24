@@ -16,18 +16,27 @@
       function TextArea(jencil, holder) {
         this.holder = holder;
         TextArea.__super__.constructor.call(this, jencil, 'jencil-textarea');
-        this.jencil.$textarea.addClass('surface');
-        this.controller = new Textarea(this.jencil.$textarea);
+        this.$source = this.jencil.$textarea;
+        this.$surface = new $('<textarea>').addClass('surface');
+        this.$surface.val(this.$source.val());
+        this.$surface.bind('keyup change click blur enter', __bind(function() {
+          return this.update();
+        }, this));
+        this.$surface.appendTo(this.$element);
+        this.controller = new Textarea(this.$surface);
       }
+      TextArea.prototype.update = function() {
+        return this.$source.val(this.$surface.val());
+      };
       return TextArea;
     })();
     Preview = (function() {
       __extends(Preview, Widget);
       function Preview(jencil, holder) {
         this.holder = holder;
-        Preview.__super__.constructor.call(this, jencil, 'jencil-preview', 'div');
-        this.$surface = $('<div>').addClass('surface');
-        this.$element.append(this.$surface);
+        Preview.__super__.constructor.call(this, jencil, 'jencil-preview');
+        this.$surface = new $('<div>').addClass('surface');
+        this.$surface.appendTo(this.$element);
         this.holder.textarea.$element.bind('keyup change click blur enter', __bind(function() {
           return this.update();
         }, this));
@@ -84,8 +93,12 @@
         }
       };
       Preview.prototype.write = function(content) {
-        return this.$surface.load(this.jencil.options.previewTemplatePath, function(response, status, xhr) {
-          return $(this).html($(this).html().replace('{{content}}', content));
+        var url;
+        url = this.jencil.options.previewTemplatePath;
+        return this.$surface.load(url, function(response, status, xhr) {
+          var $$;
+          $$ = $(this);
+          return $$.html($$.html().replace('{{content}}', content));
         });
       };
       return Preview;
@@ -97,8 +110,11 @@
         this.$element.addClass("preview-position-" + this.jencil.options.previewPosition);
         this.textarea = new TextArea(this.jencil, this);
         this.preview = new Preview(this.jencil, this);
+        this.append(this.textarea);
+        this.append(this.preview);
       }
       TextEditor.prototype.update = function() {
+        this.textarea.update();
         return this.preview.update();
       };
       TextEditor.prototype.getValue = function() {

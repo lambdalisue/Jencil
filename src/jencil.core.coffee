@@ -27,7 +27,8 @@ namespace 'Jencil.core', (exports) ->
     constructor: (@$textarea, @options) ->
       # --- construct wrapper
       @$element = $('<div>').addClass 'jencil'
-      @$textarea.wrap @$element
+      @$textarea.after @$element
+      @$textarea.hide()
       # --- construct toolbar
       @buttonHolder = new Jencil.widgets.ButtonHolder @
       @documentType = new Jencil.widgets.DocumentType @
@@ -38,13 +39,11 @@ namespace 'Jencil.core', (exports) ->
       @workspace = new Jencil.widgets.Workspace @
       @texteditor = new Jencil.widgets.TextEditor @
       @richeditor = new Jencil.widgets.RichEditor @
+      @workspace.append @texteditor
+      @workspace.append @richeditor
       # --- arrange
-      @$textarea.before @toolbar.$element
-      @$textarea.wrap @workspace.$element
-      @$textarea.after @richeditor.$element
-      @$textarea.wrap @texteditor.$element
-      @$textarea.after @texteditor.preview.$element
-      @$textarea.wrap @texteditor.textarea.$element
+      @$element.append @toolbar.$element
+      @$element.append @workspace.$element
     abspath: (path) ->
       return Jencil.core.abspath path, @options.root
     editor: ->
