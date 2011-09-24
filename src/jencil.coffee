@@ -60,8 +60,8 @@ $.fn.jencil = (options) ->
     ['js/jencil/jencil.core.js', 'window.Jencil.core']
     ['js/jencil/jencil.widgets.js', 'window.Jencil.widgets']
     ['js/jencil/jencil.buttons.js', 'window.Jencil.widgets.Button']
-    ['js/jencil/jencil.wysiwym.js', 'window.Jencil.widgets.Wysiwym']
-    ['js/jencil/jencil.wysiwyg.js', 'window.Jencil.widgets.Wysiwyg']
+    ['js/jencil/jencil.texteditor.js', 'window.Jencil.widgets.TextEditor']
+    ['js/jencil/jencil.richeditor.js', 'window.Jencil.widgets.RichEditor']
   ]
   # --- /develop mode code
   Jencil.utils.load requires, =>

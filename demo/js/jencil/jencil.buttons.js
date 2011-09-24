@@ -71,7 +71,7 @@
         this.clickCallback = void 0;
         this.clickAfterCallback = __bind(function() {
           console.log('clickAfterCallback');
-          return this.jencil.wysiwym.preview.update();
+          return this.jencil.editor().update();
         }, this);
         this.$element.click(__bind(function() {
           if (this.clickBeforeCallback != null) {
@@ -237,7 +237,8 @@
       function PreviewButton(jencil) {
         PreviewButton.__super__.constructor.call(this, jencil, 'preview', 'Preview');
         this.clickCallback = __bind(function() {
-          return this.jencil.wysiwym.preview.toggle();
+          var _ref;
+          return (_ref = this.jencil.editor().preview) != null ? _ref.toggle() : void 0;
         }, this);
         this.clickAfterCallback = void 0;
       }

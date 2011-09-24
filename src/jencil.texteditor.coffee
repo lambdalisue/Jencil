@@ -2,29 +2,29 @@ namespace 'Jencil.widgets', (exports) ->
   Widget = Jencil.widgets.Widget
   Editor = Jencil.widgets.Editor
   class TextArea extends Widget
-    constructor: (jencil, @wysiwym) ->
-      super jencil, 'jencil-wysiwym-textarea'
+    constructor: (jencil, @holder) ->
+      super jencil, 'jencil-textarea'
       @jencil.$textarea.addClass 'surface'
       @controller = new Textarea @jencil.$textarea
   class Preview extends Widget
-    constructor: (jencil, @wysiwym) ->
-      super jencil, 'jencil-wysiwym-preview', 'div'
+    constructor: (jencil, @holder) ->
+      super jencil, 'jencil-preview', 'div'
       @$surface = $('<div>').addClass 'surface'
       @$element.append @$surface
-      @wysiwym.textarea.$element.bind 'keyup change click blur enter', =>
+      @holder.textarea.$element.bind 'keyup change click blur enter', =>
         @update()
       @show()
     show: ->
       @update()
       # Quickfix to set attr twice with different instance
       @$element.parent().addClass 'preview-enable'
-      @wysiwym.$element.addClass 'preview-enable'
+      @holder.$element.addClass 'preview-enable'
       @$element.show()
     hide: ->
       @$element.hide()
       # Quickfix to set attr twice with different instance
       @$element.parent().removeClass 'preview-enable'
-      @wysiwym.$element.removeClass 'preview-enable'
+      @holder.$element.removeClass 'preview-enable'
     toggle: ->
       if @$element.is ':visible'
         @hide()
@@ -32,7 +32,7 @@ namespace 'Jencil.widgets', (exports) ->
         @show()
     update: ->
       _update = =>
-        content = @wysiwym.getValue()
+        content = @holder.getValue()
         if Jencil.profile.previewParserPath?
           $.ajax(
             type: Jencil.profile.previewParserMethod ? 'GET'
@@ -42,9 +42,6 @@ namespace 'Jencil.widgets', (exports) ->
             data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
             success: (data) =>
               @write data
-            error: (xhr, status, error) ->
-              console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
-              throw new Error error
           )
         else
           @write content
@@ -61,12 +58,14 @@ namespace 'Jencil.widgets', (exports) ->
       @$surface.load @jencil.options.previewTemplatePath, (response, status, xhr) ->
         $(this).html $(this).html().replace '{{content}}', content
   # What You See Is What You Mean (Markup text)
-  exports.Wysiwym = class Wysiwym extends Editor
+  exports.TextEditor = class TextEditor extends Editor
     constructor: (jencil) ->
-      super jencil, 'jencil-wysiwym-editor', 'div'
+      super jencil, 'jencil-text-editor', 'div'
       @$element.addClass "preview-position-#{@jencil.options.previewPosition}"
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
+    update: ->
+      @preview.update()
     getValue: ->
       return @textarea.controller.getValue()
     getSelection: ->

@@ -47,20 +47,20 @@
         this.toolbar.append(this.buttonHolder);
         this.toolbar.append(this.documentType);
         this.workspace = new Jencil.widgets.Workspace(this);
-        this.wysiwym = new Jencil.widgets.Wysiwym(this);
-        this.wysiwyg = new Jencil.widgets.Wysiwyg(this);
+        this.texteditor = new Jencil.widgets.TextEditor(this);
+        this.richeditor = new Jencil.widgets.RichEditor(this);
         this.$textarea.before(this.toolbar.$element);
         this.$textarea.wrap(this.workspace.$element);
-        this.$textarea.after(this.wysiwyg.$element);
-        this.$textarea.wrap(this.wysiwym.$element);
-        this.$textarea.after(this.wysiwym.preview.$element);
-        this.$textarea.wrap(this.wysiwym.textarea.$element);
+        this.$textarea.after(this.richeditor.$element);
+        this.$textarea.wrap(this.texteditor.$element);
+        this.$textarea.after(this.texteditor.preview.$element);
+        this.$textarea.wrap(this.texteditor.textarea.$element);
       }
       JencilCore.prototype.abspath = function(path) {
         return Jencil.core.abspath(path, this.options.root);
       };
       JencilCore.prototype.editor = function() {
-        return this.wysiwym;
+        return this.texteditor;
       };
       return JencilCore;
     })();

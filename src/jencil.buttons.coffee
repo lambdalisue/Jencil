@@ -45,7 +45,7 @@ namespace 'Jencil.widgets', (exports) ->
       @clickAfterCallback = =>
         console.log 'clickAfterCallback'
         # Update preview
-        @jencil.wysiwym.preview.update()
+        @jencil.editor().update()
       @$element.click =>
         if @clickBeforeCallback? then @clickBeforeCallback()
         if @clickCallback? then @clickCallback()
@@ -135,7 +135,7 @@ namespace 'Jencil.widgets', (exports) ->
     constructor: (jencil) ->
       super jencil, 'preview', 'Preview'
       @clickCallback = =>
-        @jencil.wysiwym.preview.toggle()
+        @jencil.editor().preview?.toggle()
       @clickAfterCallback = undefined
 
 

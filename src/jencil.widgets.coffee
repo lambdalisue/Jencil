@@ -1,11 +1,10 @@
 namespace 'Jencil.widgets', (exports) ->
   exports.Widget = class Widget
     constructor: (@jencil, cls, type='div') ->
-      if type instanceof jQuery
+      if type instanceof window.jQuery
         @$element = type.addClass cls
       else
         @$element = $("<#{type}>").addClass cls
-
     after: (widget) ->
       @$element.after widget.$element
     append: (widget) ->
@@ -49,8 +48,8 @@ namespace 'Jencil.widgets', (exports) ->
           args = buttonset[1..buttonset.length]
           button = Jencil.widgets.createButton @jencil, type, args
           @append button
-        # Update preview as well
-        @jencil.wysiwym.preview.update()
+        # Update editor as well
+        @jencil.editor().update()
 
   exports.Toolbar = class Toolbar extends Widget
     constructor: (jencil) ->
@@ -61,6 +60,8 @@ namespace 'Jencil.widgets', (exports) ->
   exports.Editor = class Editor extends Widget
     constructor: (jencil, cls, type) ->
       super jencil, cls, type
+    update: ->
+      # Update function
     getValue: ->
       throw new Error "Subclass must override this method."
     getSelection: ->

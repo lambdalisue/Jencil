@@ -8,14 +8,14 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var Editor, Preview, TextArea, Widget, Wysiwym;
+    var Editor, Preview, TextArea, TextEditor, Widget;
     Widget = Jencil.widgets.Widget;
     Editor = Jencil.widgets.Editor;
     TextArea = (function() {
       __extends(TextArea, Widget);
-      function TextArea(jencil, wysiwym) {
-        this.wysiwym = wysiwym;
-        TextArea.__super__.constructor.call(this, jencil, 'jencil-wysiwym-textarea');
+      function TextArea(jencil, holder) {
+        this.holder = holder;
+        TextArea.__super__.constructor.call(this, jencil, 'jencil-textarea');
         this.jencil.$textarea.addClass('surface');
         this.controller = new Textarea(this.jencil.$textarea);
       }
@@ -23,12 +23,12 @@
     })();
     Preview = (function() {
       __extends(Preview, Widget);
-      function Preview(jencil, wysiwym) {
-        this.wysiwym = wysiwym;
-        Preview.__super__.constructor.call(this, jencil, 'jencil-wysiwym-preview', 'div');
+      function Preview(jencil, holder) {
+        this.holder = holder;
+        Preview.__super__.constructor.call(this, jencil, 'jencil-preview', 'div');
         this.$surface = $('<div>').addClass('surface');
         this.$element.append(this.$surface);
-        this.wysiwym.textarea.$element.bind('keyup change click blur enter', __bind(function() {
+        this.holder.textarea.$element.bind('keyup change click blur enter', __bind(function() {
           return this.update();
         }, this));
         this.show();
@@ -36,13 +36,13 @@
       Preview.prototype.show = function() {
         this.update();
         this.$element.parent().addClass('preview-enable');
-        this.wysiwym.$element.addClass('preview-enable');
+        this.holder.$element.addClass('preview-enable');
         return this.$element.show();
       };
       Preview.prototype.hide = function() {
         this.$element.hide();
         this.$element.parent().removeClass('preview-enable');
-        return this.wysiwym.$element.removeClass('preview-enable');
+        return this.holder.$element.removeClass('preview-enable');
       };
       Preview.prototype.toggle = function() {
         if (this.$element.is(':visible')) {
@@ -55,7 +55,7 @@
         var _update;
         _update = __bind(function() {
           var content, _ref, _ref2;
-          content = this.wysiwym.getValue();
+          content = this.holder.getValue();
           if (Jencil.profile.previewParserPath != null) {
             return $.ajax({
               type: (_ref = Jencil.profile.previewParserMethod) != null ? _ref : 'GET',
@@ -65,11 +65,7 @@
               data: "" + ((_ref2 = Jencil.profile.previewParserVal) != null ? _ref2 : 'data') + "=" + (encodeURIComponent(content)),
               success: __bind(function(data) {
                 return this.write(data);
-              }, this),
-              error: function(xhr, status, error) {
-                console.log("xhr: " + xhr + ", status: " + status + ", error: " + error);
-                throw new Error(error);
-              }
+              }, this)
             });
           } else {
             return this.write(content);
@@ -94,45 +90,48 @@
       };
       return Preview;
     })();
-    return exports.Wysiwym = Wysiwym = (function() {
-      __extends(Wysiwym, Editor);
-      function Wysiwym(jencil) {
-        Wysiwym.__super__.constructor.call(this, jencil, 'jencil-wysiwym-editor', 'div');
+    return exports.TextEditor = TextEditor = (function() {
+      __extends(TextEditor, Editor);
+      function TextEditor(jencil) {
+        TextEditor.__super__.constructor.call(this, jencil, 'jencil-text-editor', 'div');
         this.$element.addClass("preview-position-" + this.jencil.options.previewPosition);
         this.textarea = new TextArea(this.jencil, this);
         this.preview = new Preview(this.jencil, this);
       }
-      Wysiwym.prototype.getValue = function() {
+      TextEditor.prototype.update = function() {
+        return this.preview.update();
+      };
+      TextEditor.prototype.getValue = function() {
         return this.textarea.controller.getValue();
       };
-      Wysiwym.prototype.getSelection = function() {
+      TextEditor.prototype.getSelection = function() {
         return this.textarea.controller.getSelection();
       };
-      Wysiwym.prototype.setSelection = function(start, end) {
+      TextEditor.prototype.setSelection = function(start, end) {
         return this.textarea.controller.setSelection(start, end);
       };
-      Wysiwym.prototype.getSelected = function() {
+      TextEditor.prototype.getSelected = function() {
         return this.textarea.controller.getSelected();
       };
-      Wysiwym.prototype.replaceSelected = function(str, select) {
+      TextEditor.prototype.replaceSelected = function(str, select) {
         if (select == null) {
           select = false;
         }
         return this.textarea.controller.replaceSelected(str, select);
       };
-      Wysiwym.prototype.insertBeforeSelected = function(str, select) {
+      TextEditor.prototype.insertBeforeSelected = function(str, select) {
         if (select == null) {
           select = false;
         }
         return this.textarea.controller.insertBeforeSelected(str, select);
       };
-      Wysiwym.prototype.insertAfterSelected = function(str, select) {
+      TextEditor.prototype.insertAfterSelected = function(str, select) {
         if (select == null) {
           select = false;
         }
         return this.textarea.controller.insertAfterSelected(str, select);
       };
-      Wysiwym.prototype.wrapSelected = function(before, after, select, additional) {
+      TextEditor.prototype.wrapSelected = function(before, after, select, additional) {
         if (select == null) {
           select = false;
         }
@@ -141,7 +140,7 @@
         }
         return this.textarea.controller.wrapSelected(before, after, select, additional);
       };
-      return Wysiwym;
+      return TextEditor;
     })();
   });
 }).call(this);

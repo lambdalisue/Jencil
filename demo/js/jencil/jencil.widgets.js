@@ -15,7 +15,7 @@
         if (type == null) {
           type = 'div';
         }
-        if (type instanceof jQuery) {
+        if (type instanceof window.jQuery) {
           this.$element = type.addClass(cls);
         } else {
           this.$element = $("<" + type + ">").addClass(cls);
@@ -89,7 +89,7 @@
             button = Jencil.widgets.createButton(this.jencil, type, args);
             this.append(button);
           }
-          return this.jencil.wysiwym.preview.update();
+          return this.jencil.editor().update();
         }, this));
       };
       return ButtonHolder;
@@ -113,6 +113,7 @@
       function Editor(jencil, cls, type) {
         Editor.__super__.constructor.call(this, jencil, cls, type);
       }
+      Editor.prototype.update = function() {};
       Editor.prototype.getValue = function() {
         throw new Error("Subclass must override this method.");
       };

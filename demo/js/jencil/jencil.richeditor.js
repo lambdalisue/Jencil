@@ -8,15 +8,15 @@
     return child;
   };
   namespace('Jencil.widgets', function(exports) {
-    var Editor, Widget, Wysiwyg;
+    var Editor, RichEditor, Widget;
     Widget = Jencil.widgets.Widget;
     Editor = Jencil.widgets.Editor;
-    return exports.Wysiwyg = Wysiwyg = (function() {
-      __extends(Wysiwyg, Editor);
-      function Wysiwyg(jencil) {
-        Wysiwyg.__super__.constructor.call(this, jencil, 'jencil-wysiwyg-editor', 'div');
+    return exports.RichEditor = RichEditor = (function() {
+      __extends(RichEditor, Editor);
+      function RichEditor(jencil) {
+        RichEditor.__super__.constructor.call(this, jencil, 'jencil-rich-editor', 'div');
       }
-      return Wysiwyg;
+      return RichEditor;
     })();
   });
 }).call(this);

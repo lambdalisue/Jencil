@@ -36,16 +36,16 @@ namespace 'Jencil.core', (exports) ->
       @toolbar.append @documentType
       # --- construct workspace
       @workspace = new Jencil.widgets.Workspace @
-      @wysiwym = new Jencil.widgets.Wysiwym @
-      @wysiwyg = new Jencil.widgets.Wysiwyg @
+      @texteditor = new Jencil.widgets.TextEditor @
+      @richeditor = new Jencil.widgets.RichEditor @
       # --- arrange
       @$textarea.before @toolbar.$element
       @$textarea.wrap @workspace.$element
-      @$textarea.after @wysiwyg.$element
-      @$textarea.wrap @wysiwym.$element
-      @$textarea.after @wysiwym.preview.$element
-      @$textarea.wrap @wysiwym.textarea.$element
+      @$textarea.after @richeditor.$element
+      @$textarea.wrap @texteditor.$element
+      @$textarea.after @texteditor.preview.$element
+      @$textarea.wrap @texteditor.textarea.$element
     abspath: (path) ->
       return Jencil.core.abspath path, @options.root
     editor: ->
-      return @wysiwym
+      return @texteditor
