@@ -30,6 +30,7 @@ namespace 'Jencil.widgets', (exports) ->
       else
         @show()
     update: ->
+      content = @wysiwym.getValue()
       $.ajax
         type: 'GET'
         dataType: 'html'

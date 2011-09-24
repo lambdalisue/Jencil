@@ -51,6 +51,8 @@
         }
       };
       Preview.prototype.update = function() {
+        var content;
+        content = this.wysiwym.getValue();
         return $.ajax({
           type: 'GET',
           dataType: 'html',
