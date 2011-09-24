@@ -36,10 +36,14 @@ namespace 'Jencil.widgets', (exports) ->
           $.ajax(
             type: Jencil.profile.previewParserMethod ? 'GET'
             dataType: 'text'
+            global: false
             url: @jencil.abspath Jencil.profile.previewParserPath
             data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
             success: (data) =>
               @write data
+            error: (xhr, status, error) ->
+              console.log "xhr: #{xhr}, status: #{status}, error: #{error}"
+              throw new Error error
           )
         else
           @write content

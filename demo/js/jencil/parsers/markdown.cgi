@@ -16,5 +16,4 @@ if 'data' not in form:
 else:
     data = form.getvalue('data', '')
     html = markdown.markdown(data)
-
     print html

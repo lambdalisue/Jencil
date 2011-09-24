@@ -59,11 +59,16 @@
             return $.ajax({
               type: (_ref = Jencil.profile.previewParserMethod) != null ? _ref : 'GET',
               dataType: 'text',
+              global: false,
               url: this.jencil.abspath(Jencil.profile.previewParserPath),
               data: "" + ((_ref2 = Jencil.profile.previewParserVal) != null ? _ref2 : 'data') + "=" + (encodeURIComponent(content)),
               success: __bind(function(data) {
                 return this.write(data);
-              }, this)
+              }, this),
+              error: function(xhr, status, error) {
+                console.log("xhr: " + xhr + ", status: " + status + ", error: " + error);
+                throw new Error(error);
+              }
             });
           } else {
             return this.write(content);
