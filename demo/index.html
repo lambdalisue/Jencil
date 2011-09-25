@@ -13,18 +13,30 @@
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <title>Jencil Demo - Cross browser Markup and WYSIWYG editor</title>
         <!-- DEVELOP VERSION -->
-        <link type="text/css" rel="stylesheet" href="js/jencil.dev/theme/bw/style.css">
         <script type="text/javascript" src="js/jencil.dev/jencil.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('textarea#document-body').jencil({
+                    /*
+                     * if you set documentTypeElement, the target element have to be single element
+                     * what this mean is that you cannot do something like below if there are multiple
+                     * textarea on the html.
+                     *
+                     *     $('textarea').jencil({
+                     *         documentTypeElement: $('select#document-type'),
+                     *         // whatever
+                     *     });
+                     *
+                     * this limitation is because of one-to-one relation between textarea and documentTypeElement.
+                     */
                     documentTypeElement: $('select#document-type'),
-                    //previewPosition: 'bottom'
-                    previewPosition: 'right',
-                    // use development file
+                    extras: {
+                        previewPosition: 'right'
+                    },
                     requires: [
                         ['~/textarea.min.js', 'window.Textarea'],
                         ['~/jencil.core.js', 'window.Jencil.core'],
+                        ['~/jencil.theme.js', 'window.Jencil.theme'],
                         ['~/jencil.widgets.js', 'window.Jencil.widgets'],
                         ['~/jencil.buttons.js', 'window.Jencil.buttons'],
                         ['~/jencil.editors.js', 'window.Jencil.editors'],
@@ -32,23 +44,11 @@
                     ],
                     editors: [
                         ['~/editors/jencil.texteditor.js', 'window.Jencil.editors.TextEditor'],
+                        ['js/jencil.extra/jencil.simpleeditor.js', 'window.Jencil.editors.SimpleEditor'],
                     ]
                 });
             });
         </script>
-        <!-- RELEASE VERSION
-        <link type="text/css" rel="stylesheet" href="js/jencil/theme/bw/style.css">
-        <script type="text/javascript" src="js/jencil/jencil.min.js"></script>
-        <script type="text/javascript">
-            $(function(){
-                $('textarea#document-body').jencil({
-                    documentTypeElement: $('select#document-type'),
-                    //previewPosition: 'bottom'
-                    previewPosition: 'right',
-                });
-            });
-        </script>
-        -->
     </head>
     <body>
         <div id="wrapper">
@@ -61,7 +61,7 @@
                     <select id="document-type">
                         <option value="html">HTML</option>
                         <option value="markdown">Markdown</option>
-                        <option value="rst">reStructuredText (not supported yet)</option>
+                        <option value="js/jencil.extra/profiles/plaintext.js">PlainText</option>
                         <option value="wysiwyg">WYSIWYG (not supported yet)</option>
                     </select>
                     <textarea id="document-body">
@@ -76,6 +76,20 @@ Let it be, let it be.
 Whisper words of wisdom, let it be.
                     </textarea>
                 </p>
+            </section>
+            <section id="handler">
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        var $themeSelector = $('select#jencil-themes');
+                        $themeSelector.change(function(){
+                            Jencil.theme.load($(this).val());
+                        });
+                    });
+                </script>
+                <p><label for="jencil-theme">Theme: </label><select id="jencil-themes">
+                    <option value="default">Default Theme</option>
+                    <option value="empty">No CSS Designed</option>
+                </select></p>
             </section>
             <footer>
                 <span id="copyright">Copyright &copy; 2011 lambdalisue allright reserved.</span>

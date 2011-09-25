@@ -26,8 +26,3 @@ namespace 'Jencil.profile', (exports) ->
       ['-']
       ['PreviewButton']
     ]
-    extra:
-      # TextEditor extra profile
-      previewParserMethod: undefined
-      previewParserPath: undefined
-      previewParserVal: undefined

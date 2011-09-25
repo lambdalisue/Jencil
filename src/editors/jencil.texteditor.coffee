@@ -42,13 +42,13 @@ class Preview extends Jencil.widgets.Widget
   update: ->
     _update = =>
       content = @holder.getValue()
-      if @jencil.profile.previewParserPath?
+      if @jencil.profile.extras?.previewParserPath?
         $.ajax(
-          type: @jencil.profile.previewParserMethod ? 'GET'
+          type: @jencil.profile.extras.previewParserMethod ? 'GET'
           dataType: 'text'
           global: false
-          url: @jencil.profile.previewParserPath
-          data: "#{@jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+          url: @jencil.profile.extras.previewParserPath
+          data: "#{@jencil.profile.extras.previewParserVal ? 'data'}=#{encodeURIComponent content}"
           success: (data) =>
             @write data
         )
@@ -64,23 +64,33 @@ class Preview extends Jencil.widgets.Widget
           setTimeout arguments.callee, 100
       , 100
   write: (content) ->
-    url = @jencil.options.previewTemplatePath
+    url = @jencil.options.extras.previewTemplatePath
     @$surface.load url, (response, status, xhr) ->
       $$ = $(this)
       $$.html $$.html().replace '{{content}}', content
 namespace 'Jencil.editors', (exports) ->
   EditorBase = Jencil.editors.EditorBase
   exports.TextEditor = class TextEditor extends EditorBase
+    @stylesheets: [
+      ['~/jencil.texteditor.css', 'screen, projection']
+    ]
+    @requires: [
+      ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']
+    ]
+    @options: 
+      previewPosition: 'right'
+      previewTemplatePath: '~/templates/preview.html'
+    @setUp: (jencil) ->
+      TextEditor.options.previewTemplatePath = net.hashnote.path.abspath TextEditor.options.previewTemplatePath, jencil.options.root
     constructor: (jencil) ->
       super jencil, 'jencil-text-editor', 'div'
-      @$element.addClass "preview-position-#{@jencil.options.previewPosition}"
+      @$element.addClass "preview-position-#{@jencil.options.extras.previewPosition}"
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
       @append @textarea
       @append @preview
       if $.fn.tabby?
         # Enable TAB and SHIFT+TAB feature with jQuery tabby plugin
-        # http://teddevito.com/demos/textarea.html
         @$element.tabby()
     update: ->
       @textarea.update()

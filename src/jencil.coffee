@@ -12,6 +12,26 @@ window.namespace = (target, name, block) ->
   top    = target
   target = target[item] or= {} for item in name.split '.'
   block target, top
+namespace 'net.hashnote.css', (exports) ->
+  exports.include = include = (url, media='all') ->
+    ###
+    Include outer stylesheet dynamically
+
+    Args:
+        url - an outer stylesheet url
+    ###  
+    link = document.createElement 'link'
+    link.rel = 'stylesheet'
+    link.type = 'text/css'
+    link.media = media
+    link.href = url
+    document.head.appendChild link
+  exports.remove = remove = (pattern) ->
+    pattern = new RegExp "(.*)#{pattern}$"
+    $('link').each (a, tag) ->
+      match = $(tag).get(0).href.match pattern
+      if match?
+        $(tag).remove()
 namespace 'net.hashnote.module', (exports) ->
   exports.include = include = (url) ->
     ###
@@ -116,9 +136,34 @@ namespace 'net.hashnote.path', (exports) ->
       root - script root path, use ``net.hashnote.path.root`` for find it
       prefix - a prefix string. default is '~/'
     ###
-    if path.lastIndexOf('~/', 0) is 0
+    if path.lastIndexOf(prefix, 0) is 0
       path = "#{root}/#{path[2..path.length]}"
     return path
+namespace 'Jencil.theme', (exports) ->
+  exports.root = undefined
+  exports.init = (options) ->
+    exports.root = options.themeSetPath
+    load options.defaultThemeName
+  exports.abspath = abspath = (path) ->
+    return net.hashnote.path.abspath path, Jencil.theme.current
+  exports.load = load = (name) ->
+    if Jencil.theme.current?
+      # --- remove current theme
+      net.hashnote.css.remove "#{Jencil.theme.current}/.*\.css"
+    Jencil.theme.current = "#{Jencil.theme.root}/#{name}"
+    url = "#{Jencil.theme.current}/style.css"
+    media = 'screen, projection'
+    net.hashnote.css.include url, media
+    # --- load current editor css
+    if Jencil.jencils?
+      loadEditorCSS(jencil.editor().constructor) for jencil in Jencil.jencils
+  exports.loadEditorCSS = loadEditorCSS = (editorClass) ->
+    if editorClass.stylesheets?
+      for stylesheet in editorClass.stylesheets
+        [url, media] = stylesheet
+        url = abspath url
+        media ?= 'screen, projection'
+        net.hashnote.css.include url, media
 namespace 'Jencil.loader', (exports) ->
   exports.Loader = class Loader
     ###
@@ -145,12 +190,14 @@ $ = jQuery
 $.fn.jencil = (options) ->
   options = $.extend true, {
     root: undefined
+    editorSetPath: '~/editors'
     profileSetPath: '~/profiles'
-    previewTemplatePath: '~/templates/preview.html'
-    previewPosition: 'right'
+    themeSetPath: '~/theme'
     defaultProfileName: 'html'
+    defaultThemeName: 'default'
     defaultInsertText: '*'
     documentTypeElement: undefined
+    extras: {}
     requires: [
       ['~/textarea.min.js', 'window.Textarea']
       ['~/jencil.core.min.js', 'window.Jencil.core']
@@ -162,9 +209,6 @@ $.fn.jencil = (options) ->
     editors: [
       ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
     ]
-    extras: [
-      ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']      # required to enable TAB feature on TextEditor
-    ]
   }, options
   # Check documentTypeElement
   if @.length > 1 and options.documentTypeElement?
@@ -174,13 +218,13 @@ $.fn.jencil = (options) ->
   # --- parse options
   options.root ?= net.hashnote.path.root 'jencil(\.min)?\.js'
   options.profileSetPath = net.hashnote.path.abspath options.profileSetPath, options.root
-  options.previewTemplatePath = net.hashnote.path.abspath options.previewTemplatePath, options.root
+  options.themeSetPath = net.hashnote.path.abspath options.themeSetPath, options.root
   for i in [0...options.requires.length]
     options.requires[i][0] = net.hashnote.path.abspath options.requires[i][0], options.root
   for i in [0...options.editors.length]
     options.editors[i][0] = net.hashnote.path.abspath options.editors[i][0], options.root
-  for i in [0...options.extras.length]
-    options.extras[i][0] = net.hashnote.path.abspath options.extras[i][0], options.root
+  # --- initialize theme
+  Jencil.theme.init options
   # --- create loader to each textarea
   loaders = []
   @each ->
@@ -188,13 +232,11 @@ $.fn.jencil = (options) ->
   # --- build load script list
   requires = options.requires
   requires = requires.concat options.editors
-  requires = requires.concat options.extras
   net.hashnote.module.loadall requires, =>
-    # Dispose loaders
+    # --- dispose loaders
     for loader in loaders
       loader.dispose()
-    # Attach Jencil to each textarea
+    # --- attach Jencil to each textarea
+    if not Jencil.jencils? then Jencil.jencils = []
     return @each ->
-      jencil = new Jencil.core.JencilCore $(@), options
-      # for develop
-      window.jencil = jencil
+      Jencil.jencils.push new Jencil.core.JencilCore $(@), options

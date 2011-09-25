@@ -31,17 +31,12 @@ namespace 'Jencil.core', (exports) ->
       # --- load default profile
       Jencil.profile.load @, @documentType.getProfileName()
     update: ->
-      # --- remove current editor
-      @_editor?.$element.remove()
-      delete @_editor
-      # --- construct new editor via profile
-      @_editor = new Jencil.editors[@profile.editor] @
-      @workspace.append @_editor
-      # --- update
-      @buttonHolder.update()
-      @editor().update()
+      # --- change editor
+      Jencil.editors.changeEditor @, @profile.editor, =>
+        # --- update
+        @buttonHolder.update()
+        @editor().update()
     editor: ->
       return @_editor
-    utils:
-      abspath: (path) ->
-        return net.hashnote.path.abspath path, @options.root
+    abspath: (path) ->
+      return net.hashnote.path.abspath path, @options.root

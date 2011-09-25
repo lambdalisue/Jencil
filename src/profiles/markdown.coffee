@@ -2,7 +2,7 @@ namespace 'Jencil.profile', (exports) ->
   exports.Profile = class Profile
     name: 'Markdown Profile'
     constructor: (jencil) ->
-      # if you want to prepare something, use this constructor
+      @extras.previewParserPath = jencil.abspath @extras.previewParserPath
     editor: 'TextEditor'
     buttonsets: [
       ['s', 'h1', 'H1', '\n', '\n=================================']
@@ -26,7 +26,7 @@ namespace 'Jencil.profile', (exports) ->
       ['-']
       ['PreviewButton']
     ]
-    extra:
+    extras:
       # TextEditor extra profile
       previewParserMethod: 'GET'
       previewParserPath: '~/parser/markdown.cgi'
