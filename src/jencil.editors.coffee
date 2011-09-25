@@ -7,33 +7,35 @@ namespace 'Jencil.editors', (exports) ->
     cls = Jencil.editors[name]
     if not cls?
       throw new Error "Unknown editor name is passed (name: #{name})"
-    # --- call setup function
-    cls.setUp jencil
+    # --- setup to use the editor
+    initializer = new cls.Initializer jencil
     # --- extends options.extra
-    jencil.options.extras = $.extend true, cls.options, jencil.options.extras
+    jencil.options.extras = $.extend true, initializer.options, jencil.options.extras
     # --- load editor css
-    Jencil.theme.loadEditorCSS cls
+    Jencil.theme.loadall initializer.stylesheets
     # --- load extra required libraries and change editor
-    requires = cls.requires
+    requires = initializer.requires
     for i in [0...requires.length]
       requires[i] = net.hashnote.path.abspath requires[i], jencil.options.root
     net.hashnote.module.loadall requires, =>
-      # --- call teardown function
-      jencil.editor()?.constructor.tearDown jencil
       # --- remove current editor
       jencil._editor?.$element.remove()
       delete jencil._editor
       # --- construct new editor via profile
       jencil._editor = new cls jencil
+      jencil._editor.initializer = initializer
       jencil.workspace.append jencil._editor
       # --- call callback
       callback()
-  exports.Setup = class Setup
-    constructor: (jencil) ->
-      #
+  exports.InitializerBase = class InitializerBase
     requires: []
     stylesheets: []
     options: []
+    constructor: (jencil) ->
+      for i in [0...@requires.length]
+        @requires[i][0] = jencil.abspath @requires[i][0]
+      for i in [0...@stylesheets.length]
+        @stylesheets[i][0] = Jencil.theme.abspath @stylesheets[i][0]
   exports.EditorBase = class EditorBase extends Widget
     ###
     An abstruct class of Jencil editor

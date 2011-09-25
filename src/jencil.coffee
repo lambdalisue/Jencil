@@ -125,7 +125,7 @@ namespace 'net.hashnote.path', (exports) ->
       if match?
         root = match[1]
         # remove trailing slush
-        return root[0..root.length-1]
+        return root = root[0..root.length-1]
     return root
   exports.abspath = abspath = (path, root, prefix='~/') ->
     ###
@@ -156,14 +156,13 @@ namespace 'Jencil.theme', (exports) ->
     net.hashnote.css.include url, media
     # --- load current editor css
     if Jencil.jencils?
-      loadEditorCSS(jencil.editor().constructor) for jencil in Jencil.jencils
-  exports.loadEditorCSS = loadEditorCSS = (editorClass) ->
-    if editorClass.stylesheets?
-      for stylesheet in editorClass.stylesheets
-        [url, media] = stylesheet
-        url = abspath url
-        media ?= 'screen, projection'
-        net.hashnote.css.include url, media
+      for jencil in Jencil.jencils
+        loadall jencil.editor().initializer.stylesheets
+  exports.loadall = loadall = (sets) ->
+    for set in sets
+      [url, media] = set
+      media ?= 'screen, projection'
+      net.hashnote.css.include url, media
 namespace 'Jencil.loader', (exports) ->
   exports.Loader = class Loader
     ###

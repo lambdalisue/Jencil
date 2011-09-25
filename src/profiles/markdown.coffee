@@ -29,5 +29,5 @@ namespace 'Jencil.profile', (exports) ->
     extras:
       # TextEditor extra profile
       previewParserMethod: 'GET'
-      previewParserPath: '~/parser/markdown.cgi'
+      previewParserPath: '~/parsers/markdown.cgi'
       previewParserVal: 'data'

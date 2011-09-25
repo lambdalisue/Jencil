@@ -24,7 +24,6 @@ License:
 """
 __AUTHOR__ = "lambdalisue (lambdalisue@hashnote.net)"
 __VERSION__ = "0.1.0"
-import cgi
 import BaseHTTPServer,CGIHTTPServer
-
+CGIHTTPServer.CGIHTTPRequestHandler.cgi_directories = ['/js/jencil.dev/parsers']
 BaseHTTPServer.HTTPServer(( '127.0.0.1', 8080 ), CGIHTTPServer.CGIHTTPRequestHandler ).serve_forever()

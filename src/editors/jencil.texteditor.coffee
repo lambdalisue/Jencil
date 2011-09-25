@@ -68,20 +68,23 @@ class Preview extends Jencil.widgets.Widget
     @$surface.load url, (response, status, xhr) ->
       $$ = $(this)
       $$.html $$.html().replace '{{content}}', content
+class Initializer extends Jencil.editors.InitializerBase
+    stylesheets: [
+      ['~/jencil.texteditor.css', 'screen, projection']
+    ]
+    requires: [
+      ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']
+    ]
+    options: 
+      previewPosition: 'right'
+      previewTemplatePath: '~/templates/preview.html'
+    constructor: (jencil) ->
+      super jencil
+      @options.previewTemplatePath = jencil.abspath @options.previewTemplatePath
 namespace 'Jencil.editors', (exports) ->
   EditorBase = Jencil.editors.EditorBase
   exports.TextEditor = class TextEditor extends EditorBase
-    @stylesheets: [
-      ['~/jencil.texteditor.css', 'screen, projection']
-    ]
-    @requires: [
-      ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']
-    ]
-    @options: 
-      previewPosition: 'right'
-      previewTemplatePath: '~/templates/preview.html'
-    @setUp: (jencil) ->
-      TextEditor.options.previewTemplatePath = net.hashnote.path.abspath TextEditor.options.previewTemplatePath, jencil.options.root
+    @Initializer: Initializer
     constructor: (jencil) ->
       super jencil, 'jencil-text-editor', 'div'
       @$element.addClass "preview-position-#{@jencil.options.extras.previewPosition}"
