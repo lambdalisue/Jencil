@@ -4,6 +4,7 @@
   
   This editor is tutorial editor of Jencil
   */
+  var Initializer;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -12,12 +13,20 @@
     child.__super__ = parent.prototype;
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  Initializer = (function() {
+    __extends(Initializer, Jencil.editors.Initializer);
+    function Initializer() {
+      Initializer.__super__.constructor.apply(this, arguments);
+    }
+    Initializer.prototype.stylesheets = [['js/jencil.extra/jencil.simpleeditor.css']];
+    return Initializer;
+  })();
   namespace('Jencil.editors', function(exports) {
     var EditorBase, SimpleEditor;
     EditorBase = Jencil.editors.EditorBase;
     return exports.SimpleEditor = SimpleEditor = (function() {
       __extends(SimpleEditor, EditorBase);
-      SimpleEditor.stylesheets = [['js/jencil.extra/jencil.simpleeditor.css']];
+      SimpleEditor.Initializer = Initializer;
       function SimpleEditor(jencil) {
         SimpleEditor.__super__.constructor.call(this, jencil, 'jencil-simple-editor', 'textarea');
         this.$source = this.jencil.$textarea;

@@ -68,7 +68,7 @@ class Preview extends Jencil.widgets.Widget
     @$surface.load url, (response, status, xhr) ->
       $$ = $(this)
       $$.html $$.html().replace '{{content}}', content
-class Initializer extends Jencil.editors.InitializerBase
+class Initializer extends Jencil.editors.Initializer
     stylesheets: [
       ['~/jencil.texteditor.css', 'screen, projection']
     ]

@@ -3,12 +3,14 @@ Jencil SimpleEditor
 
 This editor is tutorial editor of Jencil
 ###
+class Initializer extends Jencil.editors.Initializer
+  stylesheets: [
+    ['js/jencil.extra/jencil.simpleeditor.css']
+  ]
 namespace 'Jencil.editors', (exports) ->
   EditorBase = Jencil.editors.EditorBase
   exports.SimpleEditor = class SimpleEditor extends EditorBase
-    @stylesheets: [
-      ['js/jencil.extra/jencil.simpleeditor.css']
-    ]
+    @Initializer: Initializer
     constructor: (jencil) ->
       super jencil, 'jencil-simple-editor', 'textarea'
       # Copy value from source textarea

@@ -26,7 +26,7 @@ namespace 'Jencil.editors', (exports) ->
       jencil.workspace.append jencil._editor
       # --- call callback
       callback()
-  exports.InitializerBase = class InitializerBase
+  exports.Initializer = class Initializer
     requires: []
     stylesheets: []
     options: []
@@ -37,6 +37,7 @@ namespace 'Jencil.editors', (exports) ->
     ###
     An abstruct class of Jencil editor
     ###
+    @Initializer: Initializer
     constructor: (jencil, cls, type) ->
       super jencil, cls, type
     update: ->
