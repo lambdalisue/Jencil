@@ -42,29 +42,29 @@ class Preview extends Jencil.widgets.Widget
   update: ->
     _update = =>
       content = @holder.getValue()
-      if Jencil.profile.previewParserPath?
+      if @jencil.profile.previewParserPath?
         $.ajax(
-          type: Jencil.profile.previewParserMethod ? 'GET'
+          type: @jencil.profile.previewParserMethod ? 'GET'
           dataType: 'text'
           global: false
-          url: @jencil.abspath Jencil.profile.previewParserPath
-          data: "#{Jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+          url: @jencil.profile.previewParserPath
+          data: "#{@jencil.profile.previewParserVal ? 'data'}=#{encodeURIComponent content}"
           success: (data) =>
             @write data
         )
       else
         @write content
-    if Jencil.profile?
+    if @jencil.profile?
       _update()
     else
       setTimeout =>
-        if Jencil.profile?
+        if @jencil.profile?
           _update()
         else
           setTimeout arguments.callee, 100
       , 100
   write: (content) ->
-    url = Jencil.options.previewTemplatePath
+    url = @jencil.options.previewTemplatePath
     @$surface.load url, (response, status, xhr) ->
       $$ = $(this)
       $$.html $$.html().replace '{{content}}', content
@@ -73,7 +73,7 @@ namespace 'Jencil.editors', (exports) ->
   exports.TextEditor = class TextEditor extends EditorBase
     constructor: (jencil) ->
       super jencil, 'jencil-text-editor', 'div'
-      @$element.addClass "preview-position-#{Jencil.options.previewPosition}"
+      @$element.addClass "preview-position-#{@jencil.options.previewPosition}"
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
       @append @textarea

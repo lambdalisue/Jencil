@@ -1,8 +1,3 @@
-# --- Add string prototypes
-String.prototype.startsWith = (prefix) ->
-  return @lastIndexOf(prefix, 0) is 0
-String.prototype.endsWith = (suffix) ->
-  return @indexOf(suffix, this.length - suffix.length) isnt -1
 # --- core
 namespace 'Jencil.core', (exports) ->
   exports.format = format = (formatstr, kwargs) ->
@@ -16,7 +11,8 @@ namespace 'Jencil.core', (exports) ->
     ###
     Jencil core class
     ###
-    constructor: (@$textarea) ->
+    constructor: (@$textarea, @options) ->
+      @profile = undefined
       # --- construct wrapper
       @wrapper = new Jencil.widgets.Wrapper @
       # --- construct toolbar
@@ -32,25 +28,20 @@ namespace 'Jencil.core', (exports) ->
       # --- arrange
       @$textarea.after @wrapper.$element
       @$textarea.hide()
-      @loadProfile @getProfileName()
-    getProfileName: ->
-      return @documentType.getProfileName()
-    loadProfile: (profileName) ->
-      delete Jencil.profile # force reload
-      url = "#{Jencil.options.profileSetPath}/#{profileName}.js"
-      check = 'Jencil.profile'
-      net.hashnote.module.load url, check, =>
-        @update()
+      # --- load default profile
+      Jencil.profile.load @, @documentType.getProfileName()
     update: ->
-      # Create new editor from string
-      cls = Jencil.editors[Jencil.profile.editor]
-      @workspace.$element.children().remove()
-      @_editor = new cls @
+      # --- remove current editor
+      @_editor?.$element.remove()
+      delete @_editor
+      # --- construct new editor via profile
+      @_editor = new Jencil.editors[@profile.editor] @
       @workspace.append @_editor
-      # Update
+      # --- update
       @buttonHolder.update()
       @editor().update()
-    abspath: (path) ->
-      return net.hashnote.path.abspath path, Jencil.options.root
     editor: ->
       return @_editor
+    utils:
+      abspath: (path) ->
+        return net.hashnote.path.abspath path, @options.root

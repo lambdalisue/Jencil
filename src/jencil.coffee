@@ -124,19 +124,23 @@ namespace 'Jencil.loader', (exports) ->
     ###
     Jencil loader. This loader is for inform user to Jencil is currently loading outer scripts.
     ###
-    constructor: (textarea) ->
+    constructor: (textarea, @options) ->
       @$element = $('<div>').addClass('jencil-loader').hide()
       @$textarea = $(textarea)
       @$textarea.after @$element
       @$textarea.hide()
-      Jencil.options.documentTypeElement?.hide()
+      @options.documentTypeElement?.hide()
       @$element.show()
-
     dispose: ->
       # Remove loader element
       @$element.remove()
       # Show all related element except textarea
-      Jencil.options.documentTypeElement?.show()
+      @options.documentTypeElement?.show()
+# --- Add string prototypes
+String.prototype.startsWith = (prefix) ->
+  return @lastIndexOf(prefix, 0) is 0
+String.prototype.endsWith = (suffix) ->
+  return @indexOf(suffix, this.length - suffix.length) isnt -1
 $ = jQuery
 $.fn.jencil = (options) ->
   options = $.extend true, {
@@ -153,6 +157,7 @@ $.fn.jencil = (options) ->
       ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
       ['~/jencil.buttons.min.js', 'window.Jencil.buttons']
       ['~/jencil.editors.min.js', 'window.Jencil.editors']
+      ['~/jencil.profile.min.js', 'window.Jencil.profile']
     ]
     editors: [
       ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
@@ -176,21 +181,20 @@ $.fn.jencil = (options) ->
     options.editors[i][0] = net.hashnote.path.abspath options.editors[i][0], options.root
   for i in [0...options.extras.length]
     options.extras[i][0] = net.hashnote.path.abspath options.extras[i][0], options.root
-  # --- store options on Jencil.options
-  namespace 'Jencil', (exports) ->
-    exports.options = options
   # --- create loader to each textarea
   loaders = []
   @each ->
-    loaders.push new Jencil.loader.Loader @
+    loaders.push new Jencil.loader.Loader @, options
   # --- build load script list
-  requires = Jencil.options.requires
-  requires = requires.concat Jencil.options.editors
-  requires = requires.concat Jencil.options.extras
+  requires = options.requires
+  requires = requires.concat options.editors
+  requires = requires.concat options.extras
   net.hashnote.module.loadall requires, =>
     # Dispose loaders
     for loader in loaders
       loader.dispose()
     # Attach Jencil to each textarea
     return @each ->
-      new Jencil.core.JencilCore $(@)
+      jencil = new Jencil.core.JencilCore $(@), options
+      # for develop
+      window.jencil = jencil

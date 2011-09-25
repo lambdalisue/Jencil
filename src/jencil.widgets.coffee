@@ -29,27 +29,23 @@ namespace 'Jencil.widgets', (exports) ->
     ###
     constructor: (jencil) ->
       super jencil, 'jencil-document-type'
-      @$documentTypeElement = Jencil.options.documentTypeElement
+      @$documentTypeElement = @jencil.options.documentTypeElement
       if @$documentTypeElement?
         if @$documentTypeElement not instanceof jQuery
           @$documentTypeElement = $(@$documentTypeElement)
         @$element.append @$documentTypeElement
         @$documentTypeElement.change =>
-          @jencil.loadProfile @getProfileName()
-          @jencil.update()
+          Jencil.profile.load @jencil, @getProfileName()
     getProfileName: ->
       if @$documentTypeElement?
         return @$documentTypeElement.val()
-      return @jencil.defaultProfileName
-    update: ->
-      profileName = @getProfileName()
-      @jencil.load profileName
+      return @jencil.options.defaultProfileName
   exports.ButtonHolder = class ButtonHolder extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-button-holder'
     update: () ->
       @$element.children().remove()
-      for buttonset in Jencil.profile.buttonsets
+      for buttonset in @jencil.profile.buttonsets
         type = buttonset[0]
         args = buttonset[1..buttonset.length]
         button = Jencil.buttons.createButton @jencil, type, args
