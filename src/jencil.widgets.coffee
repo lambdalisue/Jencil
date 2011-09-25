@@ -40,7 +40,7 @@ namespace 'Jencil.widgets', (exports) ->
       for buttonset in Jencil.profile.buttonsets
         type = buttonset[0]
         args = buttonset[1..buttonset.length]
-        button = Jencil.widgets.createButton @jencil, type, args
+        button = Jencil.buttons.createButton @jencil, type, args
         @append button
   exports.Toolbar = class Toolbar extends Widget
     constructor: (jencil) ->
@@ -48,30 +48,3 @@ namespace 'Jencil.widgets', (exports) ->
   exports.Workspace = class Workspace extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-workspace'
-
-namespace 'Jencil.editors', (exports) ->
-  Widget = Jencil.widgets.Widget
-  exports.Editor = class Editor extends Widget
-    constructor: (jencil, cls, type) ->
-      super jencil, cls, type
-    update: ->
-      # Update function
-    getValue: ->
-      throw new Error "Subclass must override this method."
-    getSelection: ->
-      throw new Error "Subclass must override this method."
-    setSelection: (start, end) ->
-      throw new Error "Subclass must override this method."
-    getSelected: ->
-      throw new Error "Subclass must override this method."
-    replaceSelected: (str, select=false) ->
-      throw new Error "Subclass must override this method."
-    insertBeforeSelected: (str, select=false) ->
-      throw new Error "Subclass must override this method."
-    insertAfterSelected: (str, select=false) ->
-      throw new Error "Subclass must override this method."
-    wrapSelected: (before, after, select=false, additional=undefined) ->
-      throw new Error "Subclass must override this method."
-      
-
-

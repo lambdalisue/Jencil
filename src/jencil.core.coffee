@@ -5,6 +5,13 @@ String.prototype.endsWith = (suffix) ->
   return @indexOf(suffix, this.length - suffix.length) isnt -1
 # --- core
 namespace 'Jencil.core', (exports) ->
+  exports.format = format = (formatstr, kwargs) ->
+    ###
+    Convert {{key}} string with kwargs
+    ###
+    for key, value of kwargs
+      formatstr = formatstr.replace "{{#{key}}}", value
+    return formatstr
   exports.Jencil = class JencilCore
     constructor: (@$textarea, @options) ->
       # --- construct wrapper

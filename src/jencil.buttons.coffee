@@ -1,139 +1,158 @@
-namespace 'Jencil.widgets', (exports) ->
+namespace 'Jencil.buttons', (exports) ->
   Widget = Jencil.widgets.Widget
   exports.createButton = createButton = (jencil, type, args) ->
+    ###
+    Create button instance from type and args
+    ###
+    cls = undefined
     switch type
       when '-', 'separator'
-        return new Separator jencil
+        cls = Separator
       when 's', 'simple'
-        [cls, name, before, after, insert] = args
-        return new SimpleMarkupButton jencil, cls, name, before, after, insert
-      when 'e', 'eachline'
-        [cls, name, before, after, blockBefore, blockAfter] = args
-        return new EachlineMarkupButton jencil, cls, name, before, after, blockBefore, blockAfter
-      when 'c', 'callback'
-        [cls, name, callback, before, after] = args
-        return new CallbackButton jencil, cls, name, callback, before, after
+        cls = SimpleMarkupButton
+      when 'm', 'multiline'
+        cls = MultilineMarkupButton
+      when 'e', 'exec'
+        cls = ExecButton
       when 'l', 'link'
-        [formatstr] = args
-        return new LinkMarkupButton jencil, formatstr
+        cls = LinkMarkupButton
       when 'i', 'image'
-        [formatstr] = args
-        return new ImageMarkupButton jencil, formatstr
-      when 'u', 'unorderedlist'
-        [before, after, blockBefore, blockAfter] = args
-        return new UnorderedListMarkupButton jencil, before, after, blockBefore, blockAfter
-      when 'o', 'orderedlist'
-        [before, after, blockBefore, blockAfter] = args
-        return new OrderedListMarkupButton jencil, before, after, blockBefore, blockAfter
-      when 'p', 'preview'
-        return new PreviewButton jencil
+        cls = ImageMarkupButton
       else
-        throw new Error "Unknown button type is passed (type: #{type})"
-  exports.Separator = class Separator extends Widget
-    constructor: (jencil) ->
-      super jencil, 'separator', 'span'
-      @$element.append $('<span>|</span>')
-  exports.Button = class Button extends Widget
+        # Try to find from namespace
+        cls = Jencil.buttons[type]
+        if not cls?
+          throw new Error "Unknown button type is passed (type: #{type})"
+    return new cls jencil, args
+  # --- abstruct class
+  exports.ButtonBase = class ButtonBase extends Widget
+    ###
+    An abstruct class of all button widget
+    ###
     constructor: (jencil, cls, name) ->
       super jencil, 'button', 'a'
       @$element.addClass cls
       @$element.attr 'href', '#'
       @$element.attr 'title', name
       @$element.append $("<span>#{name}</span>")
-      @clickBeforeCallback = undefined
-      @clickCallback = undefined
-      @clickAfterCallback = =>
-        @jencil.editor().update()
       @$element.click =>
-        if @clickBeforeCallback? then @clickBeforeCallback()
-        if @clickCallback? then @clickCallback()
-        if @clickAfterCallback? then @clickAfterCallback()
-  exports.FormatMarkupButton = class FormatMarkupButton extends Button
-    format: (formatstr, kwargs) ->
-      for key, value of kwargs
-        formatstr = formatstr.replace "{{#{key}}}", value
-      return formatstr
-  exports.SimpleMarkupButton = class SimpleMarkupButton extends Button
-    constructor: (jencil, cls, name, before, after, insert) ->
+        @clickBefore()
+        @click()
+        @clickAfter()
+    editor: ->
+      return @jencil.editor()
+    clickBefore: ->
+      # This method is called before click callback is called
+    click: ->
+      # This method is called when user click the button
+    clickAfter: ->
+      # This method is called after click callback is called
+  exports.MarkupButtonBase = class MarkupButtonBase extends ButtonBase
+    ###
+    An abstruct class of all button widget which modify content
+
+    This button automatically call ``@jencil.editor().update()``
+    ###
+    clickAfter: ->
+      # Update editor
+      @editor().update()
+  # --- separator
+  exports.Separator = class Separator extends Widget
+    ###
+    Separator
+    ###
+    constructor: (jencil, args) ->
+      super jencil, 'separator', 'span'
+      @$element.append $('<span>|</span>')
+  # --- markup buttons
+  exports.SimpleMarkupButton = class SimpleMarkupButton extends MarkupButtonBase
+    ###
+    Markup singleline
+    ###
+    constructor: (jencil, args) ->
+      [cls, name, @before, @after, @insert] = args
       super jencil, cls, name
-      @clickCallback = =>
-        @jencil.editor().wrapSelected before, after, true, insert or @jencil.options.defaultInsertText
-  exports.EachlineMarkupButton = class EachlineMarkupButton extends Button
-    constructor: (jencil, cls, name, before, after, blockBefore, blockAfter) ->
+    click: ->
+      @editor().wrapSelected @before, @after, true, @insert or @jencil.options.defaultInsertText
+  exports.MultilineMarkupButton = class MultilineMarkupButton extends MarkupButtonBase
+    ###
+    Markup multilines
+    ###
+    constructor: (jencil, args) ->
+      [cls, name, @before, @after, @blockBefore, @blockAfter] = args
       super jencil, cls, name
-      @clickCallback = =>
-        selectedLines = @jencil.editor().getSelected().split '\n'
-        for i in [0...selectedLines.length]
-          _before = before.replace '{{i}}', i+1
-          _after = after.replace '{{i}}', i+1
-          selectedLine = selectedLines[i]
-          if selectedLine is blockBefore or selectedLine is blockAfter
-            continue
-          if selectedLine.startsWith(_before) and selectedLine.endsWith(_after)
-            # Unlist
-            selectedLines[i] = selectedLine.substring(_before.length, selectedLine.length-_after.length)
-          else
-            selectedLines[i] = "#{_before}#{selectedLines[i]}#{_after}"
-        if blockBefore?
-          if selectedLines[0] is blockBefore
-            selectedLines.shift()
-          else
-            selectedLines.unshift blockBefore
-        if blockAfter?
-          if selectedLines[selectedLines.length-1] is blockAfter
-            selectedLines.pop()
-          else
-            selectedLines.push blockAfter
-        insert = selectedLines.join '\n'
-        @jencil.editor().replaceSelected insert, true
-  exports.CallbackButton = class CallbackButton extends Button
-    constructor: (jencil, cls, name, callback, before, after) ->
+    click: ->
+      selectedLines = @editor().getSelected().split '\n'
+      for i in [0...selectedLines.length]
+        # format {{i}} to line number
+        _before = Jencil.core.format @before, {i: i+1}
+        _after = Jencil.core.format @after, {i: i+1}
+        line = selectedLines[i]
+        if line is @blockBefore or line is @blockAfter
+          # ignore blockBefore or blockAfter line
+          continue
+        if line.startsWith(_before) and line.endsWith(_after)
+          # remove markup
+          selectedLines[i] = line.substring(_before.length, line.length-_after.length)
+        else
+          # add markup
+          selectedLines[i] = "#{_before}#{line}#{_after}"
+      if @blockBefore?
+        if selectedLines[0] is @blockBefore then selectedLines.shift() else selectedLines.unshift @blockBefore
+      if blockAfter?
+        if selectedLines[selectedLines.length-1] is @blockAfter then selectedLines.pop() else selectedLines.push @blockAfter
+      replace = selectedLines.join '\n'
+      @editor().replaceSelected replace, true
+  # --- execute buttons
+  exports.ExecButton = class ExecButton extends ButtonBase
+    ###
+    Execute javascript
+    ###
+    constructor: (jencil, args) ->
+      [cls, name, @_click, @_clickBefore, @_clickAfter] = args
       super jencil, cls, name
-      @clickBeforeCallback = before
-      @clickCallback = callback
-      @clickAfterCallback = after
-  # --- special case buttons
-  exports.LinkMarkupButton = class LinkMarkupButton extends FormatMarkupButton
-    constructor: (jencil, formatstr) ->
+    clickBefore: ->
+      @_clickBefore @editor()
+    click: ->
+      @_click @editor()
+    clickAfter: ->
+      @_clickAfter @editor()
+  # --- prompt buttons
+  exports.LinkMarkupButton = class LinkMarkupButton extends MarkupButtonBase
+    ###
+    Collect infos required to create LINK via prompt and insert link markup
+    ###
+    constructor: (jencil, args) ->
+      [@formatstr] = args
       super jencil, 'link', 'Link'
-      @clickCallback = =>
-        href = prompt "Please input link url"
-        if href is null then return
-        label = prompt "Please input link label", @jencil.editor().getSelected()
-        if label is null then return
-        title = prompt "(Optional) Please input link title"
-        if title is null then return
-        insert = @format formatstr, 
-          href: href
-          label: label
-          title: title
-        @jencil.editor().replaceSelected insert
-  exports.ImageMarkupButton = class ImageMarkupButton extends FormatMarkupButton
-    constructor: (jencil, formatstr) ->
+    click: ->
+      href = prompt "Please input link url"
+      if href is null then return
+      label = prompt "Please input link label", @editor().getSelected()
+      if label is null then return
+      title = prompt "(Optional) Please input link title"
+      if title is null then return
+      insert = Jencil.core.format @formatstr, 
+        href: href
+        label: label
+        title: title
+      @editor().replaceSelected insert
+  exports.ImageMarkupButton = class ImageMarkupButton extends MarkupButtonBase
+    ###
+    Collect infos required to create IMAGE via prompt and insert image markup
+    ###
+    constructor: (jencil, args) ->
+      [@formatstr] = args
       super jencil, 'img', 'Image'
-      @clickCallback = =>
-        src = prompt "Please input image src url"
-        if src is null then return
-        alt = prompt "(Optional) Please input image alt label", @jencil.editor().getSelected()
-        if alt is null then return
-        title = prompt "(Optional) Please input image title"
-        if title is null then return
-        insert = @format formatstr, 
-          src: src
-          alt: alt
-          title: title
-        @jencil.editor().replaceSelected insert
-  exports.UnorderedListMarkupButton = class UnorderedListMarkupButton extends EachlineMarkupButton
-    constructor: (jencil, before, after, blockBefore, blockAfter) ->
-      super jencil, 'ul', 'Unordered List', before, after, blockBefore, blockAfter
-  exports.OrderedListMarkupButton = class OrderedListMarkupButton extends EachlineMarkupButton
-    constructor: (jencil, before, after, blockBefore, blockAfter) ->
-      super jencil, 'ol', 'Ordered List', before, after, blockBefore, blockAfter
-  exports.PreviewButton = class PreviewButton extends Button
-    constructor: (jencil) ->
-      super jencil, 'preview', 'Preview'
-      @clickCallback = =>
-        @jencil.editor().preview?.toggle()
-      @clickAfterCallback = undefined
-
-
+    click: ->
+      src = prompt "Please input image src url"
+      if src is null then return
+      alt = prompt "(Optional) Please input image alt label", @editor().getSelected()
+      if alt is null then return
+      title = prompt "(Optional) Please input image title"
+      if title is null then return
+      insert = Jencil.core.format @formatstr, 
+        src: src
+        alt: alt
+        title: title
+      @editor().replaceSelected insert

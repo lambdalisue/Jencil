@@ -133,9 +133,10 @@ $.fn.jencil = (options) ->
       ['~/textarea.min.js', 'window.Textarea']
       ['~/jencil.core.min.js', 'window.Jencil']
       ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
-      ['~/jencil.buttons.min.js', 'window.Jencil.widgets.Button']
-      ['~/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
-      ['~/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
+      ['~/jencil.buttons.min.js', 'window.Jencil.buttons']
+      ['~/jencil.editors.min.js', 'window.Jencil.editors']
+      ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
+      ['~/editors/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
     ]
     extras: [
       ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']      # required to enable TAB feature on TextEditor
