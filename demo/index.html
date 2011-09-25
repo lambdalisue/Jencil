@@ -12,13 +12,13 @@
         <![endif]-->
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <title>Jencil Demo - Cross browser Markup and WYSIWYG editor</title>
-        <link type="text/css" rel="stylesheet" href="js/jencil/theme/bw/style.css">
-        <script type="text/javascript" src="js/jencil/jencil.js"></script>
+        <!-- DEVELOP VERSION -->
+        <link type="text/css" rel="stylesheet" href="js/jencil.dev/theme/bw/style.css">
+        <script type="text/javascript" src="js/jencil.dev/jencil.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('textarea#document-body').jencil({
                     documentTypeElement: $('select#document-type'),
-                    previewTemplatePath: 'js/jencil/templates/preview.html',
                     //previewPosition: 'bottom'
                     previewPosition: 'right',
                     // use development file
@@ -33,6 +33,19 @@
                 });
             });
         </script>
+        <!-- RELEASE VERSION
+        <link type="text/css" rel="stylesheet" href="js/jencil/theme/bw/style.css">
+        <script type="text/javascript" src="js/jencil/jencil.min.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('textarea#document-body').jencil({
+                    documentTypeElement: $('select#document-type'),
+                    //previewPosition: 'bottom'
+                    previewPosition: 'right',
+                });
+            });
+        </script>
+        -->
     </head>
     <body>
         <div id="wrapper">
