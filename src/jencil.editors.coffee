@@ -1,10 +1,18 @@
+###
+Jencil editor
+###
 namespace 'Jencil.editors', (exports) ->
   Widget = Jencil.widgets.Widget
-  exports.Editor = class Editor extends Widget
+  exports.EditorBase = class EditorBase extends Widget
+    ###
+    An abstruct class of Jencil editor
+    ###
     constructor: (jencil, cls, type) ->
       super jencil, cls, type
     update: ->
-      # Update function
+      ###
+      Update editor. Subclass should override this method to update anything related to the editor
+      ###
     getValue: ->
       throw new Error "Subclass must override this method."
     getSelection: ->

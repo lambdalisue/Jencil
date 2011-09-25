@@ -73,7 +73,7 @@ namespace 'Jencil.buttons', (exports) ->
       [cls, name, @before, @after, @insert] = args
       super jencil, cls, name
     click: ->
-      @editor().wrapSelected @before, @after, true, @insert or @jencil.options.defaultInsertText
+      @editor().wrapSelected @before, @after, true, @insert or Jencil.options.defaultInsertText
   exports.MultilineMarkupButton = class MultilineMarkupButton extends MarkupButtonBase
     ###
     Markup multilines

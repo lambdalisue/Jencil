@@ -12,8 +12,11 @@ namespace 'Jencil.core', (exports) ->
     for key, value of kwargs
       formatstr = formatstr.replace "{{#{key}}}", value
     return formatstr
-  exports.Jencil = class JencilCore
-    constructor: (@$textarea, @options) ->
+  exports.JencilCore = class JencilCore
+    ###
+    Jencil core class
+    ###
+    constructor: (@$textarea) ->
       # --- construct wrapper
       @wrapper = new Jencil.widgets.Wrapper @
       # --- construct toolbar
@@ -29,10 +32,12 @@ namespace 'Jencil.core', (exports) ->
       # --- arrange
       @$textarea.after @wrapper.$element
       @$textarea.hide()
-      @load @documentType.getProfileName()
-    load: (profileName) ->
+      @loadProfile @getProfileName()
+    getProfileName: ->
+      return @documentType.getProfileName()
+    loadProfile: (profileName) ->
       delete Jencil.profile # force reload
-      url = "#{@options.profileSetPath}/#{profileName}.js"
+      url = "#{Jencil.options.profileSetPath}/#{profileName}.js"
       check = 'Jencil.profile'
       net.hashnote.module.load url, check, =>
         @update()
@@ -46,7 +51,6 @@ namespace 'Jencil.core', (exports) ->
       @buttonHolder.update()
       @editor().update()
     abspath: (path) ->
-      return net.hashnote.path.abspath path, @options.root
+      return net.hashnote.path.abspath path, Jencil.options.root
     editor: ->
       return @_editor
-

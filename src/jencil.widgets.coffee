@@ -1,5 +1,8 @@
 namespace 'Jencil.widgets', (exports) ->
   exports.Widget = class Widget
+    ###
+    An abstruct class of all widget
+    ###
     constructor: (@jencil, cls, type='div') ->
       @$element = $("<#{type}>").addClass cls
     after: (widget) ->
@@ -15,16 +18,25 @@ namespace 'Jencil.widgets', (exports) ->
     prependTo: (widget) ->
       @$element.prependTo widget.$element
   exports.Wrapper = class Wrapper extends Widget
+    ###
+    Jencil toplevel wrapper widget
+    ###
     constructor: (jencil) ->
       super jencil, 'jencil'
   exports.DocumentType = class DocumentType extends Widget
+    ###
+    Jencil document type widget
+    ###
     constructor: (jencil) ->
       super jencil, 'jencil-document-type'
-      @$documentTypeElement = @jencil.options.documentTypeElement
+      @$documentTypeElement = Jencil.options.documentTypeElement
       if @$documentTypeElement?
+        if @$documentTypeElement not instanceof jQuery
+          @$documentTypeElement = $(@$documentTypeElement)
         @$element.append @$documentTypeElement
         @$documentTypeElement.change =>
-          @update()
+          @jencil.loadProfile @getProfileName()
+          @jencil.update()
     getProfileName: ->
       if @$documentTypeElement?
         return @$documentTypeElement.val()

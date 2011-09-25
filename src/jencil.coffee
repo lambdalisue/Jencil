@@ -119,6 +119,24 @@ namespace 'net.hashnote.path', (exports) ->
     if path.lastIndexOf('~/', 0) is 0
       path = "#{root}/#{path[2..path.length]}"
     return path
+namespace 'Jencil.loader', (exports) ->
+  exports.Loader = class Loader
+    ###
+    Jencil loader. This loader is for inform user to Jencil is currently loading outer scripts.
+    ###
+    constructor: (textarea) ->
+      @$element = $('<div>').addClass('jencil-loader').hide()
+      @$textarea = $(textarea)
+      @$textarea.after @$element
+      @$textarea.hide()
+      Jencil.options.documentTypeElement?.hide()
+      @$element.show()
+
+    dispose: ->
+      # Remove loader element
+      @$element.remove()
+      # Show all related element except textarea
+      Jencil.options.documentTypeElement?.show()
 $ = jQuery
 $.fn.jencil = (options) ->
   options = $.extend true, {
@@ -131,40 +149,48 @@ $.fn.jencil = (options) ->
     documentTypeElement: undefined
     requires: [
       ['~/textarea.min.js', 'window.Textarea']
-      ['~/jencil.core.min.js', 'window.Jencil']
+      ['~/jencil.core.min.js', 'window.Jencil.core']
       ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
       ['~/jencil.buttons.min.js', 'window.Jencil.buttons']
       ['~/jencil.editors.min.js', 'window.Jencil.editors']
+    ]
+    editors: [
       ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
-      ['~/editors/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
     ]
     extras: [
       ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']      # required to enable TAB feature on TextEditor
     ]
   }, options
+  # Check documentTypeElement
   if @.length > 1 and options.documentTypeElement?
     if window.console?.warn?
       console.warn "documentTypeElement is not avaialble on multiple textarea"
       options.documentTypeElement = undefined
-  # --- hide object
-  $$ = $(@)
-  $$.hide()
-  options.documentTypeElement?.hide()
-  # --- add loading frame
-  $loading = $('<div>').addClass 'jencil-loading'
-  $$.after $loading
   # --- parse options
   options.root ?= net.hashnote.path.root 'jencil(\.min)?\.js'
   options.profileSetPath = net.hashnote.path.abspath options.profileSetPath, options.root
   options.previewTemplatePath = net.hashnote.path.abspath options.previewTemplatePath, options.root
   for i in [0...options.requires.length]
     options.requires[i][0] = net.hashnote.path.abspath options.requires[i][0], options.root
+  for i in [0...options.editors.length]
+    options.editors[i][0] = net.hashnote.path.abspath options.editors[i][0], options.root
   for i in [0...options.extras.length]
     options.extras[i][0] = net.hashnote.path.abspath options.extras[i][0], options.root
+  # --- store options on Jencil.options
+  namespace 'Jencil', (exports) ->
+    exports.options = options
+  # --- create loader to each textarea
+  loaders = []
+  @each ->
+    loaders.push new Jencil.loader.Loader @
   # --- build load script list
-  requires = options.requires.concat options.extras
+  requires = Jencil.options.requires
+  requires = requires.concat Jencil.options.editors
+  requires = requires.concat Jencil.options.extras
   net.hashnote.module.loadall requires, =>
-    $loading.remove()
-    options.documentTypeElement?.show()
+    # Dispose loaders
+    for loader in loaders
+      loader.dispose()
+    # Attach Jencil to each textarea
     return @each ->
-      new Jencil.core.Jencil $(@), options
+      new Jencil.core.JencilCore $(@)

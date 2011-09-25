@@ -24,12 +24,13 @@
                     // use development file
                     requires: [
                         ['~/textarea.min.js', 'window.Textarea'],
-                        ['~/jencil.core.js', 'window.Jencil'],
+                        ['~/jencil.core.js', 'window.Jencil.core'],
                         ['~/jencil.widgets.js', 'window.Jencil.widgets'],
                         ['~/jencil.buttons.js', 'window.Jencil.buttons'],
                         ['~/jencil.editors.js', 'window.Jencil.editors'],
+                    ],
+                    editors: [
                         ['~/editors/jencil.texteditor.js', 'window.Jencil.editors.TextEditor'],
-                        ['~/editors/jencil.richeditor.js', 'window.Jencil.editors.RichEditor']
                     ]
                 });
             });

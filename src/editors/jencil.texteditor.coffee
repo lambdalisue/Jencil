@@ -64,15 +64,16 @@ class Preview extends Jencil.widgets.Widget
           setTimeout arguments.callee, 100
       , 100
   write: (content) ->
-    url = @jencil.options.previewTemplatePath
+    url = Jencil.options.previewTemplatePath
     @$surface.load url, (response, status, xhr) ->
       $$ = $(this)
       $$.html $$.html().replace '{{content}}', content
 namespace 'Jencil.editors', (exports) ->
-  exports.TextEditor = class TextEditor extends Jencil.editors.Editor
+  EditorBase = Jencil.editors.EditorBase
+  exports.TextEditor = class TextEditor extends EditorBase
     constructor: (jencil) ->
       super jencil, 'jencil-text-editor', 'div'
-      @$element.addClass "preview-position-#{@jencil.options.previewPosition}"
+      @$element.addClass "preview-position-#{Jencil.options.previewPosition}"
       @textarea = new TextArea @jencil, @
       @preview = new Preview @jencil, @
       @append @textarea
