@@ -1,0 +1,15 @@
+h1.png      .jencil .jencil-toolbar .jencil-button-holder a.h1 span
+h2.png      .jencil .jencil-toolbar .jencil-button-holder a.h2 span
+h3.png      .jencil .jencil-toolbar .jencil-button-holder a.h3 span
+h4.png      .jencil .jencil-toolbar .jencil-button-holder a.h4 span
+h5.png      .jencil .jencil-toolbar .jencil-button-holder a.h5 span
+h6.png      .jencil .jencil-toolbar .jencil-button-holder a.h6 span
+quote.png   .jencil .jencil-toolbar .jencil-button-holder a.quote span
+bold.png    .jencil .jencil-toolbar .jencil-button-holder a.bold span
+italic.png  .jencil .jencil-toolbar .jencil-button-holder a.italic span
+link.png    .jencil .jencil-toolbar .jencil-button-holder a.link span
+image.png   .jencil .jencil-toolbar .jencil-button-holder a.img span
+ul.png      .jencil .jencil-toolbar .jencil-button-holder a.ul span
+ol.png      .jencil .jencil-toolbar .jencil-button-holder a.ol span
+code.png    .jencil .jencil-toolbar .jencil-button-holder a.code span
+preview.png .jencil .jencil-toolbar .jencil-button-holder a.preview span
