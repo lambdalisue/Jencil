@@ -43,8 +43,6 @@ namespace 'Jencil.widgets', (exports) ->
       @clickBeforeCallback = undefined
       @clickCallback = undefined
       @clickAfterCallback = =>
-        console.log 'clickAfterCallback'
-        # Update preview
         @jencil.editor().update()
       @$element.click =>
         if @clickBeforeCallback? then @clickBeforeCallback()

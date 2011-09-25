@@ -1,7 +1,7 @@
 namespace 'Jencil.profile', (exports) ->
   exports.editor = 'TextEditor'
   exports.previewParserMethod = 'GET'
-  exports.previewParserPath = '~/parsers/markdown.cgi'
+  exports.previewParserPath = '/cgi-bin/markdown.cgi'
   exports.previewParserVal = 'data'
   exports.buttonsets = [
     ['s', 'h1', 'H1', '\n', '\n=================================']

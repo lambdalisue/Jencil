@@ -86,7 +86,6 @@ namespace 'net.hashnote.module', (exports) ->
         callback?()
       else
         load sets[cursor][0], sets[cursor][1], next, timeout
-    if window.console?.info? then console.info "Load #{sets.length} outer javascripts dynamically..."
     next()
 namespace 'net.hashnote.path', (exports) ->
   exports.root = root = (pattern) ->
