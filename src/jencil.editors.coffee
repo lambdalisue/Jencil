@@ -23,7 +23,6 @@ namespace 'Jencil.editors', (exports) ->
       delete jencil._editor
       # --- construct new editor via profile
       jencil._editor = new cls jencil
-      jencil._editor.initializer = initializer
       jencil.workspace.append jencil._editor
       # --- call callback
       callback()
@@ -34,8 +33,6 @@ namespace 'Jencil.editors', (exports) ->
     constructor: (jencil) ->
       for i in [0...@requires.length]
         @requires[i][0] = jencil.abspath @requires[i][0]
-      for i in [0...@stylesheets.length]
-        @stylesheets[i][0] = Jencil.theme.abspath @stylesheets[i][0]
   exports.EditorBase = class EditorBase extends Widget
     ###
     An abstruct class of Jencil editor

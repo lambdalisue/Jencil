@@ -158,12 +158,14 @@ namespace 'Jencil.theme', (exports) ->
     # --- load current editor css
     if Jencil.jencils?
       for jencil in Jencil.jencils
-        loadall jencil.editor().initializer.stylesheets
+        editorClass = jencil.editor().constructor
+        initializer = new editorClass.Initializer jencil
+        loadall initializer.stylesheets
   exports.loadall = loadall = (sets) ->
     for set in sets
       [url, media] = set
       media ?= 'screen, projection'
-      net.hashnote.css.include url, media
+      net.hashnote.css.include abspath(url), media
 namespace 'Jencil.loader', (exports) ->
   exports.Loader = class Loader
     ###
