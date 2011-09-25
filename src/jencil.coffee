@@ -125,7 +125,8 @@ namespace 'net.hashnote.path', (exports) ->
       if match?
         root = match[1]
         # remove trailing slush
-        return root = root[0..root.length-1]
+        root = root[0..root.length-2]
+        return
     return root
   exports.abspath = abspath = (path, root, prefix='~/') ->
     ###
