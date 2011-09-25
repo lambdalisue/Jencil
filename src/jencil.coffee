@@ -131,7 +131,7 @@ $.fn.jencil = (options) ->
     defaultInsertText: '*'
     documentTypeElement: undefined
     requires: [
-      ['js/textarea.min.js', 'window.Textarea']
+      ['~/textarea.min.js', 'window.Textarea']
       ['~/jencil.core.min.js', 'window.Jencil']
       ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
       ['~/jencil.buttons.min.js', 'window.Jencil.widgets.Button']

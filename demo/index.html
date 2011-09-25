@@ -12,8 +12,8 @@
         <![endif]-->
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <title>Jencil Demo - Cross browser Markup and WYSIWYG editor</title>
-        <script type="text/javascript" src="js/jencil/jencil.js"></script>
         <link type="text/css" rel="stylesheet" href="js/jencil/theme/bw/style.css">
+        <script type="text/javascript" src="js/jencil/jencil.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('textarea#document-body').jencil({
@@ -23,7 +23,7 @@
                     previewPosition: 'right',
                     // use development file
                     requires: [
-                        ['js/textarea.min.js', 'window.Textarea'],
+                        ['~/textarea.min.js', 'window.Textarea'],
                         ['~/jencil.core.js', 'window.Jencil'],
                         ['~/jencil.widgets.js', 'window.Jencil.widgets'],
                         ['~/jencil.buttons.js', 'window.Jencil.widgets.Button'],

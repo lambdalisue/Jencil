@@ -40,12 +40,18 @@ task 'docs', 'Generate annotated source code with Docco', ->
     docco.stderr.on 'data', (data) -> print data.toString()
     docco.on 'exit', (status) -> callback?() if status is 0
 
-task 'pack', 'Pack all javascript files', ->
+task 'pack', 'Create release pack', ->
+  exec "mkdir -p packed/jencil"
+  exec "cp -f README.rst packed/jencil/"
+  exec "cp -rf lib/parsers packed/jencil/"
+  exec "cp -rf lib/templates packed/jencil/"
+  exec "cp -rf lib/profiles packed/jencil/"
+  exec "cp -rf lib/theme packed/jencil/"
+  exec "cp -f lib/textarea.min.js packed/jencil/"
   fs.readdir 'lib', (err, contents) ->
     for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
       basename = file[0..file.length-4]
-      print  "jsPacker.pl -e62 -i ../lib/#{file} -o ../lib/#{basename}.min.js\n"
-      exec "(cd packer; perl jsPacker.pl -e62 -i ../lib/#{file} -o ../lib/#{basename}.min.js)"
+      exec "(cd utils/packer; perl jsPacker.pl -e62 -i ../../lib/#{file} -o ../../packed/jencil/#{basename}.min.js)"
 
 task 'test', 'Run the test suite', ->
   build ->
