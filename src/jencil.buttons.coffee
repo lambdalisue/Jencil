@@ -83,10 +83,11 @@ namespace 'Jencil.buttons', (exports) ->
       super jencil, cls, name
     click: ->
       selectedLines = @editor().getSelected().split '\n'
+      offset = if selectedLines[0] is @blockBefore then 1 else 0
       for i in [0...selectedLines.length]
         # format {{i}} to line number
-        _before = Jencil.core.format @before, {i: i+1}
-        _after = Jencil.core.format @after, {i: i+1}
+        _before = Jencil.core.format @before, {i: i+1-offset}
+        _after = Jencil.core.format @after, {i: i+1-offset}
         line = selectedLines[i]
         if line is @blockBefore or line is @blockAfter
           # ignore blockBefore or blockAfter line
