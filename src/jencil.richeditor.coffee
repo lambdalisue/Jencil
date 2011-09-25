@@ -1,6 +1,6 @@
-namespace 'Jencil.widgets', (exports) ->
+namespace 'Jencil.editors', (exports) ->
   Widget = Jencil.widgets.Widget
-  Editor = Jencil.widgets.Editor
+  Editor = Jencil.editors.Editor
   # What You See Is What You Get (Rich text)
   exports.RichEditor = class RichEditor extends Editor
     constructor: (jencil) ->

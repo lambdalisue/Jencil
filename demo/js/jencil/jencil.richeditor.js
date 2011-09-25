@@ -7,10 +7,10 @@
     child.__super__ = parent.prototype;
     return child;
   };
-  namespace('Jencil.widgets', function(exports) {
+  namespace('Jencil.editors', function(exports) {
     var Editor, RichEditor, Widget;
     Widget = Jencil.widgets.Widget;
-    Editor = Jencil.widgets.Editor;
+    Editor = Jencil.editors.Editor;
     return exports.RichEditor = RichEditor = (function() {
       __extends(RichEditor, Editor);
       function RichEditor(jencil) {

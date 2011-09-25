@@ -12,37 +12,114 @@ window.namespace = (target, name, block) ->
   top    = target
   target = target[item] or= {} for item in name.split '.'
   block target, top
-namespace 'Jencil.utils', (exports) ->
-  exports.load = load = (sets, callback=undefined) ->
-    _import = (url) ->
-      script = document.createElement "script"
-      script.type = "text/javascript"
-      script.src = url
-      document.head.appendChild script
-    _load = (url, check, callback) ->
-      console.log "Loading #{url} ..."
-      _check = new Function "return !!(#{check})"
-      if not _check()
-        _import url
-        setTimeout ->
-          if not _check()
-            setTimeout arguments.callee, 100
-          else if callback?
-            callback()
-        , 100
-      else if callback?
-        callback()
+namespace 'net.hashnote.module', (exports) ->
+  exports.include = include = (url) ->
+    ###
+    Include outer javascript dynamically
+
+    Args:
+        url - an outer javascript url
+    ###  
+    script = document.createElement 'script'
+    script.type = 'text/javascript'
+    script.src = url
+    document.head.appendChild script
+  exports.load = load = (url, check, callback, timeout=5000) ->
+    ###
+    Load outer javascript and execute callback after loaded
+
+    Args:
+        url - an outer javascript url
+        check - checking expression written in string.
+        callback - a callback function
+
+    Example:
+        # --- foobar.js
+        Foobar = (function(message){
+            this.message = message;
+        });
+        Foobar.prototype.say = function(){
+            alert(this.message);
+        };
+        # --- main.js
+        net.hashnote.module.load('foobar.js', 'window.Foobar', function(){
+            var foobar = new Foobar("Hello");
+            foobar.say();
+        });
+    ###
+    if window.console?.info? then console.info "Loading '#{url}'..."
+    _check = new Function "return !!(#{check})"
+    if not _check()
+      include url
+      setTimeout ->
+        timeout = undefined
+      , timeout
+      setTimeout ->
+        if not timeout?
+          if window.console?.error? then console.error "Loading '#{url}' has timed out!"
+        else if not _check()
+          setTimeout arguments.callee, 100
+        else
+          if window.console?.info? then console.info "ok"
+          callback?()
+      , 10
+    else
+      callback?()
+  exports.loadall = loadall = (sets, callback, timeout=5000) ->
+    ###
+    Load all modules and execute callback after loaded
+
+    Args:
+        sets - a sets of url and check
+        callback a callback function
+        timeout - timeout in second (ambiguous)
+
+    Example:
+        net.hashnote.module.loadall([['foobar.js', 'window.Foobar'], ['hogehoge.js', 'window.Hogehoge']], function(){
+            alert("Everything has loaded.");
+        });
+    ###
     cursor = -1
-    _next = ->
+    next = ->
       cursor += 1
       if cursor == sets.length
-        if callback? then callback()
+        callback?()
       else
-        url = sets[cursor][0]
-        check = sets[cursor][1]
-        _load url, check, _next
-    _next()
-    return null
+        load sets[cursor][0], sets[cursor][1], next, timeout
+    if window.console?.info? then console.info "Load #{sets.length} outer javascripts dynamically..."
+    next()
+namespace 'net.hashnote.path', (exports) ->
+  exports.root = root = (pattern) ->
+    ###
+    Get root path of script
+
+    Args:
+      pattern - a pattern of script name written in <script> src tag
+
+    Example:
+      alert(net.hashnote.path.root('jquery(\.min)?\.js'));
+    ###
+    pattern = new RegExp "(.*)#{pattern}$"
+    root = undefined
+    $('script').each (a, tag) ->
+      match = $(tag).get(0).src.match pattern
+      if match?
+        root = match[1]
+        # remove trailing slush
+        return root[0..root.length-1]
+    return root
+  exports.abspath = abspath = (path, root, prefix='~/') ->
+    ###
+    Convert relativepath to absolutepath
+
+    Args:
+      path - a relativepath
+      root - script root path, use ``net.hashnote.path.root`` for find it
+      prefix - a prefix string. default is '~/'
+    ###
+    if path.lastIndexOf('~/', 0) is 0
+      path = "#{root}/#{path[2..path.length]}"
+    return path
 $ = jQuery
 $.fn.jencil = (options) ->
   options = $.extend true, {
@@ -53,20 +130,26 @@ $.fn.jencil = (options) ->
     defaultProfileName: 'html'
     defaultInsertText: '*'
     documentTypeElement: undefined
+    requires: [
+      ['js/textarea.min.js', 'window.Textarea']
+      ['~/jencil.core.min.js', 'window.Jencil']
+      ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
+      ['~/jencil.buttons.min.js', 'window.Jencil.widgets.Button']
+      ['~/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
+      ['~/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
+    ]
+    extras: []
   }, options
-  # --- develop mode code
-  requires = [
-    ['js/textarea.min.js', 'window.Textarea']
-    ['js/jencil/jencil.core.js', 'window.Jencil.core']
-    ['js/jencil/jencil.widgets.js', 'window.Jencil.widgets']
-    ['js/jencil/jencil.buttons.js', 'window.Jencil.widgets.Button']
-    ['js/jencil/jencil.texteditor.js', 'window.Jencil.widgets.TextEditor']
-    ['js/jencil/jencil.richeditor.js', 'window.Jencil.widgets.RichEditor']
-  ]
-  # --- /develop mode code
-  Jencil.utils.load requires, =>
-    options = Jencil.core.parse options
+  # --- parse options
+  options.root ?= net.hashnote.path.root 'jencil(\.min)?\.js'
+  options.profileSetPath = net.hashnote.path.abspath options.profileSetPath, options.root
+  options.previewTemplatePath = net.hashnote.path.abspath options.previewTemplatePath, options.root
+  for i in [0...options.requires.length]
+    options.requires[i][0] = net.hashnote.path.abspath options.requires[i][0], options.root
+  for i in [0...options.extras.length]
+    options.extras[i][0] = net.hashnote.path.abspath options.extras[i][0], options.root
+  # --- build load script list
+  requires = options.requires.concat options.extras
+  net.hashnote.module.loadall requires, =>
     return @each ->
       new Jencil.core.Jencil $(@), options
-
-

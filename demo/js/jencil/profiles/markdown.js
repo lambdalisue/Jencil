@@ -1,5 +1,6 @@
 (function() {
   namespace('Jencil.profile', function(exports) {
+    exports.editor = 'TextEditor';
     exports.previewParserMethod = 'GET';
     exports.previewParserPath = '~/parsers/markdown.cgi';
     exports.previewParserVal = 'data';

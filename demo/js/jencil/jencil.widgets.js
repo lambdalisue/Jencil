@@ -8,7 +8,7 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   namespace('Jencil.widgets', function(exports) {
-    var ButtonHolder, DocumentType, Editor, Toolbar, Widget, Workspace;
+    var ButtonHolder, DocumentType, Toolbar, Widget, Workspace, Wrapper;
     exports.Widget = Widget = (function() {
       function Widget(jencil, cls, type) {
         this.jencil = jencil;
@@ -37,6 +37,13 @@
       };
       return Widget;
     })();
+    exports.Wrapper = Wrapper = (function() {
+      __extends(Wrapper, Widget);
+      function Wrapper(jencil) {
+        Wrapper.__super__.constructor.call(this, jencil, 'jencil');
+      }
+      return Wrapper;
+    })();
     exports.DocumentType = DocumentType = (function() {
       __extends(DocumentType, Widget);
       function DocumentType(jencil) {
@@ -47,7 +54,6 @@
           this.$documentTypeElement.change(__bind(function() {
             return this.update();
           }, this));
-          this.update();
         }
       }
       DocumentType.prototype.getProfileName = function() {
@@ -59,7 +65,7 @@
       DocumentType.prototype.update = function() {
         var profileName;
         profileName = this.getProfileName();
-        return this.jencil.buttonHolder.update(profileName);
+        return this.jencil.load(profileName);
       };
       return DocumentType;
     })();
@@ -67,26 +73,20 @@
       __extends(ButtonHolder, Widget);
       function ButtonHolder(jencil) {
         ButtonHolder.__super__.constructor.call(this, jencil, 'jencil-button-holder');
-        this.update(this.jencil.options.defaultProfileName);
       }
-      ButtonHolder.prototype.update = function(profileName) {
-        var check, url;
-        delete Jencil.profile;
-        url = "" + this.jencil.options.profileSetPath + "/" + profileName + ".js";
-        check = 'Jencil.profile';
-        return Jencil.utils.load([[url, check]], __bind(function() {
-          var args, button, buttonset, type, _i, _len, _ref;
-          this.$element.children().remove();
-          _ref = Jencil.profile.buttonsets;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            buttonset = _ref[_i];
-            type = buttonset[0];
-            args = buttonset.slice(1, (buttonset.length + 1) || 9e9);
-            button = Jencil.widgets.createButton(this.jencil, type, args);
-            this.append(button);
-          }
-          return this.jencil.editor().update();
-        }, this));
+      ButtonHolder.prototype.update = function() {
+        var args, button, buttonset, type, _i, _len, _ref, _results;
+        this.$element.children().remove();
+        _ref = Jencil.profile.buttonsets;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          buttonset = _ref[_i];
+          type = buttonset[0];
+          args = buttonset.slice(1, (buttonset.length + 1) || 9e9);
+          button = Jencil.widgets.createButton(this.jencil, type, args);
+          _results.push(this.append(button));
+        }
+        return _results;
       };
       return ButtonHolder;
     })();
@@ -97,13 +97,17 @@
       }
       return Toolbar;
     })();
-    exports.Workspace = Workspace = (function() {
+    return exports.Workspace = Workspace = (function() {
       __extends(Workspace, Widget);
       function Workspace(jencil) {
         Workspace.__super__.constructor.call(this, jencil, 'jencil-workspace');
       }
       return Workspace;
     })();
+  });
+  namespace('Jencil.editors', function(exports) {
+    var Editor, Widget;
+    Widget = Jencil.widgets.Widget;
     return exports.Editor = Editor = (function() {
       __extends(Editor, Widget);
       function Editor(jencil, cls, type) {

@@ -1,6 +1,6 @@
-namespace 'Jencil.widgets', (exports) ->
+namespace 'Jencil.editors', (exports) ->
   Widget = Jencil.widgets.Widget
-  Editor = Jencil.widgets.Editor
+  Editor = Jencil.editors.Editor
   class TextArea extends Widget
     constructor: (jencil, @holder) ->
       super jencil, 'jencil-textarea'

@@ -20,7 +20,16 @@
                     documentTypeElement: $('select#document-type'),
                     previewTemplatePath: 'js/jencil/templates/preview.html',
                     //previewPosition: 'bottom'
-                    previewPosition: 'right'
+                    previewPosition: 'right',
+                    // use development file
+                    requires: [
+                        ['js/textarea.min.js', 'window.Textarea'],
+                        ['~/jencil.core.js', 'window.Jencil'],
+                        ['~/jencil.widgets.js', 'window.Jencil.widgets'],
+                        ['~/jencil.buttons.js', 'window.Jencil.widgets.Button'],
+                        ['~/jencil.texteditor.js', 'window.Jencil.editors.TextEditor'],
+                        ['~/jencil.richeditor.js', 'window.Jencil.editors.RichEditor']
+                    ]
                 });
             });
         </script>

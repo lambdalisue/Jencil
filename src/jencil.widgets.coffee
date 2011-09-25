@@ -14,6 +14,9 @@ namespace 'Jencil.widgets', (exports) ->
       @$element.prepend widget.$element
     prependTo: (widget) ->
       @$element.prependTo widget.$element
+  exports.Wrapper = class Wrapper extends Widget
+    constructor: (jencil) ->
+      super jencil, 'jencil'
   exports.DocumentType = class DocumentType extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-document-type'
@@ -22,38 +25,32 @@ namespace 'Jencil.widgets', (exports) ->
         @$element.append @$documentTypeElement
         @$documentTypeElement.change =>
           @update()
-        @update()
     getProfileName: ->
       if @$documentTypeElement?
         return @$documentTypeElement.val()
       return @jencil.defaultProfileName
     update: ->
       profileName = @getProfileName()
-      @jencil.buttonHolder.update profileName
+      @jencil.load profileName
   exports.ButtonHolder = class ButtonHolder extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-button-holder'
-      @update @jencil.options.defaultProfileName
-    update: (profileName) ->
-      delete Jencil.profile # force reload
-      url = "#{@jencil.options.profileSetPath}/#{profileName}.js"
-      check = 'Jencil.profile'
-      Jencil.utils.load [[url, check]], =>
-        @$element.children().remove()
-        for buttonset in Jencil.profile.buttonsets
-          type = buttonset[0]
-          args = buttonset[1..buttonset.length]
-          button = Jencil.widgets.createButton @jencil, type, args
-          @append button
-        # Update editor as well
-        @jencil.editor().update()
-
+    update: () ->
+      @$element.children().remove()
+      for buttonset in Jencil.profile.buttonsets
+        type = buttonset[0]
+        args = buttonset[1..buttonset.length]
+        button = Jencil.widgets.createButton @jencil, type, args
+        @append button
   exports.Toolbar = class Toolbar extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-toolbar'
   exports.Workspace = class Workspace extends Widget
     constructor: (jencil) ->
       super jencil, 'jencil-workspace'
+
+namespace 'Jencil.editors', (exports) ->
+  Widget = Jencil.widgets.Widget
   exports.Editor = class Editor extends Widget
     constructor: (jencil, cls, type) ->
       super jencil, cls, type

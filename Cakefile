@@ -28,7 +28,6 @@ build = (watch, callback) ->
 task 'build', 'Compile CoffeeScript source files', ->
   build()
 
-
 task 'watch', 'Recompile CoffeeScript source files when modified', ->
   build true
 
@@ -47,7 +46,6 @@ task 'pack', 'Pack all javascript files', ->
       basename = file[0..file.length-4]
       print  "jsPacker.pl -e62 -i ../lib/#{file} -o ../lib/#{basename}.min.js\n"
       exec "(cd packer; perl jsPacker.pl -e62 -i ../lib/#{file} -o ../lib/#{basename}.min.js)"
-
 
 task 'test', 'Run the test suite', ->
   build ->

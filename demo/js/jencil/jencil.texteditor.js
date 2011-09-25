@@ -7,10 +7,10 @@
     child.__super__ = parent.prototype;
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  namespace('Jencil.widgets', function(exports) {
+  namespace('Jencil.editors', function(exports) {
     var Editor, Preview, TextArea, TextEditor, Widget;
     Widget = Jencil.widgets.Widget;
-    Editor = Jencil.widgets.Editor;
+    Editor = Jencil.editors.Editor;
     TextArea = (function() {
       __extends(TextArea, Widget);
       function TextArea(jencil, holder) {

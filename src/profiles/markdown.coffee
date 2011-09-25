@@ -1,4 +1,5 @@
 namespace 'Jencil.profile', (exports) ->
+  exports.editor = 'TextEditor'
   exports.previewParserMethod = 'GET'
   exports.previewParserPath = '~/parsers/markdown.cgi'
   exports.previewParserVal = 'data'
@@ -24,4 +25,3 @@ namespace 'Jencil.profile', (exports) ->
     ['-']
     ['p']
   ]
-

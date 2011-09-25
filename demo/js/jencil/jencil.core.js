@@ -1,4 +1,5 @@
 (function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   String.prototype.startsWith = function(prefix) {
     return this.lastIndexOf(prefix, 0) === 0;
   };
@@ -6,60 +7,47 @@
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
   };
   namespace('Jencil.core', function(exports) {
-    var JencilCore, abspath, parse;
-    exports.abspath = abspath = function(path, root, prefix) {
-      if (prefix == null) {
-        prefix = '~/';
-      }
-      if (path.startsWith('~/')) {
-        path = "" + root + "/" + path.slice(2, (path.length + 1) || 9e9);
-      }
-      return path;
-    };
-    exports.parse = parse = function(options) {
-      var findroot;
-      findroot = function(options) {
-        return $('script').each(function(a, tag) {
-          var match;
-          match = $(tag).get(0).src.match(/(.*)jencil(\.min)?\.js$/);
-          if (match != null) {
-            options.root = match[1];
-            return options.root.slice(0, (options.root.length - 1 + 1) || 9e9);
-          }
-        });
-      };
-      if (!(options.root != null)) {
-        findroot(options);
-      }
-      options.profileSetPath = abspath(options.profileSetPath, options.root);
-      options.previewTemplatePath = abspath(options.previewTemplatePath, options.root);
-      return options;
-    };
+    var JencilCore;
     return exports.Jencil = JencilCore = (function() {
       function JencilCore($textarea, options) {
         this.$textarea = $textarea;
         this.options = options;
-        this.$element = $('<div>').addClass('jencil');
-        this.$textarea.after(this.$element);
-        this.$textarea.hide();
+        this.wrapper = new Jencil.widgets.Wrapper(this);
         this.buttonHolder = new Jencil.widgets.ButtonHolder(this);
         this.documentType = new Jencil.widgets.DocumentType(this);
         this.toolbar = new Jencil.widgets.Toolbar(this);
         this.toolbar.append(this.buttonHolder);
         this.toolbar.append(this.documentType);
+        this.wrapper.append(this.toolbar);
         this.workspace = new Jencil.widgets.Workspace(this);
-        this.texteditor = new Jencil.widgets.TextEditor(this);
-        this.richeditor = new Jencil.widgets.RichEditor(this);
-        this.workspace.append(this.texteditor);
-        this.workspace.append(this.richeditor);
-        this.$element.append(this.toolbar.$element);
-        this.$element.append(this.workspace.$element);
+        this.wrapper.append(this.workspace);
+        this.$textarea.after(this.wrapper.$element);
+        this.$textarea.hide();
+        this.load(this.documentType.getProfileName());
       }
+      JencilCore.prototype.load = function(profileName) {
+        var check, url;
+        delete Jencil.profile;
+        url = "" + this.options.profileSetPath + "/" + profileName + ".js";
+        check = 'Jencil.profile';
+        return net.hashnote.module.load(url, check, __bind(function() {
+          return this.update();
+        }, this));
+      };
+      JencilCore.prototype.update = function() {
+        var cls;
+        cls = Jencil.editors[Jencil.profile.editor];
+        this.workspace.$element.children().remove();
+        this._editor = new cls(this);
+        this.workspace.append(this._editor);
+        this.buttonHolder.update();
+        return this.editor().update();
+      };
       JencilCore.prototype.abspath = function(path) {
-        return Jencil.core.abspath(path, this.options.root);
+        return net.hashnote.path.abspath(path, this.options.root);
       };
       JencilCore.prototype.editor = function() {
-        return this.texteditor;
+        return this._editor;
       };
       return JencilCore;
     })();
