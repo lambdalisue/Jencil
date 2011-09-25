@@ -137,7 +137,9 @@ $.fn.jencil = (options) ->
       ['~/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
       ['~/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
     ]
-    extras: []
+    extras: [
+      ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']      # required to enable TAB feature on TextEditor
+    ]
   }, options
   if @.length > 1 and options.documentTypeElement?
     if window.console?.warn?

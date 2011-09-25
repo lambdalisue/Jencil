@@ -1,3 +1,8 @@
+###
+Jencil TextEditor
+
+This editor is for editing simple text with preview feature
+###
 namespace 'Jencil.editors', (exports) ->
   Widget = Jencil.widgets.Widget
   Editor = Jencil.editors.Editor
@@ -75,6 +80,10 @@ namespace 'Jencil.editors', (exports) ->
       @preview = new Preview @jencil, @
       @append @textarea
       @append @preview
+      if $.fn.tabby?
+        # Enable TAB and SHIFT+TAB feature with jQuery tabby plugin
+        # http://teddevito.com/demos/textarea.html
+        @$element.tabby()
     update: ->
       @textarea.update()
       @preview.update()
