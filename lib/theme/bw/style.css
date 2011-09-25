@@ -5,13 +5,17 @@
 }
 element {width:100%;} /* clearfix IE6, 7 */
 element:after {content:"";} /* clearfix */
-.jencil{
+.jencil, .jencil-loading{
     width: 100%;
     height: auto;
     padding: 10px;
     border: 1px solid #e4e4e4;
     border-radius: 5px;
     background: #f9f9f9;
+}
+.jencil-loading{
+    height: 500px;
+    background: url(image/loading.gif) no-repeat 50% 50%;
 }
 .jencil .jencil-toolbar{
     width: 100%;

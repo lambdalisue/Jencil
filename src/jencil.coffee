@@ -140,6 +140,17 @@ $.fn.jencil = (options) ->
     ]
     extras: []
   }, options
+  if @.length > 1 and options.documentTypeElement?
+    if window.console?.warn?
+      console.warn "documentTypeElement is not avaialble on multiple textarea"
+      options.documentTypeElement = undefined
+  # --- hide object
+  $$ = $(@)
+  $$.hide()
+  options.documentTypeElement?.hide()
+  # --- add loading frame
+  $loading = $('<div>').addClass 'jencil-loading'
+  $$.after $loading
   # --- parse options
   options.root ?= net.hashnote.path.root 'jencil(\.min)?\.js'
   options.profileSetPath = net.hashnote.path.abspath options.profileSetPath, options.root
@@ -151,5 +162,6 @@ $.fn.jencil = (options) ->
   # --- build load script list
   requires = options.requires.concat options.extras
   net.hashnote.module.loadall requires, =>
+    $loading.remove()
     return @each ->
       new Jencil.core.Jencil $(@), options
