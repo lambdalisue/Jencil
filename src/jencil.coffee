@@ -125,7 +125,7 @@ namespace 'Jencil.loader', (exports) ->
     Jencil loader. This loader is for inform user to Jencil is currently loading outer scripts.
     ###
     constructor: (textarea, @options) ->
-      @$element = $('<div>').addClass('jencil-loader').hide()
+      @$element = $('<div>').addClass 'jencil-loader'
       @$textarea = $(textarea)
       @$textarea.after @$element
       @$textarea.hide()
