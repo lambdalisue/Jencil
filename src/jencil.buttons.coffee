@@ -97,9 +97,9 @@ namespace 'Jencil.buttons', (exports) ->
         else
           # add markup
           selectedLines[i] = "#{_before}#{line}#{_after}"
-      if @blockBefore?
+      if @blockBefore isnt undefined
         if selectedLines[0] is @blockBefore then selectedLines.shift() else selectedLines.unshift @blockBefore
-      if @blockAfter?
+      if @blockAfter isnt undefined
         if selectedLines[selectedLines.length-1] is @blockAfter then selectedLines.pop() else selectedLines.push @blockAfter
       replace = selectedLines.join '\n'
       @editor().replaceSelected replace, true
