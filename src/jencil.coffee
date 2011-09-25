@@ -163,5 +163,6 @@ $.fn.jencil = (options) ->
   requires = options.requires.concat options.extras
   net.hashnote.module.loadall requires, =>
     $loading.remove()
+    options.documentTypeElement?.show()
     return @each ->
       new Jencil.core.Jencil $(@), options
