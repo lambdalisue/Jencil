@@ -73,6 +73,7 @@ class Initializer extends Jencil.editors.Initializer
       ['~/jencil.texteditor.css', 'screen, projection']
     ]
     requires: [
+      ['~/textarea.min.js', 'window.Textarea']
       ['http://teddevito.com/demos/js/jquery.textarea.js', '$.fn.tabby']
     ]
     options: 

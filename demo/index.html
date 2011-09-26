@@ -30,11 +30,11 @@
                      * this limitation is because of one-to-one relation between textarea and documentTypeElement.
                      */
                     documentTypeElement: $('select#document-type'),
+                    defaultProfileName: 'wysiwyg',
                     extras: {
                         previewPosition: 'right'
                     },
                     requires: [
-                        ['~/textarea.min.js', 'window.Textarea'],
                         ['~/jencil.core.js', 'window.Jencil.core'],
                         ['~/jencil.theme.js', 'window.Jencil.theme'],
                         ['~/jencil.widgets.js', 'window.Jencil.widgets'],
@@ -44,6 +44,7 @@
                     ],
                     editors: [
                         ['~/editors/jencil.texteditor.js', 'window.Jencil.editors.TextEditor'],
+                        ['~/editors/jencil.richeditor.js', 'window.Jencil.editors.RichEditor'],
                         ['js/jencil.extra/jencil.simpleeditor.js', 'window.Jencil.editors.SimpleEditor'],
                     ]
                 });
@@ -53,43 +54,79 @@
     <body>
         <div id="wrapper">
             <header>
-                <h1>Jencil Demo</h1>
-                <p>Cross browser Markup and WYSIWIG (not yet) editor written in CoffeeScript</p>
+                <h1>Jencil alpha Demo</h1>
+                <p>Cross browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr> editor written in CoffeeScript</p>
+                <p>See <a href="http://demos.textarea.hashnote.net/">Textarea</a> if you are interested in munipulating textarea.
+                See <a href="http://demos.richarea.hashnote.net/">Richarea</a> if you are interested in munipulating iframe. Jencil use these library to munipulating textarea and iframe.</p>
             </header>
+            <nav id="relatedlinks">
+                <ul>
+                    <li id="github"><a href="http://github.com/lambdalisue/Jencil" title="Github" target="_blank">Github</a></li>
+                    <li id="tumblr"><a href="http://hashnote.net" title="Tumblr" target="_blank">Tumblr</a></li>
+                    <li id="twitter"><a href="http://twitter.com/lambdalisue" title="Twitter" target="_blank">Twitter</a></li>
+                </ul>
+            </nav>
+            <!-- AddThis Button BEGIN -->
+            <div class="addthis_toolbox addthis_default_style ">
+            <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+            <a class="addthis_button_tweet"></a>
+
+            <a class="addthis_counter addthis_pill_style"></a>
+            </div>
+            <script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+            <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=alisue"></script>
+            <!-- AddThis Button END -->
             <section id="content">
-                <p>
-                    <select id="document-type">
-                        <option value="html">HTML</option>
-                        <option value="markdown">Markdown</option>
-                        <option value="js/jencil.extra/profiles/plaintext.js">PlainText</option>
-                        <option value="wysiwyg">WYSIWYG (not supported yet)</option>
-                    </select>
-                    <textarea id="document-body">
-When I find myself in times of trouble
-Mother Mary comes to me
-Speaking words of wisdom, let it be.
-And in my hour of darkness
-She is standing right in front of me
-Speaking words of wisdom, let it be.
-Let it be, let it be.
-Let it be, let it be.
-Whisper words of wisdom, let it be.
-                    </textarea>
-                </p>
-            </section>
-            <section id="handler">
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        var $themeSelector = $('select#jencil-themes');
-                        $themeSelector.change(function(){
-                            Jencil.theme.load($(this).val());
-                        });
-                    });
-                </script>
-                <p><label for="jencil-theme">Theme: </label><select id="jencil-themes">
-                    <option value="default">Default Theme</option>
-                    <option value="empty">No CSS Designed</option>
-                </select></p>
+                <section id="demo">
+                    <h2>Demo</h2>
+                    <p>
+                        <select id="document-type">
+                            <option value="html">HTML</option>
+                            <option value="markdown">Markdown</option>
+                            <option value="wysiwyg" selected='selected'>WYSIWYG</option>
+                            <option value="js/jencil.extra/profiles/plaintext.js">PlainText (Plugin Editor Sample)</option>
+                        </select>
+                        <textarea id="document-body">
+    When I find myself in times of trouble
+    Mother Mary comes to me
+    Speaking words of wisdom, let it be.
+    And in my hour of darkness
+    She is standing right in front of me
+    Speaking words of wisdom, let it be.
+    Let it be, let it be.
+    Let it be, let it be.
+    Whisper words of wisdom, let it be.
+                        </textarea>
+                    </p>
+                    <section id="handler">
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var $themeSelector = $('select#jencil-themes');
+                                $themeSelector.change(function(){
+                                    Jencil.theme.load($(this).val());
+                                });
+                            });
+                        </script>
+                        <p><label for="jencil-theme">Theme: </label><select id="jencil-themes">
+                            <option value="default">Default Theme</option>
+                            <option value="empty">No CSS Designed</option>
+                        </select></p>
+                    </section>
+                </section>
+                <h2>Features</h2>
+                <ul>
+                    <li>Easy to use (working as jQuery plugin)</li>
+                    <li>Cross browser (but doesn't support old browser)</li>
+                    <li>WYSIWYM and WYSIWYG compatible</li>
+                    <li>Multiple markup is supported</li>
+                    <li>Profile is supported</li>
+                    <li>Theme is supported</li>
+                    <li>Plugin is supported</li>
+                </ul>
+                <h2>Download</h2>
+                <p>This demo is alpha version so download is not available yet but if you really want to use this and you know what is alpha version mean,
+                just clone my github repository (you can jump to with an button link located top left of this page) and use it. 
+                <strong>If you are interested in this Editor, click star makes me happy!</strong></p>
             </section>
             <footer>
                 <span id="copyright">Copyright &copy; 2011 lambdalisue allright reserved.</span>

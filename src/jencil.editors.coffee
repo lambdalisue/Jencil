@@ -24,6 +24,7 @@ namespace 'Jencil.editors', (exports) ->
       # --- construct new editor via profile
       jencil._editor = new cls jencil
       jencil.workspace.append jencil._editor
+      jencil._editor.init?()
       # --- call callback
       callback()
   exports.Initializer = class Initializer
@@ -40,6 +41,10 @@ namespace 'Jencil.editors', (exports) ->
     @Initializer: Initializer
     constructor: (jencil, cls, type) ->
       super jencil, cls, type
+    init: ->
+      ###
+      Initialize function. This function is called after everything has constructed.
+      ###
     update: ->
       ###
       Update editor. Subclass should override this method to update anything related to the editor

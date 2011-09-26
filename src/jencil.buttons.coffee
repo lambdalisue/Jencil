@@ -144,7 +144,7 @@ namespace 'Jencil.buttons', (exports) ->
     ###
     constructor: (jencil, args) ->
       [@formatstr] = args
-      super jencil, 'img', 'Image'
+      super jencil, 'image', 'Image'
     click: ->
       src = prompt "Please input image src url"
       if src is null then return
