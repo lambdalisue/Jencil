@@ -12,6 +12,15 @@ class RichArea extends Jencil.widgets.Widget
   init: ->
     # Created iframe doesn't have <body> so we need to create it
     @controller = new Richarea @$surface
+    # Load template head
+    console.log @jencil.options.extras.richareaTemplatePath
+    $.get @jencil.options.extras.richareaTemplatePath, null, (html) =>
+      container = document.createElement 'div'
+      container.innerHTML = html
+      console.log container
+      @controller.raw.document.head.innerHTML = container.innerHTML
+    , 'html'
+
     @controller.setValue @$source.val()
     $(@controller.raw.body).bind 'keyup change click blur enter', =>
       @update()
@@ -61,7 +70,11 @@ class Initializer extends Jencil.editors.Initializer
     ]
     options: 
       rawviewPosition: 'right'
+      richareaTemplatePath: '~/templates/richarea.html'
       defaultRawviewState: 'close'
+    constructor: (jencil) ->
+      super jencil
+      @options.richareaTemplatePath = jencil.abspath @options.richareaTemplatePath
 namespace 'Jencil.editors', (exports) ->
   EditorBase = Jencil.editors.EditorBase
   exports.RichEditor = class RichEditor extends EditorBase

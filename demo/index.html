@@ -79,25 +79,26 @@
             <section id="content">
                 <section id="demo">
                     <h2>Demo</h2>
-                    <p>
-                        <select id="document-type">
-                            <option value="html">HTML</option>
-                            <option value="markdown">Markdown</option>
-                            <option value="wysiwyg" selected='selected'>WYSIWYG</option>
-                            <option value="js/jencil.extra/profiles/plaintext.js">PlainText (Plugin Editor Sample)</option>
-                        </select>
-                        <textarea id="document-body">
-    When I find myself in times of trouble
-    Mother Mary comes to me
-    Speaking words of wisdom, let it be.
-    And in my hour of darkness
-    She is standing right in front of me
-    Speaking words of wisdom, let it be.
-    Let it be, let it be.
-    Let it be, let it be.
-    Whisper words of wisdom, let it be.
-                        </textarea>
-                    </p>
+                    <select id="document-type">
+                        <option value="html">HTML</option>
+                        <option value="markdown">Markdown</option>
+                        <option value="wysiwyg" selected='selected'>WYSIWYG</option>
+                        <option value="js/jencil.extra/profiles/plaintext.js">PlainText (Plugin Editor Sample)</option>
+                    </select>
+                    <textarea id="document-body">
+When I find myself in times of trouble
+Mother Mary comes to me
+Speaking words of wisdom, let it be.
+And in my hour of darkness
+She is standing right in front of me
+Speaking words of wisdom, let it be.
+Let it be, let it be.
+Let it be, let it be.
+Whisper words of wisdom, let it be.
+                    </textarea>
+                    <p class="description">H1 element is shown as Red text in WYSIWYG mode. That because the WYSIWYG mode use RichEditor and RichEditor
+                    can set Template HTML. Used template in RichEditor has 'h1{color: red}' setting on its head so H1 element is shown as Red text only in WYSIWYG.
+                    That mean you can design your RichEditor as possible as CSS can.</p>
                     <section id="handler">
                         <script type="text/javascript">
                             $(document).ready(function(){
@@ -124,7 +125,7 @@
                     <li>Plugin is supported</li>
                 </ul>
                 <h2>Download</h2>
-                <p>This demo is alpha version so download is not available yet but if you really want to use this and you know what is alpha version mean,
+                <p>Jencil is still alpha version so download is not available yet but if you really want to use this and you know what is alpha version mean,
                 just clone my github repository (you can jump to with an button link located top left of this page) and use it. 
                 <strong>If you are interested in this Editor, click star makes me happy!</strong></p>
             </section>

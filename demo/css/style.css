@@ -9,6 +9,10 @@ a, a:visited{
 a:hover, a:active{
     color: #8e8eff;
 }
+p.description{
+    color: #ababab;
+    font-size: 0.9em;
+}
 div#wrapper{
     position: relative;
     width: 980px;
@@ -70,7 +74,7 @@ div.addthis_toolbox{
     position: absolute;
     top: 20px; left: 20px;
 }
-.jencil{
+.jencil, .jencil-loader{
     width: 940px !important;
     margin: 0 auto;
 }
