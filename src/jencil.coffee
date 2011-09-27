@@ -25,6 +25,7 @@ namespace 'net.hashnote.css', (exports) ->
     link.type = 'text/css'
     link.media = media
     link.href = url
+    document.head = document.head or document.getElementsByTagName('head')[0];
     document.head.appendChild link
   exports.remove = remove = (pattern) ->
     pattern = new RegExp "(.*)#{pattern}$"
@@ -43,6 +44,7 @@ namespace 'net.hashnote.module', (exports) ->
     script = document.createElement 'script'
     script.type = 'text/javascript'
     script.src = url
+    document.head = document.head or document.getElementsByTagName('head')[0];
     document.head.appendChild script
   exports.load = load = (url, check, callback, timeout=5000) ->
     ###
@@ -137,9 +139,51 @@ namespace 'net.hashnote.path', (exports) ->
       root - script root path, use ``net.hashnote.path.root`` for find it
       prefix - a prefix string. default is '~/'
     ###
-    if path.lastIndexOf(prefix, 0) is 0
+    if path?.lastIndexOf(prefix, 0) is 0
       path = "#{root}/#{path[2..path.length]}"
     return path
+namespace 'Jencil.utils', (exports) ->
+  class Browser
+    ###
+    CoffeeScript version of BrowserDetect found in http://www.quirksmode.org/js/detect.html
+    ###
+    constructor: ->
+      @browser = @searchString(@dataBrowser) or "An unknown browser"
+      @version = @searchVersion(navigator.userAgent) or @searchVersion(navigator.appVersion) or "An unknown browser"
+      @OS = @searchString(@dataOS) or "An unknown OS"
+    searchString: (data) ->
+      for row in data
+        @versionSearchString = row.versionSearch or row.identify
+        if row.string?
+          if row.string.indexOf(row.subString) isnt -1
+            return row.identify
+          else if row.prop
+            return row.identify
+    searchVersion: (dataString) ->
+      index = dataString.indexOf @versionSearchString
+      if index is -1 then return
+      return parseFloat dataString.substring(index+@versionSearchString.length+1)
+    dataBrowser: [
+      {string: navigator.userAgent, subString: 'Chrome', identify: 'Chrome'}
+      {string: navigator.userAgent, subString: 'OmniWeb', versionSearch: 'OmniWeb/', identify: 'OmniWeb'}
+      {string: navigator.vendor, subString: 'Apple', identify: 'Safari', versionSearch: 'Version'}
+      {prop: window.opera, identify: 'Opera', versionSearch: 'Version'}
+      {string: navigator.vendor, subString: 'iCab', identify: 'iCab'}
+      {string: navigator.vendor, subString: 'KDE', identify: 'Konqueror'}
+      {string: navigator.userAgent, subString: 'Firefox', identify: 'Firefox'}
+      {string: navigator.vendor, subString: 'Camino', identify: 'Camino'}
+      {string: navigator.userAgent, subString: 'Netscape', identify: 'Netscape'}
+      {string: navigator.userAgent, subString: 'MSIE', identify: 'Explorer', versionSearch: 'MSIE'}
+      {string: navigator.userAgent, subString: 'Gecko', identify: 'Mozilla', versionSearch: 'rv'}
+      {string: navigator.userAgent, subString: 'Mozilla', identify: 'Netscape', versionSearch: 'Mozilla'}
+    ]
+    dataOS: [
+      {string: navigator.platform, subString: 'Win', identify: 'Windows'}
+      {string: navigator.platform, subString: 'Mac', identify: 'Mac'}
+      {string: navigator.userAgent, subString: 'iPhone', identify: 'iPhone/iPad'}
+      {string: navigator.platform, subString: 'Linux', identify: 'Linux'}
+    ]
+  exports.browser = new Browser
 namespace 'Jencil.theme', (exports) ->
   exports.root = undefined
   exports.init = (options) ->
@@ -172,7 +216,8 @@ namespace 'Jencil.loader', (exports) ->
     Jencil loader. This loader is for inform user to Jencil is currently loading outer scripts.
     ###
     constructor: (textarea, @options) ->
-      @$element = $('<div>').addClass 'jencil-loader'
+      @$element = $('<div>').addClass 'jencil'
+      @$element.addClass 'loader'
       @$textarea = $(textarea)
       @$textarea.after @$element
       @$textarea.hide()
@@ -194,22 +239,22 @@ $.fn.jencil = (options) ->
     root: undefined
     editorSetPath: '~/editors'
     profileSetPath: '~/profiles'
-    themeSetPath: '~/theme'
+    themeSetPath: '~/themes'
     defaultProfileName: 'wysiwyg'
     defaultThemeName: 'default'
     defaultInsertText: '*'
     documentTypeElement: undefined
     extras: {}
     requires: [
-      ['~/jencil.core.min.js', 'window.Jencil.core']
-      ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
-      ['~/jencil.buttons.min.js', 'window.Jencil.buttons']
-      ['~/jencil.editors.min.js', 'window.Jencil.editors']
-      ['~/jencil.profile.min.js', 'window.Jencil.profile']
+      ['~/jencil.core.js', 'window.Jencil.core']
+      ['~/jencil.widgets.js', 'window.Jencil.widgets']
+      ['~/jencil.buttons.js', 'window.Jencil.buttons']
+      ['~/jencil.editors.js', 'window.Jencil.editors']
+      ['~/jencil.profile.js', 'window.Jencil.profile']
     ]
     editors: [
-      ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
-      ['~/editors/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
+      ['~/editors/jencil.texteditor.js', 'window.Jencil.editors.TextEditor']
+      ['~/editors/jencil.richeditor.js', 'window.Jencil.editors.RichEditor']
     ]
   }, options
   # Check documentTypeElement

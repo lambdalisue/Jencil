@@ -16,7 +16,7 @@ namespace 'Jencil.editors', (exports) ->
     # --- load extra required libraries and change editor
     requires = initializer.requires
     for i in [0...requires.length]
-      requires[i] = net.hashnote.path.abspath requires[i], jencil.options.root
+      requires[i][0] = net.hashnote.path.abspath requires[i][0], jencil.options.root
     net.hashnote.module.loadall requires, =>
       # --- remove current editor
       jencil._editor?.$element.remove()
@@ -41,6 +41,7 @@ namespace 'Jencil.editors', (exports) ->
     @Initializer: Initializer
     constructor: (jencil, cls, type) ->
       super jencil, cls, type
+      @$element.addClass 'editor'
     init: ->
       ###
       Initialize function. This function is called after everything has constructed.

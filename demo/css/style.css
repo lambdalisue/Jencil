@@ -74,7 +74,8 @@ div.addthis_toolbox{
     position: absolute;
     top: 20px; left: 20px;
 }
-.jencil, .jencil-loader{
-    width: 940px !important;
+.jencilholder{
+    width: 100px;
     margin: 0 auto;
+    background: red;
 }

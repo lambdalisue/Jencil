@@ -1,0 +1,54 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta http-equiv="Expires" content="Thu, 01 Dec 1994 16:00:00 GMT"> 
+        <meta charset="utf-8">
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <!--[if IE]>
+            <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <title>Jencil Test - Cross browser WYSIWYM and WYSIWYG editor</title>
+        <!-- DEVELOP VERSION -->
+        <script type="text/javascript" src="js/jencil/jencil.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('textarea#document-body').jencil({
+                    documentTypeElement: $('select#document-type'),
+                    extras: {
+                        previewPosition: 'right'
+                    }
+                });
+            });
+        </script>
+        <style type="text/css">
+            body{
+                background: red;
+            }
+            #container{
+                background: blue;
+                margin: 0 auto;
+                padding: 20px;
+                width: 640px;
+            }
+            .jencil{
+                width: 600px;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <select id="document-type">
+                <option value="html">HTML</option>
+                <option value="wysiwyg">WYSIWYG</option>
+            </select>
+            <textarea id="document-body"></textarea>
+            <div class="jencil" style="background: green;">
+                Ruler
+            </div>
+        </div>
+    </body>
+</html>
+
