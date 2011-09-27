@@ -25,6 +25,22 @@ build = (watch, callback) ->
   coffee.stderr.on 'data', (data) -> print data.toString()
   coffee.on 'exit', (status) -> callback?() if status is 0
 
+  options = ['-c', '-o', 'external/Textarea/lib', 'external/Textarea/src']
+  options.unshift '-w' if watch
+
+  coffee = spawn 'coffee', options
+  coffee.stdout.on 'data', (data) -> print data.toString()
+  coffee.stderr.on 'data', (data) -> print data.toString()
+  coffee.on 'exit', (status) -> callback?() if status is 0
+
+  options = ['-c', '-o', 'external/Richarea/lib', 'external/Richarea/src']
+  options.unshift '-w' if watch
+
+  coffee = spawn 'coffee', options
+  coffee.stdout.on 'data', (data) -> print data.toString()
+  coffee.stderr.on 'data', (data) -> print data.toString()
+  coffee.on 'exit', (status) -> callback?() if status is 0
+
 task 'build', 'Compile CoffeeScript source files', ->
   build()
 

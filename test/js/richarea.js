@@ -1,0 +1,1 @@
+../../external/Richarea/lib/richarea.js
