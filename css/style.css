@@ -1,0 +1,40 @@
+@charset "utf-8";
+@import url(typography.css);
+@import url(rubberlayout.css);
+@import url(slickeffect.css);
+
+#container{
+    background: #ffffff;
+    margin: 30px auto;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-shadow: 0 1px 0 #fff;
+}
+#download{
+    float: right;
+}
+#download ul,
+#download ul li{
+    margin: 0; padding: 0;
+}
+#download ul li{
+    display: inline;
+}
+#header, #header figure{
+    margin: 0; padding: 0;
+}
+#header figure h1 a.title{
+    display: inline-block;
+    width: 200px;
+    height: 75px;
+    background: url(img/header.png) no-repeat;
+    text-indent: -10000px;
+    outline: none;
+    vertical-align: bottom;
+}
+#header figure h1 span{
+    margin-left: 1em;
+}
+#header figure .description{
+    color: #ababab;
+}

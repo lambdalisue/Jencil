@@ -1,0 +1,43 @@
+@charset "utf-8";
+/*
+ * Rubber Layout CSS
+ * - http://speckyboy.com/2011/08/31/rubber-layouts-combining-static-and-fluid-layouts/
+ */
+#container {
+    width: 1000px;
+    margin: 0 auto;
+}
+#main{
+    float: left;
+    width: 68%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+#sidebar{
+    float: left;
+    width: 28%;
+    margin-left: 1%;
+    margin-right: 1%;
+    height: 1000px;
+}
+@media screen and (max-width: 999px) {
+    #container {
+        width: 720px;
+    }
+}
+@media screen and (max-width: 719px) {
+    #container {
+        width: 100%;
+    }
+}
+@media screen and (max-width: 479px) {
+    #header {
+        width: 98%;
+    }
+    #main {
+        width: 98%;
+    }
+    #sidebar {
+        width: 98%;
+    }
+}

@@ -1,87 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8'>
-
-  <title>lambdalisue/Jencil @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #81415f;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #7ebea0; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #7ebea0; }
-    h3 { text-align: center; color: #7ebea0; }
-    a { color: #7ebea0; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+    <meta charset='utf-8'>
+    <title>lambdalisue/Jencil @ GitHub</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Montez' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jencil/jencil.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('textarea#document-body-demo').jencil({
+                documentTypeElement: $('select#document-type-demo'),
+                defaultProfileName: 'wysiwyg'
+            });
+        });
+    </script>
 </head>
-
 <body>
-  <a href="http://github.com/lambdalisue/Jencil"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+    <a href="http://github.com/lambdalisue/Jencil"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+    <div id="container">
+        <nav id="download">
+            <ul>
+                <li><a href="http://github.com/lambdalisue/Jencil/zipball/master">
+                    <img border="0" width="90" alt="Download as Zip" src="http://github.com/images/modules/download/zip.png">
+                </a></li>
+                <li><a href="http://github.com/lambdalisue/Jencil/tarball/master">
+                    <img border="0" width="90" alt="Download as Tar" src="http://github.com/images/modules/download/tar.png">
+                </a></li>
+            </ul>
+        </nav>
+        <header id="header">
+            <figure>
+                <h1><a class="title" href="http://github.com/lambdalisue/Jencil">Jencil</a>
+                    <span class="small">by <a href="http://github.com/lambdalisue">lambdalisue</a></span></h1>
+                <div class="description">
+                    <p>JavaScript Cross browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr>
+                    editor working as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a></p>
+                </div>
+            </figure>
+        </header>
 
-  <div id="container">
+        <section id="main">
+            <h2 class="ribbon">Demo</h2>
+            <select id="document-type-demo">
+                <option value="wysiwyg">WYSIWYG</option>
+                <option value="html">HTML</option>
+                <option value="markdown">Markdown</option>
+            </select>
+            <textarea id="document-body-demo"></textarea>
 
-    <div class="download">
-      <a href="http://github.com/lambdalisue/Jencil/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/lambdalisue/Jencil/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+            <h2>License</h2>
+            <p><a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p>
+
+            <h2>Authors</h2>
+            <p>Λlisue (lambdalisue@hashnote.net)
+                - <a href="http://www.hashnote.net/" target="_blank">Home</a>
+                - <a href="http://twitter.com">Twitter</a>
+                - <a href="http://hashnote.net">Tumblr</a>
+            </p>
+
+            <h2>Contact</h2>
+            <p>Λlisue (lambdalisue@hashnote.net)</p>
+            <h2>Download</h2>
+            <p>
+                You can download this project in either
+                <a href="http://github.com/lambdalisue/Jencil/zipball/master">zip</a> or
+                <a href="http://github.com/lambdalisue/Jencil/tarball/master">tar</a> formats.
+            </p>
+            <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+                by running:
+                <pre>$ git clone git://github.com/lambdalisue/Jencil</pre>
+            </p>
+        </section>
+
+        <aside id="sidebar">
+            Hello
+        </aside>
+
+        <footer id="footer">
+            get the source code on GitHub : <a href="http://github.com/lambdalisue/Jencil">lambdalisue/Jencil</a>
+        </footer>
     </div>
-
-    <h1><a href="http://github.com/lambdalisue/Jencil">Jencil</a>
-      <span class="small">by <a href="http://github.com/lambdalisue">lambdalisue</a></span></h1>
-
-    <div class="description">
-      JavaScript Crossbrowser Markup and WYSIWYG editor written in CoffeeScript
-    </div>
-
-    <h2>License</h2>
-<p>MIT License</p>
-<h2>Authors</h2>
-<p>Λlisue (lambdalisue@hashnote.net)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Λlisue (lambdalisue@hashnote.net)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/lambdalisue/Jencil/zipball/master">zip</a> or
-      <a href="http://github.com/lambdalisue/Jencil/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/lambdalisue/Jencil</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/lambdalisue/Jencil">lambdalisue/Jencil</a>
-    </div>
-
-  </div>
-
-  <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-25949804-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try{
+        var pageTracker = _gat._getTracker("UA-25949804-1");
+        pageTracker._trackPageview();
+        }catch(err){}
+    </script>
 </body>
 </html>

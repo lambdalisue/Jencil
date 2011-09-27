@@ -1,0 +1,20 @@
+@charset "utf-8";
+#github-download ul{
+    margin: 0;
+    padding: 0;
+}
+#github-download ul li{
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+#github-download ul li a{
+    text-indent: -10000px;
+    outline: none;
+}
+#github-download ul li a.zip:after{
+    display: block;
+    content: url(http://github.com/images/modules/download/zip.png);
+    width: 90px;
+    height: 88.75px;
+}
