@@ -57,6 +57,8 @@ task 'docs', 'Generate annotated source code with Docco', ->
     docco.on 'exit', (status) -> callback?() if status is 0
 
 task 'pack', 'Create release pack', ->
+  exec 'cp external/Textarea/lib/textarea.min.js lib/textarea.min.js'
+  exec 'cp external/Richarea/lib/richarea.min.js lib/richarea.min.js'
   fs.readdir 'lib', (err, contents) ->
     for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
       basename = file[0..file.length-4]
