@@ -5,12 +5,14 @@ This editor is for editing rich text with preview screeen
 ###
 isIE6 = /MSIE 6/i.test navigator.userAgent
 isIE7 = /MSIE 7/i.test navigator.userAgent
+isIE8 = /MSIE 8/i.test navigator.userAgent
 class RichArea extends Jencil.widgets.Widget
   constructor: (jencil, @holder) ->
     super jencil, 'jencil-richarea'
     @$source = @jencil.$textarea
-    @$surface = new $('<iframe>').addClass 'surface'
-    @$surface.attr 'src', @jencil.options.extras.richareaTemplatePath
+    @$surface = $('<iframe>').addClass 'surface'
+    if @jencil.options.extras.richareaTemplatePath?
+      @$surface.attr 'src', @jencil.options.extras.richareaTemplatePath
     @$surface.appendTo @$element
     @$surface.css
       width: '100%'
@@ -24,13 +26,10 @@ class RichArea extends Jencil.widgets.Widget
     @controller = new Richarea @$surface
     # Add construct code which will be called after richarea get ready
     @controller.ready =>
+      @holder.reconstruct()
       $(@controller.raw.body).css
         margin: 0
         padding: 0
-      # quickfix for IE focus issue
-      @$surface.bind 'click', =>
-        alert "Clicked"
-        @controller.raw.body.focus()
       @controller.setValue @$source.val()
       $(@controller.raw.body).bind 'keypress change click blur enter', =>
         @update()
@@ -44,7 +43,7 @@ class RichArea extends Jencil.widgets.Widget
 class Rawview extends Jencil.widgets.Widget
   constructor: (jencil, @holder) ->
     super jencil, 'jencil-rawview'
-    @$surface = new $('<textarea>').addClass 'surface'
+    @$surface = $('<textarea>').addClass 'surface'
     @$surface.appendTo @$element
     @$surface.css
       width: '100%'
@@ -105,7 +104,7 @@ namespace 'Jencil.editors', (exports) ->
   exports.RichEditor = class RichEditor extends EditorBase
     @Initializer: Initializer
     constructor: (jencil) ->
-      super jencil, 'jencil-rich-editor', 'div'
+      super jencil, 'jencil-rich-editor'
       @$element.addClass "#{@jencil.options.extras.rawviewPosition}"
       @richarea = new RichArea @jencil, @
       @rawview = new Rawview @jencil, @
@@ -115,9 +114,16 @@ namespace 'Jencil.editors', (exports) ->
       else
         @append @richarea
         @append @rawview
-      if @jencil.options.extras.defaultRawviewState is 'close'
-        @rawview.hide()
+      # loading iframe takes a minute so use 'jencil-loader' for nice visual
+      @$element.addClass 'jencil-loader'
+      @richarea.$element.hide()
+      @rawview.hide()
     reconstruct: ->
+      if @$element.hasClass 'jencil-loader'
+        @$element.removeClass 'jencil-loader'
+        @richarea.$element.show()
+        if @jencil.options.extras.defaultRawviewState isnt 'close'
+          @rawview.show()
       getOffsetX = ($$) ->
         return $$.outerWidth(true) - $$.width()
       getOffsetY = ($$) ->
@@ -162,8 +168,21 @@ namespace 'Jencil.editors', (exports) ->
       if isIE6 or isIE7
         @richarea.$surface.height @richarea.$element.height()
         @rawview.$surface.height @rawview.$element.height()
+
+        # IE body size issue fix
+        if isIE6 or isIE7 or isIE8
+          @richarea.controller.raw.body.style.height = "#{@richarea.$surface.height()}px"
+        # IE body size issue fix
+        if isIE6 or isIE7 or isIE8
+          @richarea.controller.raw.body.style.height = "#{@richarea.$surface.height()}px"
+
+        # IE body size issue fix
+        if isIE6 or isIE7 or isIE8
+          @richarea.controller.raw.body.style.height = "#{@richarea.$surface.height()}px"
+      # quickfix IE body height issue
+      if isIE6 or isIE7 or isIE8
+        $(@richarea.controller.raw.body).height @richarea.$surface.height()
     init: ->
-      @reconstruct()
       @richarea.init()
       @rawview.init()
     update: ->

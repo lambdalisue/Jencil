@@ -10,8 +10,14 @@
     border-radius: 5px;
     background: #f9f9f9;
 }
-.jencil.loader{
-    background: url(image/loading.gif) no-repeat 50% 50%;
+.jencil-loader{
+    background: #f9f9f9 url(image/loading.gif) no-repeat 50% 50%;
+}
+.jencil.jencil-loader{
+    height: 420px;
+}
+.jencil .jencil-workspace .jencil-editor{
+    height: 400px;
 }
 .jencil .jencil-toolbar{
     width: 100%;
@@ -104,7 +110,4 @@
 }
 .jencil .jencil-workspace{
     padding: 5px 0;
-}
-.jencil .jencil-workspace .editor{
-    height: 400px;
 }

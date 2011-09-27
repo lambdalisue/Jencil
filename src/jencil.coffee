@@ -176,7 +176,7 @@ namespace 'Jencil.loader', (exports) ->
     ###
     constructor: (textarea, @options) ->
       @$element = $('<div>').addClass 'jencil'
-      @$element.addClass 'loader'
+      @$element.addClass 'jencil-loader'
       @$textarea = $(textarea)
       @$textarea.after @$element
       @$textarea.hide()

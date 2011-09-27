@@ -5,13 +5,14 @@ This editor is for editing simple text with preview screeen
 ###
 isIE6 = /MSIE 6/i.test navigator.userAgent
 isIE7 = /MSIE 7/i.test navigator.userAgent
+isIE8 = /MSIE 8/i.test navigator.userAgent
 class TextArea extends Jencil.widgets.Widget
   constructor: (jencil, @holder) ->
     super jencil, 'jencil-textarea'
     @$element.css
       position: 'relative'
     @$source = @jencil.$textarea
-    @$surface = new $('<textarea>').addClass 'surface'
+    @$surface = $('<textarea>').addClass 'surface'
     @$surface.val @$source.val()
     @$surface.css
       width: '100%'
@@ -32,7 +33,7 @@ class Preview extends Jencil.widgets.Widget
     super jencil, 'jencil-preview'
     @$element.css
       position: 'relative'
-    @$surface = new $('<div>').addClass 'surface'
+    @$surface = $('<div>').addClass 'surface'
     @$surface.appendTo @$element
     @$surface.css
       width: '100%'
@@ -67,11 +68,11 @@ class Preview extends Jencil.widgets.Widget
       content = @holder.getValue()
       if @jencil.profile.extras?.previewParserPath?
         $.ajax(
-          type: @jencil.profile.extras.previewParserMethod ? 'GET'
+          type: @jencil.profile.extras.previewParserMethod or 'GET'
           dataType: 'text'
           global: false
           url: @jencil.profile.extras.previewParserPath
-          data: "#{@jencil.profile.extras.previewParserVal ? 'data'}=#{encodeURIComponent content}"
+          data: "#{@jencil.profile.extras.previewParserVal or 'data'}=#{encodeURIComponent content}"
           success: (data) =>
             @write data
         )
@@ -171,8 +172,14 @@ namespace 'Jencil.editors', (exports) ->
       if isIE6 or isIE7
         @textarea.$surface.height @textarea.$element.height()
         @preview.$surface.height @preview.$element.height()
+      # quickfix for IE 8. Without this code, only IE 8 hung up after switched
+      # from different editor.
+      if isIE8
+        range = document.selection.createRange()
+        range.select()
     init: ->
       @reconstruct()
+      @update()
     update: ->
       @textarea.update()
       @preview.update()
@@ -200,5 +207,5 @@ namespace 'Jencil.buttons', (exports) ->
       super jencil, 'preview', 'Preview'
     click: ->
       editor = @editor()
-      editor.preview?.toggle()
-      editor.reconstruct?()
+      editor.preview.toggle()
+      editor.reconstruct()

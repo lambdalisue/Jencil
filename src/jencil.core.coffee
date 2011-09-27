@@ -24,6 +24,9 @@ namespace 'Jencil.core', (exports) ->
       @wrapper.append @toolbar
       # --- construct workspace
       @workspace = new Jencil.widgets.Workspace @
+      # The loader will be removed when correct editor has loaded in
+      # Jencil.editors.changeEditor method
+      @workspace.append new Jencil.editors.Loader @
       @wrapper.append @workspace
       # --- arrange
       @$textarea.after @wrapper.$element

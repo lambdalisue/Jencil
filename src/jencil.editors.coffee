@@ -17,14 +17,17 @@ namespace 'Jencil.editors', (exports) ->
     requires = initializer.requires
     for i in [0...requires.length]
       requires[i][0] = net.hashnote.path.abspath requires[i][0], jencil.options.root
+    # remove everything include loader
+    jencil.workspace.$element.children().remove()
+    # add new loader, it will be removed when correct editor has loaded
+    jencil.workspace.append new Jencil.editors.Loader jencil
     net.hashnote.module.loadall requires, =>
-      # --- remove current editor
-      jencil._editor?.$element.remove()
-      delete jencil._editor
       # --- construct new editor via profile
       jencil._editor = new cls jencil
-      jencil.workspace.append jencil._editor
-      jencil._editor.init?()
+      # --- remove everything include loader
+      jencil.workspace.$element.children().remove()
+      jencil.workspace.append jencil.editor()
+      jencil.editor().init()
       # --- call callback
       callback()
   exports.Initializer = class Initializer
@@ -34,6 +37,11 @@ namespace 'Jencil.editors', (exports) ->
     constructor: (jencil) ->
       for i in [0...@requires.length]
         @requires[i][0] = jencil.abspath @requires[i][0]
+  exports.Loader = class Loader extends Widget
+    constructor: (jencil) ->
+      super jencil, 'jencil-editor'
+      @$element.addClass 'jencil-loader'
+    
   exports.EditorBase = class EditorBase extends Widget
     ###
     An abstruct class of Jencil editor
@@ -41,7 +49,7 @@ namespace 'Jencil.editors', (exports) ->
     @Initializer: Initializer
     constructor: (jencil, cls, type) ->
       super jencil, cls, type
-      @$element.addClass 'editor'
+      @$element.addClass 'jencil-editor'
     init: ->
       ###
       Initialize function. This function is called after everything has constructed.
@@ -66,4 +74,3 @@ namespace 'Jencil.editors', (exports) ->
       throw new Error "Subclass must override this method."
     wrapSelected: (before, after, select=false, additional=undefined) ->
       throw new Error "Subclass must override this method."
-
