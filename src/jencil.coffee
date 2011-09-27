@@ -201,7 +201,6 @@ $.fn.jencil = (options) ->
     documentTypeElement: undefined
     extras: {}
     requires: [
-      ['~/textarea.min.js', 'window.Textarea']
       ['~/jencil.core.min.js', 'window.Jencil.core']
       ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
       ['~/jencil.buttons.min.js', 'window.Jencil.buttons']
