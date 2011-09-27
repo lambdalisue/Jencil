@@ -15,14 +15,18 @@ body{
     background: url(http://subtlepatterns.com/patterns/whitey.png);
 }
 a { color: #7ebea0; }
-p { font-size: 1.2em; }
+p { font-size: 1.4em; }
 
 h2{
-    font-size: 1.8em;
+    font-size: 2.4em;
     font-family: 'Andika', sans-serif;
-    margin: 2em 0 0.5em 0;
-    padding: 0.05em 0.2em;
-    border: 1px solid #e4e4e4;
-    border-radius: 5px;
-    background-color: #f7f7f7;
+    font-style: italic;
+}
+h2:first-child{
+    margin-top: 0;
+    padding-top: 0;
+}
+
+ul li{
+    font-size: 1.4em;
 }

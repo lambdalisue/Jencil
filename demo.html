@@ -34,56 +34,23 @@
                 <h1><a class="title" href="http://github.com/lambdalisue/Jencil">Jencil</a>
                     <span class="small">by <a href="http://github.com/lambdalisue">lambdalisue</a></span></h1>
                 <div class="description">
-                    <p>JavaScript cross-browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr>
+                    <p>JavaScript Cross browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr>
                     editor working as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a></p>
                 </div>
             </figure>
         </header>
         <section id="content">
             <section id="main">
-                <p>Jencil is a JavaScript cross-browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr> editor
-                    which is working as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>.
-                    It allows you to turn any textarea into a WYSIWYM (markup) and WYSIWYG (rich content) editor. See <a href="demo.html">Demo</a> to get what Jencil does.
-                </p>
-
-                <p>For quick use, see <a href="tutorial.html">Tutorial</a> to get how to install and use Jencil on your page.</p>
-                <p>This editor is completely customizable with plugin! See <a href="doc.html">Document</a> for more detail if you are interested in developing Jencil plugin.</p> 
-
-                <section id="compatibility">
-                    <h2>Compatibility</h2>
-                    <h3>Supported Browser</h3>
-                    <p><img src="img/firefox-icon.png" width="32" alt="Firefox">
-                        <img src="img/chrome-icon.png" width="32" alt="Chrome">
-                        <img src="img/safari-icon.png" width="32" alt="Safari">
-                        <img src="img/opera-icon.png" width="32" alt="Opera">
-                        <img src="img/ie9-icon.png" width="32" alt="Internet Explorer 9"></p>
-                    <h3>Limited Browser</h3>
-                    <p><img src="img/ie6-icon.png" width="32" alt="Internet Explorer 6">
-                        <img src="img/ie7-icon.png" width="32" alt="Internet Explorer 7">
-                        <img src="img/ie8-icon.png" width="32" alt="Internet Explorer 8"></p>
-                </section>
-
-                <section id="features">
-                    <h2>Features</h2>
-                    <ul>
-                        <li>Free and Open source</li>
-                        <li>100% skinnable using Theme (CSS)</li>
-                        <li>100% customizable using Plugin (JavaScript)</li>
-                        <li>Easy to use</li>
-                        <li>Easy to understand &amp; extend</li>
-                        <li>WYSIWYM (Markup) Editor with Preview is available</li>
-                        <li>WYSIWYM Preview template HTML is customizable</li>
-                        <li>WYSIWYM Markup Parser is customizable</li>
-                        <li>WYSIWYG (Rich) Editor with Raw text editing is available</li>
-                        <li>WYSIWYG template HTML (WYSIWYG Editor style) is customizable</li>
-                        <li>Multiple document type is available</li>
-                        <li>Full screen editing mode is available (not yet)</li>
-                    </ul>
-                </section>
-
+                <h2 class="ribbon">Demo</h2>
+                <select id="document-type-demo">
+                    <option value="wysiwyg">WYSIWYG</option>
+                    <option value="html">HTML</option>
+                    <option value="markdown">Markdown</option>
+                </select>
+                <textarea id="document-body-demo"></textarea>
 
                 <h2>License</h2>
-                <p>This Editor is licensed under <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p>
+                <p><a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p>
 
                 <h2>Authors</h2>
                 <p>Λlisue (lambdalisue@hashnote.net)
@@ -108,12 +75,12 @@
             <aside id="sidebar">
                 <ul>
                     <li id="home"><a href="/">Home</a></li>
-                    <li id="screenshot"><a href="screenshot.html">Screenshot</a></li>
-                    <li id="demo"><a href="demo.html">Demo</a></li>
-                    <li id="doc"><a href="doc.html">Document</a></li>
-                    <li id="license"><a href="license.html">License</a></li>
-                    <li id="contact"><a href="contact.html">Contact</a></li>
-                    <li id="download"><a href="download.html">Download</a></li>
+                    <li id="screenshot"><a href="/screenshot/">Screenshot</a></li>
+                    <li id="demo"><a href="/demo/">Demo</a></li>
+                    <li id="doc"><a href="/doc/">Document</a></li>
+                    <li id="license"><a href="/license/">License</a></li>
+                    <li id="contact"><a href="/contact/">Contact</a></li>
+                    <li id="download"><a href="/download/">Download</a></li>
                 </ul>
             </aside>
         </section>
@@ -134,3 +101,4 @@
     </script>
 </body>
 </html>
+
