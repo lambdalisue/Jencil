@@ -195,7 +195,7 @@ $.fn.jencil = (options) ->
     editorSetPath: '~/editors'
     profileSetPath: '~/profiles'
     themeSetPath: '~/theme'
-    defaultProfileName: 'html'
+    defaultProfileName: 'wysiwyg'
     defaultThemeName: 'default'
     defaultInsertText: '*'
     documentTypeElement: undefined
@@ -209,6 +209,7 @@ $.fn.jencil = (options) ->
     ]
     editors: [
       ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
+      ['~/editors/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
     ]
   }, options
   # Check documentTypeElement
