@@ -4,7 +4,7 @@ Jencil
 Javascript cross-browser WYSIWYM and WYSIWYG editor written in CoffeeScript
 
 :Author: Alisue (lambdalisue@hashnote.net)
-:Version: 0.0.1
+:Version: 0.0.1rc2
 :License: MIT License
 :Url: http://github.com/lambdalisue/Jencil
 ###
