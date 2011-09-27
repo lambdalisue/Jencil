@@ -1,7 +1,4 @@
-.jencil-text-editor .jencil-textarea .surface{background: red;}
-.jencil-text-editor .jencil-preview .surface{background: blue;}
-
-/*.jencil-text-editor:after{ content: ""; }*/
+.jencil-text-editor:after{ content: ""; }
 .jencil-text-editor .jencil-textarea,
 .jencil-text-editor .jencil-preview{
     padding: 10px;

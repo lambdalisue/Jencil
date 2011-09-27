@@ -53,7 +53,7 @@
     width: 16px;
     height: 16px;
     text-indent: -10000px;
-    background: url(image/csssprite.png) no-repeat !important;
+    background-image: url(image/csssprite.png) !important;
     background: url(image/csssprite.gif) no-repeat;
 }
 .jencil .jencil-toolbar .jencil-button-holder a.h1 span{ background-position: -0px 0px; }

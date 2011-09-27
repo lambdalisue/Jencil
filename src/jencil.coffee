@@ -1,9 +1,10 @@
 ###
 Jencil
 
-Cross browser Markup and WYSIWYG editor
+Javascript cross-browser WYSIWYM and WYSIWYG editor written in CoffeeScript
 
 :Author: Alisue (lambdalisue@hashnote.net)
+:Version: 0.0.1
 :License: MIT License
 :Url: http://github.com/lambdalisue/Jencil
 ###
@@ -142,48 +143,6 @@ namespace 'net.hashnote.path', (exports) ->
     if path?.lastIndexOf(prefix, 0) is 0
       path = "#{root}/#{path[2..path.length]}"
     return path
-namespace 'Jencil.utils', (exports) ->
-  class Browser
-    ###
-    CoffeeScript version of BrowserDetect found in http://www.quirksmode.org/js/detect.html
-    ###
-    constructor: ->
-      @browser = @searchString(@dataBrowser) or "An unknown browser"
-      @version = @searchVersion(navigator.userAgent) or @searchVersion(navigator.appVersion) or "An unknown browser"
-      @OS = @searchString(@dataOS) or "An unknown OS"
-    searchString: (data) ->
-      for row in data
-        @versionSearchString = row.versionSearch or row.identify
-        if row.string?
-          if row.string.indexOf(row.subString) isnt -1
-            return row.identify
-          else if row.prop
-            return row.identify
-    searchVersion: (dataString) ->
-      index = dataString.indexOf @versionSearchString
-      if index is -1 then return
-      return parseFloat dataString.substring(index+@versionSearchString.length+1)
-    dataBrowser: [
-      {string: navigator.userAgent, subString: 'Chrome', identify: 'Chrome'}
-      {string: navigator.userAgent, subString: 'OmniWeb', versionSearch: 'OmniWeb/', identify: 'OmniWeb'}
-      {string: navigator.vendor, subString: 'Apple', identify: 'Safari', versionSearch: 'Version'}
-      {prop: window.opera, identify: 'Opera', versionSearch: 'Version'}
-      {string: navigator.vendor, subString: 'iCab', identify: 'iCab'}
-      {string: navigator.vendor, subString: 'KDE', identify: 'Konqueror'}
-      {string: navigator.userAgent, subString: 'Firefox', identify: 'Firefox'}
-      {string: navigator.vendor, subString: 'Camino', identify: 'Camino'}
-      {string: navigator.userAgent, subString: 'Netscape', identify: 'Netscape'}
-      {string: navigator.userAgent, subString: 'MSIE', identify: 'Explorer', versionSearch: 'MSIE'}
-      {string: navigator.userAgent, subString: 'Gecko', identify: 'Mozilla', versionSearch: 'rv'}
-      {string: navigator.userAgent, subString: 'Mozilla', identify: 'Netscape', versionSearch: 'Mozilla'}
-    ]
-    dataOS: [
-      {string: navigator.platform, subString: 'Win', identify: 'Windows'}
-      {string: navigator.platform, subString: 'Mac', identify: 'Mac'}
-      {string: navigator.userAgent, subString: 'iPhone', identify: 'iPhone/iPad'}
-      {string: navigator.platform, subString: 'Linux', identify: 'Linux'}
-    ]
-  exports.browser = new Browser
 namespace 'Jencil.theme', (exports) ->
   exports.root = undefined
   exports.init = (options) ->
@@ -242,19 +201,19 @@ $.fn.jencil = (options) ->
     themeSetPath: '~/themes'
     defaultProfileName: 'wysiwyg'
     defaultThemeName: 'default'
-    defaultInsertText: '*'
+    defaultInsertText: '<< any text >>'
     documentTypeElement: undefined
     extras: {}
     requires: [
-      ['~/jencil.core.js', 'window.Jencil.core']
-      ['~/jencil.widgets.js', 'window.Jencil.widgets']
-      ['~/jencil.buttons.js', 'window.Jencil.buttons']
-      ['~/jencil.editors.js', 'window.Jencil.editors']
-      ['~/jencil.profile.js', 'window.Jencil.profile']
+      ['~/jencil.core.min.js', 'window.Jencil.core']
+      ['~/jencil.widgets.min.js', 'window.Jencil.widgets']
+      ['~/jencil.buttons.min.js', 'window.Jencil.buttons']
+      ['~/jencil.editors.min.js', 'window.Jencil.editors']
+      ['~/jencil.profile.min.js', 'window.Jencil.profile']
     ]
     editors: [
-      ['~/editors/jencil.texteditor.js', 'window.Jencil.editors.TextEditor']
-      ['~/editors/jencil.richeditor.js', 'window.Jencil.editors.RichEditor']
+      ['~/editors/jencil.texteditor.min.js', 'window.Jencil.editors.TextEditor']
+      ['~/editors/jencil.richeditor.min.js', 'window.Jencil.editors.RichEditor']
     ]
   }, options
   # Check documentTypeElement

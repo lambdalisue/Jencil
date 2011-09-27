@@ -41,22 +41,14 @@ task 'docs', 'Generate annotated source code with Docco', ->
     docco.on 'exit', (status) -> callback?() if status is 0
 
 task 'pack', 'Create release pack', ->
-  exec "mkdir -p jencil/editors"
-  exec "cp -f README.rst jencil/"
-  exec "cp -rf lib/parsers jencil/"
-  exec "cp -rf lib/templates jencil/"
-  exec "cp -rf lib/profiles jencil/"
-  exec "cp -rf lib/theme jencil/"
-  exec "cp -f lib/textarea.min.js jencil/"
-  exec "cp -f lib/richarea.min.js jencil/"
   fs.readdir 'lib', (err, contents) ->
     for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
       basename = file[0..file.length-4]
-      exec "jspacker -e62 -i ./lib/#{file} -o ./jencil/#{basename}.min.js"
+      exec "jspacker -e62 -i ./lib/#{file} -o ./lib/#{basename}.min.js"
   fs.readdir 'lib/editors', (err, contents) ->
     for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
       basename = file[0..file.length-4]
-      exec "jspacker -e62 -i ./lib/editors/#{file} -o ./jencil/editors/#{basename}.min.js"
+      exec "jspacker -e62 -i ./lib/editors/#{file} -o ./lib/editors/#{basename}.min.js"
 
 task 'test', 'Run the test suite', ->
   build ->

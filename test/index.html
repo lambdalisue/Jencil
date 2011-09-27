@@ -17,8 +17,21 @@
                 $('textarea#document-body').jencil({
                     documentTypeElement: $('select#document-type'),
                     extras: {
-                        previewPosition: 'right'
-                    }
+                        previewPosition: 'right',
+                        defaultRawviewState: 'open'
+                    },
+                    requires: [
+                        ['~/jencil.core.js', 'window.Jencil.core'],
+                        ['~/jencil.theme.js', 'window.Jencil.theme'],
+                        ['~/jencil.widgets.js', 'window.Jencil.widgets'],
+                        ['~/jencil.buttons.js', 'window.Jencil.buttons'],
+                        ['~/jencil.editors.js', 'window.Jencil.editors'],
+                        ['~/jencil.profile.js', 'window.Jencil.profile'],
+                    ],
+                    editors: [
+                        ['~/editors/jencil.texteditor.js', 'window.Jencil.editors.TextEditor'],
+                        ['~/editors/jencil.richeditor.js', 'window.Jencil.editors.RichEditor'],
+                    ]
                 });
             });
         </script>
@@ -42,7 +55,7 @@
         <div id="container">
             <select id="document-type">
                 <option value="html">HTML</option>
-                <option value="wysiwyg">WYSIWYG</option>
+                <option value="wysiwyg" selected>WYSIWYG</option>
             </select>
             <textarea id="document-body"></textarea>
             <div class="jencil" style="background: green;">

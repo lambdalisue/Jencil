@@ -3,6 +3,8 @@ Jencil TextEditor
 
 This editor is for editing simple text with preview screeen
 ###
+isIE6 = /MSIE 6/i.test navigator.userAgent
+isIE7 = /MSIE 7/i.test navigator.userAgent
 class TextArea extends Jencil.widgets.Widget
   constructor: (jencil, @holder) ->
     super jencil, 'jencil-textarea'
@@ -19,7 +21,7 @@ class TextArea extends Jencil.widgets.Widget
       padding: 0
       resize: 'none'
       outline: 'none'
-    @$surface.bind 'keyup change click blur enter', =>
+    @$surface.bind 'keypress change click blur enter', =>
       @update()
     @$surface.appendTo @$element
     @controller = new Textarea @$surface
@@ -39,7 +41,7 @@ class Preview extends Jencil.widgets.Widget
       margin: 0
       padding: 0
       overflow: 'auto'
-    @holder.textarea.$element.bind 'keyup change click blur enter', =>
+    @holder.textarea.$element.bind 'keypress change click blur enter', =>
       @update()
     @show()
   isVisible: ->
@@ -119,12 +121,6 @@ namespace 'Jencil.editors', (exports) ->
       else
         @append @textarea
         @append @preview
-      if @jencil.options.extras.previewPosition is 'left'
-        @preview.$element.css float: 'left'
-        @textarea.$element.css float: 'right'
-      else if @jencil.options.extras.previewPosition is 'right'
-        @textarea.$element.css float: 'left'
-        @preview.$element.css float: 'right'
       if $.fn.tabby?
         # Enable TAB and SHIFT+TAB feature with jQuery tabby plugin
         @$element.tabby()
@@ -172,7 +168,7 @@ namespace 'Jencil.editors', (exports) ->
         # set height
         @textarea.$element.height height-offsetty
       # quickfix for IE 6, 7
-      if Jencil.utils.browser.browser is 'Explorer' and Jencil.utils.browser.version < 8
+      if isIE6 or isIE7
         @textarea.$surface.height @textarea.$element.height()
         @preview.$surface.height @preview.$element.height()
     init: ->
