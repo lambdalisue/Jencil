@@ -24,8 +24,8 @@ body:before
     z-index: -1;
     position: absolute;
     content: "";
-    bottom: 15px;
-    left: 10px;
+    bottom: 10px;
+    left: 25px;
     width: 50%;
     top: 80%;
     max-width:300px;
@@ -46,7 +46,7 @@ body:before
     -o-transform: rotate(3deg);
     -ms-transform: rotate(3deg);
     transform: rotate(3deg);
-    right: 10px;
+    right: 25px;
     left: auto;
 }
 

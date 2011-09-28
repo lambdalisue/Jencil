@@ -2,13 +2,20 @@
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>lambdalisue/Jencil @ GitHub</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Jencil - A JavaScript cross-browser WYSIWYM and WYSIWYG editor works as jQuery plugin</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Andika' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Pompiere' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy' rel='stylesheet' type='text/css'>
+    <link href="js/jquery.ad-gallery.1.2.4/jquery.ad-gallery.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="http://www.kryogenix.org/code/browser/smoothscroll/smoothscroll.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.ad-gallery.1.2.4/jquery.ad-gallery.pack.js"></script>
     <script type="text/javascript" src="js/jencil/jencil.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
+            $('#gallery').adGallery({});
             $('textarea#document-body-demo').jencil({
                 documentTypeElement: $('select#document-type-demo'),
                 defaultProfileName: 'wysiwyg'
@@ -17,86 +24,137 @@
     </script>
 </head>
 <body>
-    <a href="http://github.com/lambdalisue/Jencil"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+    <a name="top" id="top"></a>
+    <a href="http://github.com/lambdalisue/Jencil"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10000" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
     <div id="container">
-        <nav id="download-shortcut">
-            <ul>
-                <li><a href="http://github.com/lambdalisue/Jencil/zipball/master">
-                    <img border="0" width="90" alt="Download as Zip" src="http://github.com/images/modules/download/zip.png">
-                </a></li>
-                <li><a href="http://github.com/lambdalisue/Jencil/tarball/master">
-                    <img border="0" width="90" alt="Download as Tar" src="http://github.com/images/modules/download/tar.png">
-                </a></li>
-            </ul>
-        </nav>
         <header id="header">
             <figure>
                 <h1><a class="title" href="http://github.com/lambdalisue/Jencil">Jencil</a>
                     <span class="small">by <a href="http://github.com/lambdalisue">lambdalisue</a></span></h1>
                 <div class="description">
-                    <p>JavaScript cross-browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr>
-                    editor working as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a></p>
+                    <p>A JavaScript cross-browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr>
+                    editor which works as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a></p>
                 </div>
             </figure>
         </header>
         <section id="content">
             <section id="main">
-                <p>Jencil is a JavaScript cross-browser <abbr title="What You See Is What You Mean">WYSIWYM</abbr> and <abbr title="What You See Is What You Get">WYSIWYG</abbr> editor
-                    which is working as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>.
-                    It allows you to turn any textarea into a WYSIWYM (markup) and WYSIWYG (rich content) editor. See <a href="http://demos.jencil.hashnote.net/" target="_blank">Demo</a> to get what Jencil does.
-                </p>
-
-                <p>For quick use, see <a href="tutorial.html">Tutorial</a> to get how to install and use Jencil on your page.</p>
-                <p>This editor is completely customizable with plugin! See <a href="doc.html">Document</a> for more detail if you are interested in developing Jencil plugin.</p> 
-
-                <section id="compatibility">
-                    <h2>Compatibility</h2>
-                    <h3>Supported Browser</h3>
-                    <p><img src="img/firefox-icon.png" width="32" alt="Firefox">
-                        <img src="img/chrome-icon.png" width="32" alt="Chrome">
-                        <img src="img/safari-icon.png" width="32" alt="Safari">
-                        <img src="img/opera-icon.png" width="32" alt="Opera">
-                        <img src="img/ie9-icon.png" width="32" alt="Internet Explorer 9"></p>
-                    <h3>Limited Browser</h3>
-                    <p><img src="img/ie6-icon.png" width="32" alt="Internet Explorer 6">
-                        <img src="img/ie7-icon.png" width="32" alt="Internet Explorer 7">
-                        <img src="img/ie8-icon.png" width="32" alt="Internet Explorer 8"></p>
+                <section id="introduction">
+                    <p>Jencil is a JavaScript cross-browser WYSIWYM and WYSIWYG editor
+                        which works as <a href="http://jquery.com/">jQuery</a> plugin and written in <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>.
+                        It allows you to turn any textarea into a WYSIWYM and WYSIWYG editor. See <a href="#demo">Demo</a> to get what Jencil does.
+                    </p>
                 </section>
 
-                <section id="features">
-                    <h2>Features</h2>
-                    <ul>
-                        <li>Free and Open source</li>
-                        <li>100% skinnable using Theme (CSS)</li>
-                        <li>100% customizable using Plugin (JavaScript)</li>
-                        <li>Easy to use</li>
-                        <li>Easy to understand &amp; extend</li>
-                        <li>WYSIWYM (Markup) Editor with Preview is available</li>
-                        <li>WYSIWYM Preview template HTML is customizable</li>
-                        <li>WYSIWYM Markup Parser is customizable</li>
-                        <li>WYSIWYG (Rich) Editor with Raw text editing is available</li>
-                        <li>WYSIWYG template HTML (WYSIWYG Editor style) is customizable</li>
-                        <li>Multiple document type is available</li>
-                        <li>Full screen editing mode is available (not yet)</li>
-                    </ul>
+                <section id="information">
+                    <section id="compatibility">
+                        <h2>Compatibility</h2>
+                        <h3>Support completely</h3>
+                        <p><img src="img/firefox_48x48.png" width="32" alt="Firefox">
+                            <img src="img/chrome_48x48.png" width="32" alt="Chrome">
+                            <img src="img/safari_48x48.png" width="32" alt="Safari">
+                            <img src="img/opera_48x48.png" width="32" alt="Opera"></p>
+                        <h3>Support but limited and/or looks ugly</h3>
+                        <p><img src="img/ie6_48x48.png" width="32" alt="Internet Explorer 6">
+                            <img src="img/ie7_48x48.png" width="32" alt="Internet Explorer 7">
+                            <img src="img/ie8_48x48.png" width="32" alt="Internet Explorer 8"></p>
+                        <h3>Not support yet</h3>
+                        <p><img src="img/iphone_48x48.png" width="32" alt="iPhone/iPad">
+                            <img src="img/android_48x48.png" width="32" alt="Android"></p>
+                        <h3>Not confirmed but may work</h3>
+                        <p><img src="img/ie9_48x48.png" width="32" alt="Internet Explorer 9"></p>
+                    </section>
+
+                    <section id="features">
+                        <h2>Features</h2>
+                        <ul>
+                            <li>Free and Open source</li>
+                            <li>100% skinnable using Theme (CSS)</li>
+                            <li>100% customizable using Plugin (JavaScript)</li>
+                            <li>Easy to use</li>
+                            <li>Easy to understand &amp; extend</li>
+                            <li>WYSIWYM (Markup) Editor with Preview is available</li>
+                            <li>WYSIWYM Preview template HTML is customizable</li>
+                            <li>WYSIWYM Markup Parser is customizable</li>
+                            <li>WYSIWYG (Rich) Editor with Raw text editing is available</li>
+                            <li>WYSIWYG template HTML (WYSIWYG Editor style) is customizable</li>
+                            <li>Multiple document type and dynamic change</li>
+                            <li class="notyet">Keyboard shortcut (not yet)</li>
+                            <li class="notyet">Full screen editing mode (not yet)</li>
+                            <li class="notyet">File attach system is (not yet)</li>
+                        </ul>
+                    </section>
                 </section>
 
 
-                <h2>License</h2>
-                <p>This Editor is licensed under <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p>
+                <h2 id="screenshot">Screenshot</h2>
+                <p class="ref"><a href="#top">Jump to top [^]</a></p>
+                <div id="gallery" class="ad-gallery">
+                    <div class="ad-image-wrapper">
+                    </div>
+                    <div class="ad-controls">
+                    </div>
+                    <div class="ad-nav">
+                        <div class="ad-thumbs">
+                            <ul class="ad-thumb-list">
+                                <li><a href="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot01.png">
+                                        <img src="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot01.png" width="120">
+                                    </a>
+                                </li>
+                                <li><a href="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot02.png">
+                                        <img src="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot02.png" width="120">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-                <h2>Authors</h2>
-                <p>Λlisue (lambdalisue@hashnote.net)
-                    - <a href="http://www.hashnote.net/" target="_blank">Home</a>
-                    - <a href="http://twitter.com">Twitter</a>
-                    - <a href="http://hashnote.net">Tumblr</a>
-                </p>
+                <h2 id="demo">Demo</h2>
+                <p class="ref"><a href="#top">Jump to top [^]</a></p>
+                <p><strong>Markdown profile is not available in this demo because Markdown parser doesn't work on github server. </strong>
+                    Visit <a href="http://demos.jencil.hashnote.net/">http://demos.jencil.hashnote.net</a> if you want to try
+                    parsing markup and preview html.</p>
+                <select id="document-type-demo">
+                    <option value="wysiwyg">HTML (WYSIWYG)</option>
+                    <option value="html">HTML</option>
+                </select>
+                <textarea id="document-body-demo"></textarea>
 
-                <h2>Contact</h2>
-                <p>Λlisue (lambdalisue@hashnote.net)</p>
-                <h2>Download</h2>
+                <h2 id="license">License</h2>
+                <p class="ref"><a href="#top">Jump to top [^]</a></p>
+                <p>Jencil is a free software distributed under the terms of the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a> reproduced below.
+                    Jencil may be used for any purpose, including commercial purposes, at absolutely no cost. No paperwork, no royalties, no GNU-like "copyleft" restrictions,
+                    either. Just download it and use it. Jencil is certified Open Source software. Its license is compatible with GPL.
+                    Jencil is not in the public domain and <a href="#author-info">Alisue</a> keeps its copyright.</p>
+
+                <p>The spirit of the Jencil license is that you are free to use Jencil for any purpose at no cost without having to ask me.
+                    The only requirement is that if you do use Jencil, then you should give me credit by including the appropriate copyright notice somewhere in your product
+                    or its documentation. A nice, but optional, way to give me further credit is to include a Jencil logo and a link to my site in a web page for your product.</p>
+
+                <blockquote class="copyright">
+                    <p>Copyright &copy; 2011 hashnote.net, Alisue</p>
+
+                    <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+                        to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+                        and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+                    <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+                    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+                </blockquote>
+
+                <h2 id="document">Document</h2>
+                <p class="ref"><a href="#top">Jump to top [^]</a></p>
+                <p>No document is available yet because Jencil is still developing and it need a lot of refactoring.</p>
+
+                <h2 id="download">Download</h2>
+                <p class="ref"><a href="#top">Jump to top [^]</a></p>
+                <p><strong>Jencil is still developing and need a lot of refactoring. So what you can download now may not work on future.</strong></p>
                 <p>
-                    You can download this project in either
+                    You can download latest Jencil in either
                     <a href="http://github.com/lambdalisue/Jencil/zipball/master">zip</a> or
                     <a href="http://github.com/lambdalisue/Jencil/tarball/master">tar</a> formats.
                 </p>
@@ -104,22 +162,117 @@
                     by running:
                     <pre>$ git clone git://github.com/lambdalisue/Jencil</pre>
                 </p>
+                <h3>Version history</h3>
+                <ul>
+                    <li><strong>Version 0.0.1 - <a href="http://github.com/lambdalisue/Jencil/zipball/v0.0.1">zip</a> or <a href="http://github.com/lambdalisue/Jencil/tarball/v0.0.1">tar</a></strong>
+                        <div class="description">
+                            <p>This is a first beta release. The following features are not working yet:</p>
+                            <ul>
+                                <li>Keyboard shortcut</li>
+                                <li>Full screen mode</li>
+                                <li>File attach (upload and insert)</li>
+                            </ul>
+                            <p>And the following browser is not confirmed yet:</p>
+                            <ul>
+                                <li>Internet Explorer 9</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
             </section>
             <aside id="sidebar">
+                <ul id="menu">
+                    <li class="home"><a href="#top">Home</a></li>
+                    <li class="screenshot"><a href="#screenshot">Screenshot</a></li>
+                    <li class="demo"><a href="#demo">Demo</a></li>
+                    <li class="license"><a href="#license">License</a></li>
+                    <li class="document"><a href="#document">Document</a></li>
+                    <li class="download"><a href="#download">Download</a></li>
+                </ul>
+                <h2 id="author-info">Author information</h2>
+                <img src="https://twimg0-a.akamaihd.net/profile_images/1117329821/156643464-e2d69e86084c36ed5ff41d80e738cfb2.4c82a540-full.png" alt="avator">
+                <table id="author-info-table">
+                    <tr>
+                        <td>Name</td>
+                        <td>Λlisue <a href="http://translate.google.co.jp/#en|ja|Ali%20su%20ae">[pronounce: Ali su ae]</a></td>
+                    </tr>
+                    <tr>
+                        <td>Language</td>
+                        <td>Japanese / English</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>lambdalisue@hashnote.net</td>
+                    </tr>
+                    <tr>
+                        <td>Homepage</td>
+                        <td><a href="http://hashnote.net">Hashnote</a> (ja)</td>
+                    </tr>
+                    <tr>
+                        <td>Tumblr</td>
+                        <td><a href="http://www.hashnote.net">lambdalisue</a> (ja)</td>
+                    </tr>
+                    <tr>
+                        <td>Twitter</td>
+                        <td><a href="http://twitter.com/lambdalisue">lambdalisue</a> (ja)</td>
+                    </tr>
+                    <tr>
+                        <td>Github</td>
+                        <td><a href="http://github.com/lambdalisue">lambdalisue</a> (en)</td>
+                    </tr>
+                </table>
+                <h2>Material links</h2>
                 <ul>
-                    <li id="home"><a href="http://lambdalisue.github.com/Jencil/">Home</a></li>
-                    <li id="screenshot"><a href="screenshot.html">Screenshot</a></li>
-                    <li id="demo"><a href="http://demos.jencil.hashnote.net/">Demo</a></li>
-                    <li id="doc"><a href="doc.html">Document</a></li>
-                    <li id="license"><a href="license.html">License</a></li>
-                    <li id="contact"><a href="contact.html">Contact</a></li>
-                    <li id="download"><a href="download.html">Download</a></li>
+                    <li><a href="http://www.webdesignerdepot.com" target="_blank">Reflection Icon Set by Webdesigner Depot</a>
+                        <div class="description">
+                            <p>Used in this web site and Jencil main logo</p>
+                        </div>
+                    </li>
+                    <li><a href="http://p.yusukekamiyamane.com/" target="_blank">Fugue Icons</a>
+                        <div class="description">
+                            <p>Used in this web site and default Jencil UI</p>
+                        </div>
+                    </li>
+                    <li><a href="http://www.red-team-design.com/how-to-create-slick-effects-with-css3-box-shadow">How to create slick effects with CSS3 box-shadow</a>
+                        <div class="description">
+                            <p>Used in this web site</p>
+                        </div>
+                    </li>
+                    <li><a href="http://speckyboy.com/2011/08/31/rubber-layouts-combining-static-and-fluid-layouts/">Rubber Layouts – Combining Static and Fluid Layouts</a>
+                        <div class="description">
+                            <p>Used in this web site</p>
+                        </div>
+                    </li>
+
+                    <li><a href="http://coffeescripter.com/2009/07/ad-gallery-a-jquery-gallery-plugin/">AD Gallery - a jQuery gallery plugin</a>
+                        <div class="description">
+                            <p>Used in this web site to build screenshot gallery</p>
+                        </div>
+                    </li>
+                    <li><a href="http://www.kryogenix.org/code/browser/smoothscroll/">Smooth scrolling demo</a>
+                        <div class="description">
+                            <p>Used in this web site to enable smooth scrolling</p>
+                        </div>
+                    </li>
+                </ul>
+                <h2>Logo of Jencil</h2>
+                <ul id="logos">
+                    <li><img src="css/img/header.png" alt="full size">
+                        <div class="description">
+                            <p>Download as <a href="css/img/header.png">png</a> | <a href="res/svg/header.svg">svg</a></p>
+                        </div>
+                    </li>
+                    <li><img src="css/img/logo.png" alt="square size">
+                        <div class="description">
+                            <p>Download as <a href="css/img/logo.png">png</a> | <a href="res/svg/logo.svg">svg</a></p>
+                        </div>
+                    </li>
                 </ul>
             </aside>
         </section>
 
         <footer id="footer">
-            get the source code on GitHub : <a href="http://github.com/lambdalisue/Jencil">lambdalisue/Jencil</a>
+            <p>Copyright &copy; 2011 hashnote.net, Alisue allright reserved.</p>
         </footer>
     </div>
     <script type="text/javascript">

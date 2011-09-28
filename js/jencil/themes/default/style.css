@@ -1,12 +1,9 @@
-/* elementfix */
 *:after {
   display:block;
   clear:both;
 }
-element {width:100%;} /* clearfix IE6, 7 */
-element:after {content:"";} /* clearfix */
-.jencil, .jencil-loader{
-    width: 95%;
+.jencil{
+    min-width: 300px;
     height: auto;
     padding: 10px;
     border: 1px solid #e4e4e4;
@@ -14,8 +11,13 @@ element:after {content:"";} /* clearfix */
     background: #f9f9f9;
 }
 .jencil-loader{
-    height: 500px;
-    background: url(image/loading.gif) no-repeat 50% 50%;
+    background: #f9f9f9 url(image/loading.gif) no-repeat 50% 50%;
+}
+.jencil.jencil-loader{
+    height: 420px;
+}
+.jencil .jencil-workspace .jencil-editor{
+    height: 400px;
 }
 .jencil .jencil-toolbar{
     width: 100%;
@@ -57,7 +59,8 @@ element:after {content:"";} /* clearfix */
     width: 16px;
     height: 16px;
     text-indent: -10000px;
-    background: url(image/csssprite.png) no-repeat;
+    background-image: url(image/csssprite.png) !important;
+    background: url(image/csssprite.gif) no-repeat;
 }
 .jencil .jencil-toolbar .jencil-button-holder a.h1 span{ background-position: -0px 0px; }
 .jencil .jencil-toolbar .jencil-button-holder a.h2 span{ background-position: -16px 0px; }
@@ -104,4 +107,7 @@ element:after {content:"";} /* clearfix */
     border: none;
     background: #f9f9f9;
     color: #3c3c3c;
+}
+.jencil .jencil-workspace{
+    padding: 5px 0;
 }
