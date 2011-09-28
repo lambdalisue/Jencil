@@ -10,7 +10,7 @@ JavaScript crossbrowser Markup and WYSIWYG edtior written in CoffeeScript
 This script is inspired by `markItUp! <http://markitup.jaysalvat.com/home/>`_
 
 :Author: Alisue (lambdalisue@hashnote.net)
-:Version: 0.0.1rc2
+:Version: 0.0.1rc3
 :License: MIT License
 :Url: http://github.com/lambdalisue/Jencil 
 :Demo: http://demos.jencil.hashnote.net/
