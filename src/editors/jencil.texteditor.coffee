@@ -98,7 +98,7 @@ class Initializer extends Jencil.editors.Initializer
     ]
     requires: [
       ['~/textarea.min.js', 'window.Textarea']
-      ['~/jquery.textarea.js', '$.fn.tabby']
+      ['~/jquery.textarea.min.js', '$.fn.tabby']
     ]
     options: 
       previewPosition: 'right'
