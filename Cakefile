@@ -41,6 +41,17 @@ build = (watch, callback) ->
   coffee.stderr.on 'data', (data) -> print data.toString()
   coffee.on 'exit', (status) -> callback?() if status is 0
 
+pack = ->
+  exec 'cp external/Textarea/lib/textarea.min.js lib/textarea.min.js'
+  exec 'cp external/Richarea/lib/richarea.min.js lib/richarea.min.js'
+  fs.readdir 'lib', (err, contents) ->
+    for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
+      basename = file[0..file.length-4]
+      exec "jspacker -e62 -i ./lib/#{file} -o ./lib/#{basename}.min.js"
+  fs.readdir 'lib/editors', (err, contents) ->
+    for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
+      basename = file[0..file.length-4]
+      exec "jspacker -e62 -i ./lib/editors/#{file} -o ./lib/editors/#{basename}.min.js"
 task 'build', 'Compile CoffeeScript source files', ->
   build()
 
@@ -57,16 +68,22 @@ task 'docs', 'Generate annotated source code with Docco', ->
     docco.on 'exit', (status) -> callback?() if status is 0
 
 task 'pack', 'Create release pack', ->
-  exec 'cp external/Textarea/lib/textarea.min.js lib/textarea.min.js'
-  exec 'cp external/Richarea/lib/richarea.min.js lib/richarea.min.js'
-  fs.readdir 'lib', (err, contents) ->
-    for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
-      basename = file[0..file.length-4]
-      exec "jspacker -e62 -i ./lib/#{file} -o ./lib/#{basename}.min.js"
-  fs.readdir 'lib/editors', (err, contents) ->
-    for file in contents when /\.js$/.test(file) and not /\.min\.js$/.test(file)
-      basename = file[0..file.length-4]
-      exec "jspacker -e62 -i ./lib/editors/#{file} -o ./lib/editors/#{basename}.min.js"
+  build()
+  pack()
+
+task 'package', 'Create redistributable package', ->
+  build()
+  pack()
+
+  exec 'mkdir -p package/editors'
+  exec 'mkdir -p package/profiles'
+  exec 'cp README.rst package/'
+  exec 'cp -rf ./lib/*.min.js package/'
+  exec 'cp -rf ./lib/editors/*.min.js package/editors/'
+  exec 'cp -rf ./lib/profiles/*.js package/profiles/'
+  exec 'cp -rf ./parsers package/'
+  exec 'cp -rf ./templates package/'
+  exec 'cp -rf ./themes package/'
 
 task 'test', 'Run the test suite', ->
   build ->

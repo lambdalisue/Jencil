@@ -1,3 +1,5 @@
+isIE6 = /MSIE 6/i.test navigator.userAgent
+isIE7 = /MSIE 7/i.test navigator.userAgent
 namespace 'Jencil.buttons', (exports) ->
   Widget = Jencil.widgets.Widget
   exports.createButton = createButton = (jencil, type, args) ->
@@ -32,8 +34,11 @@ namespace 'Jencil.buttons', (exports) ->
     constructor: (jencil, cls, name) ->
       super jencil, 'button', 'a'
       @$element.addClass cls
-      @$element.attr 'href', '#'
       @$element.attr 'title', name
+      @$element.css 'cursor', 'pointer'
+      # quickfix IE6 and IE7 hover issue
+      if isIE6 or isIE7
+        @$element.attr 'href', 'javascript:void(0);'
       @$element.append $("<span>#{name}</span>")
       @$element.click =>
         @clickBefore()
