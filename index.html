@@ -97,12 +97,40 @@
                     <div class="ad-nav">
                         <div class="ad-thumbs">
                             <ul class="ad-thumb-list">
-                                <li><a href="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot01.png">
-                                        <img src="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot01.png" width="120">
+                                <li><a href="img/screenshots/screenshot01.png">
+                                        <img src="img/screenshot_thumbnails/screenshot01.png" title="Jencil RichEditor without Rawview" alt="Under Ubuntu 11.04 + Firefox">
                                     </a>
                                 </li>
-                                <li><a href="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot02.png">
-                                        <img src="https://raw.github.com/lambdalisue/Jencil/master/img/screenshot02.png" width="120">
+                                <li><a href="img/screenshots/screenshot02.png">
+                                        <img src="img/screenshot_thumbnails/screenshot02.png" title="Jencil TextEditor with Preview" alt="Under Ubuntu 11.04 + Firefox">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot03.png">
+                                        <img src="img/screenshot_thumbnails/screenshot03.png" title="Windows XP + Firefox">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot04.png">
+                                        <img src="img/screenshot_thumbnails/screenshot04.png" title="Windows XP + Opera">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot05.png">
+                                        <img src="img/screenshot_thumbnails/screenshot05.png" title="Windows XP + Safari">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot06.png">
+                                        <img src="img/screenshot_thumbnails/screenshot06.png" title="Windows XP + Google Chrome">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot07.png">
+                                        <img src="img/screenshot_thumbnails/screenshot07.png" title="Windows XP + Internet Explorer 8">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot08.png">
+                                        <img src="img/screenshot_thumbnails/screenshot08.png" title="Windows XP + Internet Explorer 7">
+                                    </a>
+                                </li>
+                                <li><a href="img/screenshots/screenshot09.png">
+                                        <img src="img/screenshot_thumbnails/screenshot09.png" title="Windows XP + Internet Explorer 6">
                                     </a>
                                 </li>
                             </ul>
@@ -148,7 +176,33 @@
 
                 <h2 id="document">Document</h2>
                 <p class="ref"><a href="#top">Jump to top [^]</a></p>
-                <p>No document is available yet because Jencil is still developing and it need a lot of refactoring.</p>
+                <h3>How to use</h3>
+                <ol>
+                    <li>Download latest Jencil and extract it</li>
+                    <li>Copy <strong><code>package</code></strong> directory to your javascript directory and rename it to <strong><code>jencil</code></strong></li>
+                    <li>Add the following line to your HTML Head:
+                        <pre><code>&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/jencil/jencil.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+    $(document).ready(function(){
+        $('textarea#document-body-demo').jencil({
+            documentTypeElement: $('select#document-type-demo')
+        });
+    });
+&lt;/script&gt;</code></pre>
+                    </li>
+                    <li>Add the following line to your HTML Body:
+                        <pre><code>&lt;select id="document-type-demo"&gt;
+    &lt;option value="html"&gt;HTML&lt;/option&gt;
+    &lt;option value="wysiwyg"&gt;WYSIWYG&lt;/option&gt;
+&lt;/select&gt;
+&lt;textarea id="document-body-demo"&gt;This is a default text&lt;/textarea&gt;
+</code></pre>
+                    </li>
+                </ol>
+
+                <h3>API Reference</h3>
+                <p>No API Reference is available yet because Jencil is still developing and it need a lot of refactoring.</p>
 
                 <h2 id="download">Download</h2>
                 <p class="ref"><a href="#top">Jump to top [^]</a></p>
@@ -160,7 +214,7 @@
                 </p>
                 <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
                     by running:
-                    <pre>$ git clone git://github.com/lambdalisue/Jencil</pre>
+                    <pre><code>$ git clone git://github.com/lambdalisue/Jencil</code></pre>
                 </p>
                 <h3>Version history</h3>
                 <ul>

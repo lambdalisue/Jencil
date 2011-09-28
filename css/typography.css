@@ -28,10 +28,11 @@ h3{
     font-size: 1.4em;
 }
 
-ul li{
+ul li, ol li{
     font-size: 1.4em;
 }
-ul li p, ul li * li{
+ul li p, ul li * li,
+ol li p, ol li * li{
     font-size: 1.0em;
 }
 table td{
