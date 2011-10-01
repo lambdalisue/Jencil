@@ -35,9 +35,9 @@ class RichArea extends Jencil.widgets.Widget
         @update()
       @update()
   getValue: ->
-    if @controller?.isReady() then return @controller.getValue()
+    if @controller?.ready() then return @controller.getValue()
   setValue: (value) ->
-    if @controller?.isReady() then @controller.setValue value
+    if @controller?.ready() then @controller.setValue value
   update: ->
     @$source.val @controller?.getValue()
 class Rawview extends Jencil.widgets.Widget
@@ -203,16 +203,13 @@ namespace 'Jencil.buttons', (exports) ->
       editor.reconstruct()
   exports.CommandButton = class CommandButton extends MarkupButtonBase
     constructor: (jencil, args) ->
-      [name, cls, @command, @value] = args
+      [name, cls, @command, @args] = args
       super jencil, name, cls
     click: ->
-      @exec @command, @value
-    exec: (command, value) ->
-      if @editor().richarea.controller
-        if not @editor().richarea.controller[command]?
-          if window.console?.error? then console.error "#{command} is not defined on Richarea"
-        else
-          @editor().richarea.controller[command] value
+      @exec @command, @args
+    exec: (command, args) ->
+      if @editor().richarea.controller?
+        @editor().richarea.controller.execCommand command, args
   exports.PromptCommandButton = class PromptCommandButton extends CommandButton
     constructor: (jencil, args) ->
       [name, cls, command, @message, @defaultValue] = args

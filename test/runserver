@@ -26,4 +26,4 @@ __AUTHOR__ = "lambdalisue (lambdalisue@hashnote.net)"
 __VERSION__ = "0.1.0"
 import BaseHTTPServer,CGIHTTPServer
 CGIHTTPServer.CGIHTTPRequestHandler.cgi_directories = ['/js/jencil.dev/parsers']
-BaseHTTPServer.HTTPServer(( '0.0.0.0', 8080 ), CGIHTTPServer.CGIHTTPRequestHandler ).serve_forever()
+BaseHTTPServer.HTTPServer(( '0.0.0.0', 8000 ), CGIHTTPServer.CGIHTTPRequestHandler ).serve_forever()
