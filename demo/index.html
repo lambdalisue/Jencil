@@ -1,9 +1,6 @@
 <!DOCTYPE>
 <html>
     <head>
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Cache-Control" content="no-cache">
-        <meta http-equiv="Expires" content="Thu, 01 Dec 1994 16:00:00 GMT"> 
         <meta charset="utf-8">
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         <!--[if IE]>
@@ -11,24 +8,31 @@
         <![endif]-->
         <link rel="stylesheet" href="css/style.css" type="text/css">
         <title>Jencil Demo - Javascript cross-browser WYSIWYM and WYSIWYG editor written in CoffeeScript</title>
-        <script type="text/javascript" src="js/jencil/jencil.min.js"></script>
+        <!--
+        <script type="text/javascript" src="js/textarea.min.js"></script>
+        <script type="text/javascript" src="js/richarea.js"></script>
+        <script type="text/javascript" src="js/jencil/utils/detector.js"></script>
+        <script type="text/javascript" src="js/jencil/utils/namespace.js"></script>
+        <script type="text/javascript" src="js/jencil/utils/partial.js"></script>
+        <script type="text/javascript" src="js/jencil/utils/dynamicloader.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.core.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.utils.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.options.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.profile.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.theme.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.widget.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.button.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.editor.js"></script>
+        <script type="text/javascript" src="js/jencil/core/jencil.editor.pane.js"></script>
+        <script type="text/javascript" src="js/jencil/editors/jencil.texteditor.js"></script>
+        <script type="text/javascript" src="js/jencil/editors/jencil.richeditor.js"></script>
+        -->
+        <script type="text/javascript" src="js/jencil/jencil.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('textarea#document-body').jencil({
-                    /*
-                     * if you set documentTypeElement, the target element have to be single element
-                     * what this mean is that you cannot do something like below if there are multiple
-                     * textarea on the html.
-                     *
-                     *     $('textarea').jencil({
-                     *         documentTypeElement: $('select#document-type'),
-                     *         // whatever
-                     *     });
-                     *
-                     * this limitation is because of one-to-one relation between textarea and documentTypeElement.
-                     */
-                    documentTypeElement: $('select#document-type'),
-                    defaultProfileName: 'wysiwyg'
+                    root: 'http://localhost:8000/js/jencil',
+                    documentTypeElement: $('select#document-type')
                 });
             });
         </script>
@@ -59,13 +63,7 @@
                         <option value="wysiwyg" selected='selected'>WYSIWYG</option>
                     </select>
                     <textarea id="document-body">
-                        <h1>This is an Jencil Demo</h1>
-                        <h2><a href="http://www.youtube.com/watch?v=kEogJacjLTE&amp;feature=related">Let it be</a> <sub>by</sub> Beatles</h2><h2><img src="https://blog.so-net.ne.jp/_images/blog/_36b/seawind335/Let20It20Be.jpg" style="float:left; width: 240px"></h2><div style="margin-left: 120px; text-align: center;">
-                        When I find myself in times of trouble<br>Mother Mary comes to me<br>Speaking words of wisdom, let it be.<br><br>
-                        And in my hour of darkness<br>She is standing right in front of me<br>Speaking words of wisdom, let it be.<br><br>
-                        Let it be, let it be.<br><br>
-                        Let it be, let it be.<br><br></div><div style="margin-left: 120px; text-align: center;">
-                        Whisper words of wisdom, let it be.</div>
+<h1>This is an Jencil Demo</h1>
                     </textarea>
                 </div>
                     <section id="handler">

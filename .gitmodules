@@ -1,6 +1,6 @@
-[submodule "external/Richarea"]
-	path = external/Richarea
-	url = git@github.com:lambdalisue/Richarea.git
-[submodule "external/Textarea"]
-	path = external/Textarea
-	url = git@github.com:lambdalisue/Textarea.git
+[submodule "src/libs/Textarea"]
+	path = src/libs/Textarea
+	url = git://github.com/lambdalisue/Textarea.git
+[submodule "src/libs/Richarea"]
+	path = src/libs/Richarea
+	url = git://github.com/lambdalisue/Richarea.git
