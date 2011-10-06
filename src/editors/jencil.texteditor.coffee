@@ -37,6 +37,10 @@ namespace 'Jencil.editor.pane', (exports) ->
       @$surface.bind 'keypress click change blur enter', =>
         @update()
       @controller = new Textarea @$surface
+    init: ->
+      # Enable TAB and SHIFT+TAB feature with jQuery tabby plugin
+      @$element.tabby() if $.fn.tabby?
+      super()
     relocate: ->
       super()
       # quickfix for IE 6 and 7, because they don't know '100%' mean.
@@ -71,11 +75,6 @@ namespace 'Jencil.editor', (exports) ->
       @textarea.update =>
         @jencil.setSourceValue @getValue()
         @preview.update()
-    init: ->
-      if $.fn.tabby?
-        # Enable TAB and SHIFT+TAB feature with jQuery tabby plugin
-        @textarea.$element.tabby()
-      super()
     relocate: ->
       super()
       # quickfix for IE 8. Without this code, only IE 8 hung up after switched

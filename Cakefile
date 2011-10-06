@@ -23,6 +23,7 @@ CS = 'src'
 JS = 'lib'
 DEMO = 'demo'
 TEST = 'test'
+SPEC = 'spec'
 FILES = [
   'utils/detector',
   'utils/namespace',
@@ -40,19 +41,40 @@ FILES = [
   'editors/jencil.richeditor',
 ]
 REQUIRES = [
-  'src/libs/Textarea/lib/textarea.min.js',
-  'src/libs/Richarea/lib/richarea.min.js',
+  'requires/textarea.min.js',
+  'requires/richarea.min.js',
+  'requires/jquery.textarea.js',
 ]
 HEADER = """
-Jencil #{VERSION}
+Jencil - A JavaScript Cross-browser WYSIWYM and WYSIWYG editor #{VERSION}
+http://lambdalisue.github.com/Jencil
 
-Javascript cross-browser WYSIWYM and WYSIWYG editor written in CoffeeScript
+Copyright 2011 (c) hashnote.net, Alisue allright reserved.
+Licensed under the MIT license.
 
-Author: Alisue (lambdalisue@hashnote.net)
-Version: #{VERSION}
-Date: #{(new Date).toUTCString()}
-License: MIT License
-Url: http://github.com/lambdalisue/Jencil
+Dependencies:
+- jQuery v1.4.2
+  http://jquery.com/
+- Tabby jQuery plugin v0.12
+  http://teddevito.com/demos/textarea.html
+- Textarea v0.1.0 (included)
+  http://demos.textarea.hashnote.net/
+- Richarea v0.1.1 (included)
+  http://demos.richarea.hashnote.net/
+
+Includes Tabby jQuery plugin v0.12
+  http://teddevito.com/demos/textarea.html
+  Copyright (c) 2009 Ted Devito
+
+Includes Textarea v0.1.0
+  http://demos.textarea.hashnote.net/
+  Copyright (c) 2011 hashnote.net, Alisue allright reserved
+
+Includes Richarea v0.1.1 (included)
+  http://demos.richarea.hashnote.net/
+  Copyright (c) 2011 hashnote.net, Alisue allright reserved
+
+Last-Modified: #{(new Date).toUTCString()}
 """
 GCC = '$HOME/.app/compiler-latest/compiler.jar'
 
@@ -89,6 +111,7 @@ class reporter
      reporter._write null, "[#{reporter._now()}] #{reporter.RED}#{reporter.CROSS}  #{message}#{reporter.RESET}", args
 
 option '-v', '--verbose', 'display full information to stdout/stderr'
+option '-w', '--watch', 'continuously compile or test (available on compile:debug, compile:release and test:spec)'
 
 if HEADER?
   CS_HEADER = "###!\n#{HEADER}\n###\n"
@@ -105,7 +128,7 @@ if "#{NAME}" in FILES
 
 # get reason line from error string
 reason = (error) ->
-  m = error.match /Error: (.*)/
+  m = "#{error}".match /Error: (.*)/
   return if m? then " - #{m[1]}" else ''
 # prepend data to file
 prepend = (file, data, encoding='utf8') ->
@@ -168,8 +191,8 @@ compile =
     failures = 0
     remaining = files.length
     for file in files
-      compile.single "#{src}/#{file}.coffee", "#{dst}/#{file}.js", options, (error) ->
-        failures++ if error?
+      compile.single "#{src}/#{file}.coffee", "#{dst}/#{file}.js", options, (_failures) ->
+        failures += _failures
         callback? failures if not --remaining
   # compile coffeescript files in src to a single javascript file (dst)
   release: (files, src, dst, options, callback) ->
@@ -234,72 +257,166 @@ watch =
     for file in files then do (file) ->
       fs.watchFile file, (curr, prev) ->
         compile.join files, dst, options
+# === watch task
 task 'watch:debug', 'watch for changes on coffeescript files and continuously compile the file', (options) ->
+  reporter.head 'watching for changes on coffeescript files and continuously compile the files ...'
+  reporter.log()
   watch.debug FILES, CS, JS, options
 task 'watch:release', 'watch for changes on coffeescript files and continuously compile the file', (options) ->
+  reporter.head 'watching for changes on coffeescript files and continuously compile a single joined javascript file ...'
+  reporter.log()
   watch.release FILES, CS, "#{JS}/#{NAME}.js", options
+# === compile task
 task 'compile:debug', 'compile coffeescript files to javascript files', (options) ->
-  compile.debug FILES, CS, JS, options
+  if options.watch?
+    invoke 'watch:debug'
+    return
+  reporter.head 'compiling coffeescript files to javascript files ...'
+  reporter.log()
+  compile.debug FILES, CS, JS, options, (failures) ->
+    reporter.log()
+    if failures is 0
+      reporter.info 'successfully complete'
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
 task 'compile:release', 'compile coffeescript files to a single javascript file', (options) ->
-  compile.release FILES, CS, "#{JS}/#{NAME}.js", options
+  if options.watch?
+    invoke 'watch:release'
+    return
+  reporter.head 'compiling coffeescript files to a single javascript file ...'
+  reporter.log()
+  compile.release FILES, CS, "#{JS}/#{NAME}.js", options, (failures) ->
+    reporter.log()
+    if failures is 0
+      reporter.info 'successfully complete'
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
+# === pack task
 task 'pack:coffee', 'pack coffeescript files to a single coffeescript file', (options) ->
+  reporter.head 'pack coffeescript files to a single coffeescript file ...'
+  reporter.log()
   files = ("#{CS}/#{file}.coffee" for file in FILES)
   dst = "#{CS}/#{NAME}.coffee"
-  pack.coffeescript files, dst, options
-task 'pack:requires', 'compile coffeescript files to a single javascript file', (options) ->
+  pack.coffeescript files, dst, options, (failures) ->
+    reporter.log()
+    if failures is 0
+      reporter.info 'successfully complete'
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
+task 'pack:requires', 'pack compile coffeescript files to a single javascript file', (options) ->
+  reporter.head 'pack compiled javascript file with required javascript files ...'
+  reporter.log()
   files = REQUIRES.concat ["#{JS}/#{NAME}.js"]
   dst = "#{JS}/#{NAME}.full.js"
-  pack.javascript files, dst, options
-task 'build', 'invoke compile:release, pack:requires and minify the result javascript', (options) ->
-  dst = "#{JS}/#{NAME}.js"
-  compile.release FILES, CS, dst, options, (failures) ->
+  pack.javascript files, dst, options, (failures) ->
+    reporter.log()
     if failures is 0
-      pack.javascript REQUIRES.concat([dst]), dst, options, (failures) ->
-        minify dst, "#{JS}/#{NAME}.min.js"
+      reporter.info 'successfully complete'
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
+# === release task
+task 'build', 'invoke compile:release, pack:requires and minify the result javascript', (options) ->
+  complete = (failures) ->
+    reporter.log()
+    if failures is 0
+      reporter.info 'successfully complete'
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
+  step3 = (failures) ->
+    reporter.log()
+    if failures is 0
+      src = "#{JS}/#{NAME}.full.js"
+      dst = "#{JS}/#{NAME}.min.js"
+      reporter.head 'minify packed javascript file ...'
+      reporter.log()
+      minify src, dst, options, complete
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
+  step2 = (failures) ->
+    reporter.log()
+    if failures is 0
+      src = REQUIRES.concat ["#{JS}/#{NAME}.js"]
+      dst = "#{JS}/#{NAME}.full.js"
+      reporter.head 'pack compiled javascript file with required javascript files ...'
+      reporter.log()
+      pack.javascript src, dst, options, step3
+    else
+      reporter.error "there are #{failures} error exists. fix these and try again."
+  files = FILES
+  src = CS
+  dst = "#{JS}/#{NAME}.js"
+  reporter.head 'compiling coffeescript files to a single javascript file ...'
+  reporter.log()
+  compile.release files, src, dst, options, step2
+task 'clean', 'clean generated javascript files and html files', ->
+  reporter.head 'clean generated coffeescript file, javascript files and html files ...'
+  reporter.log()
+  files = ("\"#{JS}/#{file}.js\"" for file in FILES)
+  files.push "\"#{JS}/#{NAME}.js\""
+  files.push "\"#{JS}/#{NAME}.full.js\""
+  files.push "\"#{JS}/#{NAME}.min.js\""
+  files.concat ("\"docs/#{path.basename file}.html\"" for file in FILES)
+  exec "rm -r #{files.join ' '}", (error, stdout, stderr) ->
+    if not error?
+      reporter.info 'successfully complete'
+    else
+      reporter.error stderr
+      process.exit 1
+# === document task
+task 'docs', 'generate annotated source code with docco', (options) ->
+  reporter.head 'generating annotated source codes from coffeescript files ...'
+  reporter.log()
+  complete = (failures) ->
+    reporter.log()
+    if failures is 0
+      reporter.info 'successfully complete'
+    else
+      reporter.error "there are #{failures} error exists. fix these error and try again."
+      process.exit 1
+  failures = 0
+  remaining = FILES.length
+  for file in FILES then do (file) ->
+    src = "#{CS}/#{file}.coffee"
+    dst = "docs/#{path.basename file}.html"
+    exec "docco #{src}", (error, stdout, stderr) ->
+      if not error?
+        reporter.success "#{src} ---> #{dst}"
+      else
+        reporter.fail "#{src} ---> #{dst}#{reason stderr}"
+        reporter.error stderr if options.verbose?
+        failures++
+      complete failures if not --remaining
+# === test task
 task 'demo', 'start demo server on 0.0.0.0:8000 via python SimpleHTTPServer', (options) ->
   reporter.head 'start demo server on 0.0.0.0:8000 ...'
-  proc = spawn 'python', ['-m', 'SimpleHTTPServer'], {'cwd': DEMO}
+  proc = spawn 'python', ['-m', 'CGIHTTPServer'], {'cwd': DEMO}
   proc.stdout.on 'data', (data) ->
     process.stdout.write data
   proc.stderr.on 'data', (data) ->
     process.stdout.write data
   proc.on 'exit', (status) ->
     process.exit 1 if status isnt 0
-
-task 'compose', 'compose all required resources to release', (options) ->
-  reporter.info 'coming soon'
-#### generate annotated source code with docco ###
-#task 'docs', 'generate annotated source code with docco', ->
-#  failed = 0
-#  remaining = sources.length
-#  reporter.log "Generating annotated source codes from CoffeeScript files...", logger.bold
-#  reporter.log()
-#  for file, index in sources then do (file, index) ->
-#    src = "#{srcdir}/#{file}.coffee"
-#    dst = "docs/#{file}.html"
-#    exec "docco #{src}", (err, stdout, stderr) ->
-#      if err?
-#        logger.fail "#{src} => #{dst}", stderr
-#        failed++
-#      else
-#        logger.success "#{src} => #{dst}"
-#      process() if --remaining is 0
-#  process = ->
-#    logger.log()
-#    if failed is 0
-#      logger.info 'Annotated source codes has successfuly generated.'
-#    else
-#      logger.error "#{failed} document has failed to generate."
-#    logger.log()
-#
-#### run the test suites via vows ###
-#task 'test', 'run the test suites via vows', (options) ->
-#  args = ("#{TESTDIR}/#{file}.coffee" for file in tests)
-#  args.unshift '--spec'
-#  proc = spawn 'vows', args
-#  proc.stdout.on 'data', (buffer) ->
-#    console.log buffer.toString().trim()
-#  proc.stderr.on 'data', (buffer) ->
-#    reporter.error buffer.toString().trim()
-#  proc.on 'exit', (status) ->
-#    process.exit(1) if status isnt 0
+task 'test:spec', 'run spec tests for behavior driving development via vows', (options) ->
+  reporter.head 'running all spec tests (spec_***.*) for behavior driving development via vows ...'
+  reporter.log()
+  args = ("#{SPEC}/#{file}" for file in fs.readdirSync SPEC when /^spec_.*\..*/.test file)
+  args.unshift '--spec'
+  args.unshift '--watch' if options.watch?
+  proc = spawn 'vows', args
+  proc.stdout.on 'data', (buffer) ->
+    process.stdout.write buffer
+  proc.stderr.on 'data', (buffer) ->
+    reporter.error buffer
+  proc.on 'exit', (status) ->
+    process.exit(1) if status isnt 0
+task 'test:unit', 'run unit tests for test driving development via nodeunit', (options) ->
+  reporter.head 'running all unit tests (test_***.*) for test driving development via nodeunit ...'
+  reporter.log()
+  args = ("#{TEST}/#{file}" for file in fs.readdirSync TEST when /^test_.*\..*/.test file)
+  proc = spawn 'nodeunit', args
+  proc.stdout.on 'data', (buffer) ->
+    process.stdout.write buffer
+  proc.stderr.on 'data', (buffer) ->
+    reporter.error buffer
+  proc.on 'exit', (status) ->
+    process.exit(1) if status isnt 0
