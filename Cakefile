@@ -17,7 +17,7 @@ path            = require 'path'
 util            = require 'util'
 {spawn, exec}   = require 'child_process'
 
-VERSION = 'v0.0.2'
+VERSION = 'v0.0.2rc2'
 NAME = 'jencil'
 CS = 'src'
 JS = 'lib'
