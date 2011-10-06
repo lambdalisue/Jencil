@@ -44,23 +44,44 @@ namespace 'Jencil.editor.pane', (exports) ->
     constructor: (jencil, editor) ->
       super jencil, 'jencil-preview-pane', editor
       @$element.css position: 'relative'
-      @$surface = $('<div>').addClass 'surface'
+      @$surface = $('<iframe>').addClass 'surface'
       @$surface.appendTo @$element
       @$surface.css
         width: '100%'
         height: '100%'
-        border: ''
+        border: 'none'
         margin: 0
         padding: 0
-        overflow: 'auto'
+      if Jencil.utils.detector.browser is 'Explorer'
+        # quickfix for IE border issue
+        @$surface.attr 'frameborder', 0
+    init: ->
+      # ready iframe
+      iframe = @$surface.get(0)
+      if iframe.contentDocument?
+        @_document = iframe.contentDocument
+      else
+        @_document = iframe.contentWindow.document
+      @_document.write '<body></body>'
+      super()
     _writeContent: (content) ->
       process = (template) =>
-        @$surface.html template.replace '{{content}}', content
+        if @_document?
+          try
+            scrollTop = @_document.documentElement.scrollTop
+          catch e
+            scrollTop = 0
+          @_document.open()
+          @_document.write template.replace('{{content}}', content)
+          @_document.close()
+          @_document.documentElement.scrollTop = scrollTop
       if not @_previewTemplate?
         templatePath = Jencil.utils.path.abspath @jencil.options.extras.previewTemplatePath
-        @$surface.load templatePath, (response, status, xhr) =>
-          @_previewTemplate = response
-          process response
+        $.ajax
+          url: templatePath
+          success: (data) =>
+            @_previewTemplate = data
+            process data
       else
         process @_previewTemplate
     update: ->
