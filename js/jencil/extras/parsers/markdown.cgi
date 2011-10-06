@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # :vim set fileencoding=utf8:
 import cgi
-import cgitb
-import markdown
-cgitb.enable()
-
 print "Content-Type: text/html"
 print
+try:
+    import markdown
+except ImportError:
+    print "<h1>Markdown Parse Could not work</h1>"
+    print "You have to install markdown with the following command first!"
+    print "<pre>pip install markdown</pre>"
 
 form = cgi.FieldStorage()
 if 'data' not in form:

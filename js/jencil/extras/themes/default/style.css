@@ -10,15 +10,6 @@
     border-radius: 5px;
     background: #f9f9f9;
 }
-.jencil-loader{
-    background: #f9f9f9 url(image/loading.gif) no-repeat 50% 50%;
-}
-.jencil.jencil-loader{
-    height: 420px;
-}
-.jencil .jencil-workspace .jencil-editor{
-    height: 400px;
-}
 .jencil .jencil-toolbar{
     width: 100%;
     margin-top: -5px;
@@ -109,5 +100,27 @@
     color: #3c3c3c;
 }
 .jencil .jencil-workspace{
+    height: 400px;
     padding: 5px 0;
+    background: url(image/loading.gif) no-repeat 50% 50%;
+}
+.jencil .jencil-workspace:after{ content: ""; }
+.jencil .jencil-workspace .jencil-editor{
+    background: #f9f9f9;
+}
+.jencil .jencil-workspace .jencil-editor .jencil-pane,
+.jencil .jencil-workspace .jencil-editor .jencil-lhspane,
+.jencil .jencil-workspace .jencil-editor .jencil-rhspane{
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: #ffffff;
+}
+.jencil .jencil-workspace .jencil-dualpane-editor div:first-child{
+    margin-right: 2px;
+}
+.jencil .jencil-workspace .jencil-dualpane-editor div:last-child{
+    margin-left: 2px;
 }
