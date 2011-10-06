@@ -68,6 +68,8 @@ namespace 'Jencil.editor.pane', (exports) ->
       if @controller?.ready() then return @controller.getValue()
     setValue: (value) ->
       if @controller?.ready() then @controller.setValue value
+    focus: ->
+      @$surface.focus()
 namespace 'Jencil.editor', (exports) ->
   DualPaneEditorBase = Jencil.editor.DualPaneEditorBase
   TextareaPane = Jencil.editor.pane.TextareaPane
@@ -103,6 +105,8 @@ namespace 'Jencil.editor', (exports) ->
       @richarea.getValue()
     setValue: (value) ->
       @richarea.setValue value
+    focus: ->
+      @richarea.focus()
 # --- Add extra buttons for TextEditor
 namespace 'Jencil.button', (exports) ->
   ButtonBase = Jencil.button.ButtonBase
@@ -113,6 +117,8 @@ namespace 'Jencil.button', (exports) ->
       super jencil, name, cls
     click: ->
       @exec @command, @args
+    clickAfter: ->
+      @editor().focus()
     exec: (command, args) ->
       if @editor().richarea.controller?
         @editor().richarea.controller.execCommand command, args

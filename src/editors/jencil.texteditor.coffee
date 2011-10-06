@@ -50,6 +50,8 @@ namespace 'Jencil.editor.pane', (exports) ->
       @controller.getValue()
     setValue: (value) ->
       @controller.setValue value
+    focus: ->
+      @$surface.focus()
 namespace 'Jencil.editor', (exports) ->
   DualPaneEditorBase = Jencil.editor.DualPaneEditorBase
   PreviewPane = Jencil.editor.pane.PreviewPane
@@ -85,6 +87,8 @@ namespace 'Jencil.editor', (exports) ->
       @textarea.getValue()
     setValue: (value) ->
       @textarea.setValue value
+    focus: ->
+      @textarea.focus()
     getSelection: ->
       return @textarea.controller.getSelection()
     setSelection: (start, end) ->

@@ -38,6 +38,8 @@ namespace 'Jencil.editor.pane', (exports) ->
       if @isVisible() then @hide() else @show()
     relocate: -> 
       # Do nothing
+    focus: ->
+      @$element.focus()
   exports.PreviewPane = class PreviewPane extends EditorPane
     constructor: (jencil, editor) ->
       super jencil, 'jencil-preview-pane', editor

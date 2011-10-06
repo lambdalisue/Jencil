@@ -68,6 +68,8 @@ namespace 'Jencil.editor', (exports) ->
       height = @workspace.$element.height()
       @$element.width width - offsetX
       @$element.height height - offsetY
+    focus: ->
+      throw new Error 'subclass must override this method to focus editor main panel'
   exports.SinglePaneEditorBase = class SinglePaneEditorBase extends EditorBase
     constructor: (jencil, cls, @pane) ->
       super jencil, cls
@@ -90,6 +92,8 @@ namespace 'Jencil.editor', (exports) ->
       height = @$element.height()
       @pane.$element.width width-offsetX
       @pane.$element.height height-offsetY
+    focus: ->
+      @pane.focus()
   exports.DualPaneEditorBase = class DualPaneEditorBase extends EditorBase
     constructor: (jencil, cls, @lhspane, @rhspane, @panedir='horizontal') ->
       super jencil, cls

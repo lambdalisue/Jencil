@@ -54,6 +54,7 @@ namespace 'Jencil.button', (exports) ->
     clickAfter: ->
       # Update editor
       @editor().update()
+      @editor().focus()
   # --- separator
   exports.Separator = class Separator extends Widget
     constructor: (jencil, args) ->
