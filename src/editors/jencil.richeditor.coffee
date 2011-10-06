@@ -47,8 +47,14 @@ namespace 'Jencil.editor.pane', (exports) ->
         @relocate()
         @$body = $(@controller.raw.body)
         @$body.css {margin: 0, padding: 0}
-        @$body.bind 'keypress change click blur enter', =>
+        @$body.bind 'keyup keypress change click blur enter', =>
           @update()
+          if Jencil.utils.detector.browser is 'Firefox'
+            # in Firefox, keyup event doesn't called and keypress event is
+            # called before value change so call @update() with delay.
+            setTimeout =>
+              @update()
+            , 100
         RichareaPane.__super__.init.call @
     relocate: ->
       super()

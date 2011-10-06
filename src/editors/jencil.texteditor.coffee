@@ -34,7 +34,7 @@ namespace 'Jencil.editor.pane', (exports) ->
         padding: 0
         resize: 'none'
         outline: 'none'
-      @$surface.bind 'keypress click change blur enter', =>
+      @$surface.bind 'keyup keypress click change blur enter', =>
         @update()
       @controller = new Textarea @$surface
     init: ->
