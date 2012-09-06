@@ -1,0 +1,184 @@
+.panelMixin {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #e4e4e4;
+  background: #f9f9f9;
+}
+.jencil {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #e4e4e4;
+  background: #f9f9f9;
+  width: 640px;
+  height: 320px;
+}
+.jencil .workspace .toolbar {
+  width: 100%;
+  margin-top: 2px;
+}
+.jencil .workspace .toolbar:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.jencil .workspace .toolbar .separator,
+.jencil .workspace .toolbar .button {
+  display: block;
+  float: left;
+}
+.jencil .workspace .toolbar .separator {
+  height: 14px;
+  margin: 2px 0;
+  margin-left: 6px;
+  padding-right: 6px;
+  border-left: 1px solid #e4e4e4;
+  text-indent: -10000px;
+}
+.jencil .workspace .toolbar .button {
+  margin: 0 1px;
+  padding: 2px;
+  outline: none;
+  border: 1px solid #f9f9f9;
+  cursor: pointer;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+.jencil .workspace .toolbar .button:hover {
+  background: #eaeaea;
+}
+.jencil .workspace .toolbar .button span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  text-indent: -10000px;
+  background-image: url(img/sprite.png) !important;
+  background: url(img/sprite.gif) no-repeat;
+}
+.jencil .workspace .mainPanel {
+  padding: 5px 0;
+  background: #f9f9f9;
+}
+.jencil .workspace .mainPanel .panel {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #e4e4e4;
+  background: #f9f9f9;
+  background: #ffffff;
+}
+.jencil .workspace .mainPanel .panel.left {
+  margin-right: 2px;
+}
+.jencil .workspace .mainPanel .panel.right {
+  margin-left: 2px;
+}
+.jencil .workspace .mainPanel .splitter {
+  position: absolute;
+  cursor: move;
+}
+.jencil .workspace .mainPanel .splitter.vertical {
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+}
+.jencil .workspace .mainPanel .splitter.horizontal {
+  width: 100%;
+  height: 5px;
+  cursor: row-resize;
+}
+.jencil .workspace .toolbar .button.undo span {
+  background-position: 0px 0px;
+}
+.jencil .workspace .toolbar .button.redo span {
+  background-position: -16px 0px;
+}
+.jencil .workspace .toolbar .button.h1 span {
+  background-position: -32px 0px;
+}
+.jencil .workspace .toolbar .button.h2 span {
+  background-position: -48px 0px;
+}
+.jencil .workspace .toolbar .button.h3 span {
+  background-position: -64px 0px;
+}
+.jencil .workspace .toolbar .button.h4 span {
+  background-position: -80px 0px;
+}
+.jencil .workspace .toolbar .button.h5 span {
+  background-position: -96px 0px;
+}
+.jencil .workspace .toolbar .button.h6 span {
+  background-position: -112px 0px;
+}
+.jencil .workspace .toolbar .button.bold span {
+  background-position: -128px 0px;
+}
+.jencil .workspace .toolbar .button.italic span {
+  background-position: -144px 0px;
+}
+.jencil .workspace .toolbar .button.underline span {
+  background-position: -160px 0px;
+}
+.jencil .workspace .toolbar .button.strike span {
+  background-position: -176px 0px;
+}
+.jencil .workspace .toolbar .button.subscript span {
+  background-position: -192px 0px;
+}
+.jencil .workspace .toolbar .button.superscript span {
+  background-position: -208px 0px;
+}
+.jencil .workspace .toolbar .button.anchor span {
+  background-position: -224px 0px;
+}
+.jencil .workspace .toolbar .button.image span {
+  background-position: -240px 0px;
+}
+.jencil .workspace .toolbar .button.unorderedList span {
+  background-position: -256px 0px;
+}
+.jencil .workspace .toolbar .button.orderedList span {
+  background-position: -272px 0px;
+}
+.jencil .workspace .toolbar .button.code span {
+  background-position: -288px 0px;
+}
+.jencil .workspace .toolbar .button.quote span {
+  background-position: -304px 0px;
+}
+.jencil .workspace .toolbar .button.indent span {
+  background-position: -320px 0px;
+}
+.jencil .workspace .toolbar .button.outdent span {
+  background-position: -336px 0px;
+}
+.jencil .workspace .toolbar .button.alignLeft span {
+  background-position: -352px 0px;
+}
+.jencil .workspace .toolbar .button.alignCenter span {
+  background-position: -368px 0px;
+}
+.jencil .workspace .toolbar .button.alignRight span {
+  background-position: -384px 0px;
+}
+.jencil .workspace .toolbar .button.alignJustify span {
+  background-position: -400px 0px;
+}
+.jencil .workspace .toolbar .button.preview span {
+  background-position: -416px 0px;
+}
+.jencil .workspace .toolbar .button.preview.hide span {
+  background-position: -432px 0px;
+}
+.jencil .workspace .toolbar .button.fullscreen span {
+  background-position: -448px 0px;
+}
+.jencil .workspace .toolbar .button.fullscreen.hide span {
+  background-position: -464px 0px;
+}

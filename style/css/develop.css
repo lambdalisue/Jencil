@@ -1,0 +1,55 @@
+.jencil {
+  background: lightpink;
+}
+.jencil.focus {
+  border: 5px solid red;
+}
+.jencil .workspace {
+  background: lightblue;
+}
+.jencil .workspace .toolbar .button {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: #ababab;
+}
+.jencil .splitter {
+  position: absolute;
+  background: darkred;
+  cursor: move;
+}
+.jencil .splitter.vertical {
+  width: 5px;
+  height: 100%;
+}
+.jencil .splitter.horizontal {
+  width: 100%;
+  height: 5px;
+}
+.jencil .panel {
+  border: 5px solid;
+}
+.jencil .panel body {
+  margin: 0;
+  padding: 0;
+}
+.jencil .panel.vertical {
+  background: blue;
+  border-color: darkblue;
+}
+.jencil .panel.left {
+  background: pink;
+  border-color: salmon;
+}
+.jencil .panel.right {
+  background: yellowgreen;
+  border-color: green;
+}
+.jencil .panel.top {
+  background: yellow;
+  border-color: lightyellow;
+}
+.jencil .panel.bottom {
+  background: lightblue;
+  border-color: lightblue;
+}
