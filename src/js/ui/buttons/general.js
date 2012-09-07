@@ -1,4 +1,4 @@
-var FullscreenButton, PreviewButton, RedoButton, UndoButton,
+var ConfigButton, FullscreenButton, JencilButton, PreviewButton, RedoButton, UndoButton,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -20,7 +20,7 @@ UndoButton = (function(_super) {
       }
       return setTimeout(check, 100);
     };
-    UndoButton.__super__.constructor.call(this, core, 'undo', callback, 'Ctrl+Z');
+    UndoButton.__super__.constructor.call(this, core, 'undo', 'Undo', callback, 'Ctrl+Z');
     check();
   }
 
@@ -46,7 +46,7 @@ RedoButton = (function(_super) {
       }
       return setTimeout(check, 100);
     };
-    RedoButton.__super__.constructor.call(this, core, 'redo', callback, 'Ctrl+Shift+Z');
+    RedoButton.__super__.constructor.call(this, core, 'redo', 'Redo', callback, 'Ctrl+Shift+Z');
     check();
   }
 
@@ -70,7 +70,7 @@ FullscreenButton = (function(_super) {
         return _this.element.addClass('hide');
       }
     };
-    FullscreenButton.__super__.constructor.call(this, core, 'fullscreen', callback, 'Ctrl+F');
+    FullscreenButton.__super__.constructor.call(this, core, 'fullscreen', 'Toggle fullscreen', callback, 'Ctrl+F');
   }
 
   return FullscreenButton;
@@ -94,7 +94,7 @@ PreviewButton = (function(_super) {
       }
       return _this.core.wrapper.workspace.toggleViewer();
     };
-    PreviewButton.__super__.constructor.call(this, core, 'preview', callback, 'Ctrl+P');
+    PreviewButton.__super__.constructor.call(this, core, 'preview', 'Toggle preview', callback, 'Ctrl+P');
   }
 
   PreviewButton.prototype.init = function() {
@@ -106,5 +106,69 @@ PreviewButton = (function(_super) {
   };
 
   return PreviewButton;
+
+})(ActionButton);
+
+ConfigButton = (function(_super) {
+
+  __extends(ConfigButton, _super);
+
+  function ConfigButton(core) {
+    var callback,
+      _this = this;
+    callback = function(e) {
+      var viewer;
+      viewer = _this.core.getViewer();
+      if (!viewer.element.is(':visible')) {
+        _this.element.addClass('hide');
+      } else {
+        _this.element.removeClass('hide');
+      }
+      return _this.core.wrapper.workspace.toggleViewer();
+    };
+    ConfigButton.__super__.constructor.call(this, core, 'preview', 'Toggle preview', callback, 'Ctrl+P');
+  }
+
+  ConfigButton.prototype.init = function() {
+    if (this.core.wrapper.workspace.mainPanel.splitter.defaultValue === 0) {
+      return this.element.addClass('hide');
+    } else {
+      return this.element.removeClass('hide');
+    }
+  };
+
+  return ConfigButton;
+
+})(ActionButton);
+
+JencilButton = (function(_super) {
+
+  __extends(JencilButton, _super);
+
+  function JencilButton(core) {
+    var callback,
+      _this = this;
+    callback = function(e) {
+      var viewer;
+      viewer = _this.core.getViewer();
+      if (!viewer.element.is(':visible')) {
+        _this.element.addClass('hide');
+      } else {
+        _this.element.removeClass('hide');
+      }
+      return _this.core.wrapper.workspace.toggleViewer();
+    };
+    JencilButton.__super__.constructor.call(this, core, 'preview', 'Toggle preview', callback, 'Ctrl+P');
+  }
+
+  JencilButton.prototype.init = function() {
+    if (this.core.wrapper.workspace.mainPanel.splitter.defaultValue === 0) {
+      return this.element.addClass('hide');
+    } else {
+      return this.element.removeClass('hide');
+    }
+  };
+
+  return JencilButton;
 
 })(ActionButton);

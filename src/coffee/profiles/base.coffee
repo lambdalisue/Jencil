@@ -44,3 +44,9 @@ class Profile
   getButtonClasses: ->
     return @buttonClasses
 
+  @factory: (name) ->
+    switch name
+      when 'html' then return HtmlProfile
+      when 'markdown' then return MarkdownProfile
+      else return HtmlProfile
+

@@ -28,10 +28,16 @@ class HtmlEditor extends TextEditor
     if not text
       text = window.prompt("Please input a link text", "Here")
     href = window.prompt("Please input a link url", "http://")
+    if not text? and not href?
+      # cancel
+      return
     @selection "<a href='#{href}'>#{text}</a>"
   image: ->
     src = window.prompt("Please input a image url", "http://")
     alt = window.prompt("(Optional) Please input a alt message", "Image")
+    if not src? and not alt?
+      # cancel
+      return
     @selection "<img src='#{src}' alt='#{alt}'>"
   unorderedList: ->
     text = @selection()

@@ -5,16 +5,19 @@ class Separator extends Widget
 
 
 class Button extends Widget
-  constructor: (core, @name) ->
+  constructor: (core, @name, @title) ->
     super core, '<a>'
     @element.addClass('button').addClass(name)
     @element.append($("<span>#{name}</span>"))
-    @element.attr 'title', name
+    if @title?
+      if $.i18n? and $.t?
+        @title = $.t(@title)
+      @element.attr 'title', @title
 
 
 class ActionButton extends Button
-  constructor: (core, name, @callback, @shortcut) ->
-    super core, name
+  constructor: (core, name, title, @callback, @shortcut) ->
+    super core, name, title
     @element.click => @callback()
 
     if @shortcut? and window.shortcut?
@@ -25,12 +28,12 @@ class ActionButton extends Button
 
 
 class CommandButton extends ActionButton
-  constructor: (core, name, @command, shortcut) ->
+  constructor: (core, name, title, @command, shortcut) ->
     callback = => @core.caretaker.invoke @command
-    super core, name, callback, shortcut
+    super core, name, title, callback, shortcut
 
 
 class EditorMarkupButton extends CommandButton
-  constructor: (core, name, shortcut) ->
+  constructor: (core, name, title, shortcut) ->
     command = new EditorMarkupCommand(core, name)
-    super core, name, command, shortcut
+    super core, name, title, command, shortcut

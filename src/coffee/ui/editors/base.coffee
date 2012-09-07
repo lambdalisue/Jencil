@@ -29,47 +29,77 @@ class Editor extends Panel
     return @setValue(memento)
 
 
-class TextPanel extends Panel
+class TextareaPanel extends Panel
   constructor: (core) ->
     super core, '<textarea>'
+    @textarea = new Textarea(window.document, @element.get(0))
+    @selection = @textarea.selection
     @element.css
       margin: '0'
       padding: '0'
       border: 'none'
       outline: 'none'
       resize: 'none'
-    @element.tabby() if $.fn.tabby?
-    @helper = new Textarea(window.document, @element.get(0))
+    # Enable tab indent
+    @element.tabby({'tabString': '    '}) if $.fn.tabby?
+    # Enable auto indent
+    @element.on 'keydown', (e) => 
+      if e.which == 13
+        # get the number of leading spaces of current line
+        line = @selection.line()
+        if /^\s*/.test(line)
+          indent = line.match(/^\s*/)[0]
+        else
+          indent = ""
+        insert = "\n#{indent}"
+        command = new Command @, =>
+          @selection.insertAfter(insert, false)
+          @focus()
+        @core.caretaker.invoke(command)
+        # cancel bubbling
+        e.stopPropagation()
+        e.stopImmediatePropagation()
+        # stop default 
+        e.preventDefault()
+        return false
 
-  caret: (start, end) ->
-    return @helper.selection.caret(start, end)
+  val: (value) ->
+    if value?
+      @textarea.val(value)
+      return @
+    return @textarea.val()
 
   selection: (value) ->
-    if value?
-      return @helper.selection.replaceSelection(value, true)
-    return @helper.selection.text()
+    return @selection.text(value, true)
 
   insertBefore: (str) ->
-    return @helper.selection.insertBeforeSelection(str, true)
+    return @selection.insertBefore(str, true)
 
   insertAfter: (str) ->
-    return @helper.selection.insertAfterSelection(str, true)
+    return @selection.insertAfter(str, true)
 
   wrap: (before, after) ->
-    return @helper.selection.wrapSelection(before, after, true)
+    return @selection.wrap(before, after, true)
+
+  focus: ->
+    @element.focus()
+    return @
+
+  # be originator
+  createMemento: ->
+    return @val()
+
+  # be originator
+  setMemento: (memento) ->
+    return @val(memento)
 
 
 class TextEditor extends Editor
   constructor: (core) ->
     super core
-    @textPanel = new TextPanel(core)
+    @textPanel = new TextareaPanel(core)
     @element.append @textPanel.element
     @textPanel.element.on 'keyup keypress click blur', => @update()
-    @textPanel.element.on 'keyup', (e) => 
-      if e.which == 13
-        # record the changes
-        dummyCommand = new DummyCommand(@)
-        @core.caretaker.invoke(dummyCommand)
 
   adjust: ->
     @textPanel.element.outerWidth @element.width()
@@ -78,14 +108,14 @@ class TextEditor extends Editor
     return @
 
   focus: ->
-    @textPanel.element.focus()
+    @textPanel.focus()
     return @
 
   getValue: ->
-    return @textPanel.helper.val()
+    return @textPanel.val()
 
   setValue: (value) ->
-    @textPanel.helper.val(value)
+    @textPanel.val(value)
     @update()
     return @
 

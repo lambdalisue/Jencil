@@ -5,6 +5,12 @@ class Splitter extends Widget
 
     # regulate volume without reconstruct
     @_volume = @defaultVolume
+    @_curtain = $('<div>').hide().css
+      'position': 'absolute'
+      'top': '0'
+      'left': '0'
+      'overflow': 'hidden'
+      'z-index': 99999
 
     # events
     mousemove = (e) =>
@@ -18,6 +24,8 @@ class Splitter extends Widget
       $window = $(window)
       $window.unbind 'mousemove', mousemove
       $window.unbind 'mouseup', mouseup
+      # hide curtain div
+      @_curtain.hide()
       # cancel bubbling
       e.stopPropagation()
       e.stopImmediatePropagation()
@@ -27,11 +35,22 @@ class Splitter extends Widget
       $window = $(window)
       $window.mousemove mousemove
       $window.mouseup mouseup
+      # show curtain div
+      container = @element.parent()
+      @_curtain.outerWidth(container.width())
+      @_curtain.outerHeight(container.height())
+      @_curtain.show()
       # cancel bubbling
       e.stopPropagation()
       e.stopImmediatePropagation()
       # stop default 
       e.preventDefault()
+
+  init: ->
+    # Add curtain. It is required for iframe
+    # See http://forum.jquery.com/topic/jquery-splitter-not-working-over-iframe
+    container = @element.parent()
+    container.append @_curtain
 
   volume: (value, skip=false) ->
     if value?
@@ -63,6 +82,8 @@ class VerticalSplitter extends Splitter
     @snd.element.addClass 'right'
     @fst.element.css {'float': 'left'}
     @snd.element.css {'float': 'left'}
+
+    @_curtain.css 'pointer', 'col-resize'
 
   mousemove: (e) ->
     container = @fst.parent()
@@ -125,6 +146,7 @@ class HorizontalSplitter extends Splitter
     @element.addClass 'horizontal'
     @fst.element.addClass 'top'
     @snd.element.addClass 'bottom'
+    @_curtain.css 'pointer', 'raw-resize'
 
   mousemove: (e) ->
     container = @fst.parent()

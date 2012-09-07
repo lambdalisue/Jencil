@@ -69,5 +69,3 @@ class Caretaker
 
   canRedo: ->
     return @_redoStack.length > 0
-
-

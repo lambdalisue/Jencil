@@ -15,6 +15,13 @@ Splitter = (function(_super) {
     Splitter.__super__.constructor.call(this, core);
     this.element.addClass('splitter');
     this._volume = this.defaultVolume;
+    this._curtain = $('<div>').hide().css({
+      'position': 'absolute',
+      'top': '0',
+      'left': '0',
+      'overflow': 'hidden',
+      'z-index': 99999
+    });
     mousemove = function(e) {
       _this.mousemove(e);
       e.stopPropagation();
@@ -26,20 +33,31 @@ Splitter = (function(_super) {
       $window = $(window);
       $window.unbind('mousemove', mousemove);
       $window.unbind('mouseup', mouseup);
+      _this._curtain.hide();
       e.stopPropagation();
       e.stopImmediatePropagation();
       return e.preventDefault();
     };
     this.element.mousedown(function(e) {
-      var $window;
+      var $window, container;
       $window = $(window);
       $window.mousemove(mousemove);
       $window.mouseup(mouseup);
+      container = _this.element.parent();
+      _this._curtain.outerWidth(container.width());
+      _this._curtain.outerHeight(container.height());
+      _this._curtain.show();
       e.stopPropagation();
       e.stopImmediatePropagation();
       return e.preventDefault();
     });
   }
+
+  Splitter.prototype.init = function() {
+    var container;
+    container = this.element.parent();
+    return container.append(this._curtain);
+  };
 
   Splitter.prototype.volume = function(value, skip) {
     if (skip == null) {
@@ -100,6 +118,7 @@ VerticalSplitter = (function(_super) {
     this.snd.element.css({
       'float': 'left'
     });
+    this._curtain.css('pointer', 'col-resize');
   }
 
   VerticalSplitter.prototype.mousemove = function(e) {
@@ -196,6 +215,7 @@ HorizontalSplitter = (function(_super) {
     this.element.addClass('horizontal');
     this.fst.element.addClass('top');
     this.snd.element.addClass('bottom');
+    this._curtain.css('pointer', 'raw-resize');
   }
 
   HorizontalSplitter.prototype.mousemove = function(e) {

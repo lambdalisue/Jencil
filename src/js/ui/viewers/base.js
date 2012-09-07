@@ -33,20 +33,27 @@ IframePanel = (function(_super) {
       resize: 'none',
       width: '100%',
       height: '100%',
-      pointerEvents: 'none'
+      overflow: 'visible'
     });
     this.element.attr('frameborder', 0);
   }
 
   IframePanel.prototype.init = function() {
-    var iframe;
+    var iframe,
+      _this = this;
     iframe = this.element.get(0);
     if (iframe.contentDocument != null) {
       this.document = iframe.contentDocument;
     } else {
       this.document = iframe.contentWindow.document;
     }
-    return this.document.write('<body></body>');
+    this.document.write('<body></body>');
+    return this.element.resize(function() {
+      var body;
+      body = _this.document.body;
+      _this.element.width = body.scrollWidth + (body.offsetWidth - body.clientWidth);
+      return _this.element.height = body.scrollHeight + (body.offsetHeight - body.clientHeight);
+    });
   };
 
   IframePanel.prototype.write = function(content) {
@@ -61,6 +68,8 @@ IframePanel = (function(_super) {
       this.document.write(content);
       this.document.close();
       this.document.documentElement.scrollTop = scrollTop;
+      this.element.width(this.document.scrollLeft);
+      this.element.height(this.document.scrollTop);
       return true;
     }
     return false;

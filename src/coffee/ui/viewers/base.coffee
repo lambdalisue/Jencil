@@ -18,7 +18,7 @@ class IframePanel extends Panel
       resize: 'none'
       width: '100%'
       height: '100%'
-      pointerEvents: 'none'   # without this, iframe will steal mousemove event
+      overflow: 'visible'
     @element.attr 'frameborder', 0
 
   init: ->
@@ -28,6 +28,10 @@ class IframePanel extends Panel
     else
       @document = iframe.contentWindow.document
     @document.write '<body></body>'
+    @element.resize =>
+      body = @document.body
+      @element.width = body.scrollWidth + (body.offsetWidth - body.clientWidth)
+      @element.height = body.scrollHeight + (body.offsetHeight - body.clientHeight)
 
   write: (content) ->
     if @document?
@@ -39,6 +43,9 @@ class IframePanel extends Panel
       @document.write content
       @document.close()
       @document.documentElement.scrollTop = scrollTop
+      # resize
+      @element.width @document.scrollLeft
+      @element.height @document.scrollTop
       return true
     return false
 

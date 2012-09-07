@@ -8,7 +8,7 @@ class UndoButton extends ActionButton
       else
         @element.removeClass 'disabled'
       setTimeout check, 100
-    super core, 'undo', callback, 'Ctrl+Z'
+    super core, 'undo', 'Undo', callback, 'Ctrl+Z'
     check()
 
 
@@ -22,7 +22,7 @@ class RedoButton extends ActionButton
       else
         @element.removeClass 'disabled'
       setTimeout check, 100
-    super core, 'redo', callback, 'Ctrl+Shift+Z'
+    super core, 'redo', 'Redo', callback, 'Ctrl+Shift+Z'
     check()
 
 
@@ -35,7 +35,7 @@ class FullscreenButton extends ActionButton
       else
         @core.fullscreen.show()
         @element.addClass 'hide'
-    super core, 'fullscreen', callback, 'Ctrl+F'
+    super core, 'fullscreen', 'Toggle fullscreen', callback, 'Ctrl+F'
 
 
 class PreviewButton extends ActionButton
@@ -47,7 +47,7 @@ class PreviewButton extends ActionButton
       else
         @element.removeClass 'hide'
       @core.wrapper.workspace.toggleViewer()
-    super core, 'preview', callback, 'Ctrl+P'
+    super core, 'preview', 'Toggle preview', callback, 'Ctrl+P'
 
   init: ->
     if @core.wrapper.workspace.mainPanel.splitter.defaultValue == 0
@@ -55,3 +55,36 @@ class PreviewButton extends ActionButton
     else
       @element.removeClass 'hide'
 
+class ConfigButton extends ActionButton
+  constructor: (core) ->
+    callback = (e) =>
+      viewer = @core.getViewer()
+      if not viewer.element.is(':visible')
+        @element.addClass 'hide'
+      else
+        @element.removeClass 'hide'
+      @core.wrapper.workspace.toggleViewer()
+    super core, 'preview', 'Toggle preview', callback, 'Ctrl+P'
+
+  init: ->
+    if @core.wrapper.workspace.mainPanel.splitter.defaultValue == 0
+      @element.addClass 'hide'
+    else
+      @element.removeClass 'hide'
+      
+class JencilButton extends ActionButton
+  constructor: (core) ->
+    callback = (e) =>
+      viewer = @core.getViewer()
+      if not viewer.element.is(':visible')
+        @element.addClass 'hide'
+      else
+        @element.removeClass 'hide'
+      @core.wrapper.workspace.toggleViewer()
+    super core, 'preview', 'Toggle preview', callback, 'Ctrl+P'
+
+  init: ->
+    if @core.wrapper.workspace.mainPanel.splitter.defaultValue == 0
+      @element.addClass 'hide'
+    else
+      @element.removeClass 'hide'

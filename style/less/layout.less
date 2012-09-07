@@ -13,9 +13,8 @@
     height: 320px;
 
     .workspace {
-        .toolbar {
+        .toolbar, .statusbar {
             width: 100%;
-            margin-top: 2px;
 
             &:after {
                 content: "";
@@ -59,6 +58,12 @@
                 }
             }
         }
+        .statusbar {
+            .separator, .button {
+                display: block;
+                float: right;
+            }
+        }
 
         .mainPanel {
             padding: 5px 0;
@@ -94,7 +99,7 @@
     }
 }
 
-.jencil .workspace .toolbar .button {
+.jencil .workspace .button {
     &.undo span { background-position: -0px 0px; }
     &.redo span { background-position: -16px 0px; }
     &.h1 span { background-position: -32px 0px; }

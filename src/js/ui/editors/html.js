@@ -65,6 +65,9 @@ HtmlEditor = (function(_super) {
       text = window.prompt("Please input a link text", "Here");
     }
     href = window.prompt("Please input a link url", "http://");
+    if (!(text != null) && !(href != null)) {
+      return;
+    }
     return this.selection("<a href='" + href + "'>" + text + "</a>");
   };
 
@@ -72,6 +75,9 @@ HtmlEditor = (function(_super) {
     var alt, src;
     src = window.prompt("Please input a image url", "http://");
     alt = window.prompt("(Optional) Please input a alt message", "Image");
+    if (!(src != null) && !(alt != null)) {
+      return;
+    }
     return this.selection("<img src='" + src + "' alt='" + alt + "'>");
   };
 

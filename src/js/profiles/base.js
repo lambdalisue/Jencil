@@ -18,6 +18,17 @@ Profile = (function() {
     return this.buttonClasses;
   };
 
+  Profile.factory = function(name) {
+    switch (name) {
+      case 'html':
+        return HtmlProfile;
+      case 'markdown':
+        return MarkdownProfile;
+      default:
+        return HtmlProfile;
+    }
+  };
+
   return Profile;
 
 })();

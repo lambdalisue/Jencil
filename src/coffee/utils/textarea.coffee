@@ -29,21 +29,28 @@ class Selection
     return @
 
   caret: (start, end) ->
+    if start? and typeof start is 'array'
+      end = start[1]
+      start = start[0]
+    if start? and not end?
+      end = start
     if start? and end?
       return @_setCaret start, end
     return @_getCaret()
 
-  text: ->
-    if @document.selection?
-      # Internet Explorer
-      range = @document.selection.createRange()
-      return range.text
-    else if @element.setSelectionRange
-      [s, e] = @caret()
-      return @element.value.substring s, e
-    return null
+  caretMove: (offset) ->
+    [s, e] = @caret()
+    return @caret(s+offset, e+offset)
 
-  replace: (str, start, end) ->
+  lineCaret: ->
+    [s, e] = @caret()
+    value = @element.value
+    s = value.lastIndexOf("\n", s - 1) + 1
+    e = value.indexOf("\n", s)
+    e = value.length if e == -1
+    return [s, e]
+
+  _replace: (str, start, end) ->
     scrollTop = @element.scrollTop
     if @document.selection # MSIE and Opera
       @element.focus()
@@ -57,10 +64,19 @@ class Selection
     @element.scrollTop = scrollTop
     return @
 
-  replaceSelection: (str, keepSelection) ->
+  _getText: ->
+    if @document.selection?
+      # Internet Explorer
+      range = @document.selection.createRange()
+      return range.text
+    else if @element.setSelectionRange
+      [s, e] = @caret()
+      return @element.value.substring s, e
+    return null
+  _setText: (str, keepSelection) ->
     scrollTop = @element.scrollTop
     [s, e] = @caret()
-    @replace str, s, e
+    @_replace str, s, e
     # set new selection
     e = s + str.length
     s = e if not keepSelection
@@ -69,11 +85,21 @@ class Selection
     @element.scrollTop = scrollTop
     return @
 
-  insertBeforeSelection: (str, keepSelection) ->
+  text: (str, keepSelection) ->
+    if str?
+      return @_setText(str, keepSelection)
+    return @_getText()
+
+  line: ->
+    value = @element.value
+    [s, e] = @lineCaret()
+    return value.substr(s, e-s)
+
+  insertBefore: (str, keepSelection) ->
     scrollTop = @element.scrollTop
     [s, e] = @caret()
     text = @text()
-    @replace str + text, s, e
+    @_replace str + text, s, e
     # set new selection
     e = s + str.length
     s = e if not keepSelection
@@ -82,11 +108,11 @@ class Selection
     @element.scrollTop = scrollTop
     return @
 
-  insertAfterSelection: (str, keepSelection) ->
+  insertAfter: (str, keepSelection) ->
     scrollTop = @element.scrollTop
     [s, e] = @caret()
     text = @text()
-    @replace text + str, s, e
+    @_replace text + str, s, e
     # set new selection
     s = e
     e = e + str.length
@@ -96,15 +122,15 @@ class Selection
     @element.scrollTop = scrollTop
     return @
 
-  wrapSelection: (b, a, keepSelection) ->
+  wrap: (b, a, keepSelection) ->
     scrollTop = @element.scrollTop
     text = @text()
     if text.indexOf(b) is 0 and text.lastIndexOf(a) is (text.length - a.length)
       str = text.substring b.length, text.length - a.length
-      @replaceSelection str, keepSelection
+      @text str, keepSelection
     else
       [s, e] = @caret()
-      @replace b + text + a, s, e
+      @_replace b + text + a, s, e
       e = s + b.length + text.length + a.length
       s = e if not keepSelection
       @caret s, e

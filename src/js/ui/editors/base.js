@@ -1,4 +1,4 @@
-var Editor, TextEditor, TextPanel,
+var Editor, TextEditor, TextareaPanel,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -51,12 +51,15 @@ Editor = (function(_super) {
 
 })(Panel);
 
-TextPanel = (function(_super) {
+TextareaPanel = (function(_super) {
 
-  __extends(TextPanel, _super);
+  __extends(TextareaPanel, _super);
 
-  function TextPanel(core) {
-    TextPanel.__super__.constructor.call(this, core, '<textarea>');
+  function TextareaPanel(core) {
+    var _this = this;
+    TextareaPanel.__super__.constructor.call(this, core, '<textarea>');
+    this.textarea = new Textarea(window.document, this.element.get(0));
+    this.selection = this.textarea.selection;
     this.element.css({
       margin: '0',
       padding: '0',
@@ -65,35 +68,71 @@ TextPanel = (function(_super) {
       resize: 'none'
     });
     if ($.fn.tabby != null) {
-      this.element.tabby();
+      this.element.tabby({
+        'tabString': '    '
+      });
     }
-    this.helper = new Textarea(window.document, this.element.get(0));
+    this.element.on('keydown', function(e) {
+      var command, indent, insert, line;
+      if (e.which === 13) {
+        line = _this.selection.line();
+        if (/^\s*/.test(line)) {
+          indent = line.match(/^\s*/)[0];
+        } else {
+          indent = "";
+        }
+        insert = "\n" + indent;
+        command = new Command(_this, function() {
+          _this.selection.insertAfter(insert, false);
+          return _this.focus();
+        });
+        _this.core.caretaker.invoke(command);
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        return false;
+      }
+    });
   }
 
-  TextPanel.prototype.caret = function(start, end) {
-    return this.helper.selection.caret(start, end);
-  };
-
-  TextPanel.prototype.selection = function(value) {
+  TextareaPanel.prototype.val = function(value) {
     if (value != null) {
-      return this.helper.selection.replaceSelection(value, true);
+      this.textarea.val(value);
+      return this;
     }
-    return this.helper.selection.text();
+    return this.textarea.val();
   };
 
-  TextPanel.prototype.insertBefore = function(str) {
-    return this.helper.selection.insertBeforeSelection(str, true);
+  TextareaPanel.prototype.selection = function(value) {
+    return this.selection.text(value, true);
   };
 
-  TextPanel.prototype.insertAfter = function(str) {
-    return this.helper.selection.insertAfterSelection(str, true);
+  TextareaPanel.prototype.insertBefore = function(str) {
+    return this.selection.insertBefore(str, true);
   };
 
-  TextPanel.prototype.wrap = function(before, after) {
-    return this.helper.selection.wrapSelection(before, after, true);
+  TextareaPanel.prototype.insertAfter = function(str) {
+    return this.selection.insertAfter(str, true);
   };
 
-  return TextPanel;
+  TextareaPanel.prototype.wrap = function(before, after) {
+    return this.selection.wrap(before, after, true);
+  };
+
+  TextareaPanel.prototype.focus = function() {
+    this.element.focus();
+    return this;
+  };
+
+  TextareaPanel.prototype.createMemento = function() {
+    return this.val();
+  };
+
+  TextareaPanel.prototype.setMemento = function(memento) {
+    return this.val(memento);
+  };
+
+  return TextareaPanel;
 
 })(Panel);
 
@@ -104,17 +143,10 @@ TextEditor = (function(_super) {
   function TextEditor(core) {
     var _this = this;
     TextEditor.__super__.constructor.call(this, core);
-    this.textPanel = new TextPanel(core);
+    this.textPanel = new TextareaPanel(core);
     this.element.append(this.textPanel.element);
     this.textPanel.element.on('keyup keypress click blur', function() {
       return _this.update();
-    });
-    this.textPanel.element.on('keyup', function(e) {
-      var dummyCommand;
-      if (e.which === 13) {
-        dummyCommand = new DummyCommand(_this);
-        return _this.core.caretaker.invoke(dummyCommand);
-      }
     });
   }
 
@@ -126,16 +158,16 @@ TextEditor = (function(_super) {
   };
 
   TextEditor.prototype.focus = function() {
-    this.textPanel.element.focus();
+    this.textPanel.focus();
     return this;
   };
 
   TextEditor.prototype.getValue = function() {
-    return this.textPanel.helper.val();
+    return this.textPanel.val();
   };
 
   TextEditor.prototype.setValue = function(value) {
-    this.textPanel.helper.val(value);
+    this.textPanel.val(value);
     this.update();
     return this;
   };

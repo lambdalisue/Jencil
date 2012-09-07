@@ -7,7 +7,7 @@ H1Button = (function(_super) {
   __extends(H1Button, _super);
 
   function H1Button(core) {
-    H1Button.__super__.constructor.call(this, core, 'h1');
+    H1Button.__super__.constructor.call(this, core, 'h1', 'H1');
   }
 
   return H1Button;
@@ -19,7 +19,7 @@ H2Button = (function(_super) {
   __extends(H2Button, _super);
 
   function H2Button(core) {
-    H2Button.__super__.constructor.call(this, core, 'h2');
+    H2Button.__super__.constructor.call(this, core, 'h2', 'H2');
   }
 
   return H2Button;
@@ -31,7 +31,7 @@ H3Button = (function(_super) {
   __extends(H3Button, _super);
 
   function H3Button(core) {
-    H3Button.__super__.constructor.call(this, core, 'h3');
+    H3Button.__super__.constructor.call(this, core, 'h3', 'H3');
   }
 
   return H3Button;
@@ -43,7 +43,7 @@ H4Button = (function(_super) {
   __extends(H4Button, _super);
 
   function H4Button(core) {
-    H4Button.__super__.constructor.call(this, core, 'h4');
+    H4Button.__super__.constructor.call(this, core, 'h4', 'H4');
   }
 
   return H4Button;
@@ -55,7 +55,7 @@ H5Button = (function(_super) {
   __extends(H5Button, _super);
 
   function H5Button(core) {
-    H5Button.__super__.constructor.call(this, core, 'h5');
+    H5Button.__super__.constructor.call(this, core, 'h5', 'H5');
   }
 
   return H5Button;
@@ -67,7 +67,7 @@ H6Button = (function(_super) {
   __extends(H6Button, _super);
 
   function H6Button(core) {
-    H6Button.__super__.constructor.call(this, core, 'h6');
+    H6Button.__super__.constructor.call(this, core, 'h6', 'H6');
   }
 
   return H6Button;
@@ -79,7 +79,7 @@ BoldButton = (function(_super) {
   __extends(BoldButton, _super);
 
   function BoldButton(core) {
-    BoldButton.__super__.constructor.call(this, core, 'bold', "Ctrl+B");
+    BoldButton.__super__.constructor.call(this, core, 'bold', 'Bold', "Ctrl+B");
   }
 
   return BoldButton;
@@ -91,7 +91,7 @@ ItalicButton = (function(_super) {
   __extends(ItalicButton, _super);
 
   function ItalicButton(core) {
-    ItalicButton.__super__.constructor.call(this, core, 'italic', "Ctrl+I");
+    ItalicButton.__super__.constructor.call(this, core, 'italic', 'Italic', "Ctrl+I");
   }
 
   return ItalicButton;
@@ -103,7 +103,7 @@ UnderlineButton = (function(_super) {
   __extends(UnderlineButton, _super);
 
   function UnderlineButton(core) {
-    UnderlineButton.__super__.constructor.call(this, core, 'underline', "Ctrl+U");
+    UnderlineButton.__super__.constructor.call(this, core, 'underline', 'Underline', "Ctrl+U");
   }
 
   return UnderlineButton;
@@ -115,7 +115,7 @@ StrikeButton = (function(_super) {
   __extends(StrikeButton, _super);
 
   function StrikeButton(core) {
-    StrikeButton.__super__.constructor.call(this, core, 'strike');
+    StrikeButton.__super__.constructor.call(this, core, 'strike', 'Strikeout');
   }
 
   return StrikeButton;
@@ -127,7 +127,7 @@ SuperscriptButton = (function(_super) {
   __extends(SuperscriptButton, _super);
 
   function SuperscriptButton(core) {
-    SuperscriptButton.__super__.constructor.call(this, core, 'superscript');
+    SuperscriptButton.__super__.constructor.call(this, core, 'superscript', 'Superscript');
   }
 
   return SuperscriptButton;
@@ -139,7 +139,7 @@ SubscriptButton = (function(_super) {
   __extends(SubscriptButton, _super);
 
   function SubscriptButton(core) {
-    SubscriptButton.__super__.constructor.call(this, core, 'subscript');
+    SubscriptButton.__super__.constructor.call(this, core, 'subscript', 'Subscript');
   }
 
   return SubscriptButton;
@@ -151,7 +151,7 @@ AnchorButton = (function(_super) {
   __extends(AnchorButton, _super);
 
   function AnchorButton(core) {
-    AnchorButton.__super__.constructor.call(this, core, 'anchor');
+    AnchorButton.__super__.constructor.call(this, core, 'anchor', 'Anchor link');
   }
 
   return AnchorButton;
@@ -163,7 +163,7 @@ ImageButton = (function(_super) {
   __extends(ImageButton, _super);
 
   function ImageButton(core) {
-    ImageButton.__super__.constructor.call(this, core, 'image');
+    ImageButton.__super__.constructor.call(this, core, 'image', 'Image');
   }
 
   return ImageButton;
@@ -175,7 +175,7 @@ UnorderedListButton = (function(_super) {
   __extends(UnorderedListButton, _super);
 
   function UnorderedListButton(core) {
-    UnorderedListButton.__super__.constructor.call(this, core, 'unorderedList');
+    UnorderedListButton.__super__.constructor.call(this, core, 'unorderedList', 'Unordered list');
   }
 
   return UnorderedListButton;
@@ -187,7 +187,7 @@ OrderedListButton = (function(_super) {
   __extends(OrderedListButton, _super);
 
   function OrderedListButton(core) {
-    OrderedListButton.__super__.constructor.call(this, core, 'orderedList');
+    OrderedListButton.__super__.constructor.call(this, core, 'orderedList', 'Ordered list');
   }
 
   return OrderedListButton;
@@ -199,7 +199,7 @@ IndentButton = (function(_super) {
   __extends(IndentButton, _super);
 
   function IndentButton(core) {
-    IndentButton.__super__.constructor.call(this, core, 'indent');
+    IndentButton.__super__.constructor.call(this, core, 'indent', 'Indent');
   }
 
   return IndentButton;
@@ -211,7 +211,7 @@ OutdentButton = (function(_super) {
   __extends(OutdentButton, _super);
 
   function OutdentButton(core) {
-    OutdentButton.__super__.constructor.call(this, core, 'outdent');
+    OutdentButton.__super__.constructor.call(this, core, 'outdent', 'Outdent');
   }
 
   return OutdentButton;
@@ -223,7 +223,7 @@ AlignLeftButton = (function(_super) {
   __extends(AlignLeftButton, _super);
 
   function AlignLeftButton(core) {
-    AlignLeftButton.__super__.constructor.call(this, core, 'alignLeft');
+    AlignLeftButton.__super__.constructor.call(this, core, 'alignLeft', 'Align left');
   }
 
   return AlignLeftButton;
@@ -235,7 +235,7 @@ AlignCenterButton = (function(_super) {
   __extends(AlignCenterButton, _super);
 
   function AlignCenterButton(core) {
-    AlignCenterButton.__super__.constructor.call(this, core, 'alignCenter');
+    AlignCenterButton.__super__.constructor.call(this, core, 'alignCenter', 'Align center');
   }
 
   return AlignCenterButton;
@@ -247,7 +247,7 @@ AlignRightButton = (function(_super) {
   __extends(AlignRightButton, _super);
 
   function AlignRightButton(core) {
-    AlignRightButton.__super__.constructor.call(this, core, 'alignRight');
+    AlignRightButton.__super__.constructor.call(this, core, 'alignRight', 'Align right');
   }
 
   return AlignRightButton;
@@ -259,7 +259,7 @@ AlignJustifyButton = (function(_super) {
   __extends(AlignJustifyButton, _super);
 
   function AlignJustifyButton(core) {
-    AlignJustifyButton.__super__.constructor.call(this, core, 'alignJustify');
+    AlignJustifyButton.__super__.constructor.call(this, core, 'alignJustify', 'Justify');
   }
 
   return AlignJustifyButton;
