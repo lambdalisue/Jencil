@@ -1,2 +1,0 @@
-HtmlViewer = TemplateViewer
-

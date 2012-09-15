@@ -19,45 +19,35 @@
             ignoreLeaks: true
         });
     </script>
-    <link rel="stylesheet" href="../style/css/layout.css">
+    <link rel="stylesheet" href="../src/css/layout.css">
     <script src="../lib/js/jquery.tabby.js"></script>
     <script src="../lib/js/markdown.js"></script>
     <script src="../lib/js/shortcut.js"></script>
-    <script src="../src/js/extends/jquery.extends.js"></script>
-    <script src="../src/js/utils/memento.js"></script>
-    <script src="../src/js/utils/textarea.js"></script>
+    <script src="../src/js/utils/namespace.js"></script>
+    <script src="../src/js/utils/evolution.js"></script>
+    <script src="../src/js/utils/selection.js"></script>
+    <script src="../src/js/utils/curtain.js"></script>
+    <script src="../src/js/utils/undo.js"></script>
     <script src="../src/js/utils/animation.js"></script>
     <script src="../src/js/core.js"></script>
-    <script src="../src/js/commands.js"></script>
-    <script src="../src/js/ui/widget.js"></script>
-    <script src="../src/js/ui/splitter.js"></script>
-    <script src="../src/js/ui/panel.js"></script>
-    <script src="../src/js/ui/features.js"></script>
-    <script src="../src/js/ui/buttons/base.js"></script>
-    <script src="../src/js/ui/buttons/general.js"></script>
-    <script src="../src/js/ui/buttons/markup.js"></script>
-    <script src="../src/js/ui/editors/base.js"></script>
-    <script src="../src/js/ui/editors/html.js"></script>
-    <script src="../src/js/ui/editors/markdown.js"></script>
-    <script src="../src/js/ui/viewers/base.js"></script>
-    <script src="../src/js/ui/viewers/html.js"></script>
-    <script src="../src/js/ui/viewers/markdown.js"></script>
-    <script src="../src/js/profiles/base.js"></script>
-    <script src="../src/js/profiles/html.js"></script>
-    <script src="../src/js/profiles/markdown.js"></script>
+    <script src="../src/js/widgets.js"></script>
+    <script src="../src/js/splitter.js"></script>
+    <script src="../src/js/editors.js"></script>
+    <script src="../src/js/viewers.js"></script>
+    <script src="../src/js/buttons.js"></script>
+    <script src="../src/js/workspace.js"></script>
+    <script src="../src/js/fullscreen.js"></script>
+    <script src="../src/js/mainpanels.js"></script>
+    <script src="../src/js/filetypes/html.js"></script>
     <!--
     <link rel="stylesheet" href="../style/css/jencil.0.1.0.min.css">
     <script src="../src/js/jencil.0.1.0.min.js"></script>
     -->
     <script src="js/sandbox.js"></script>
-    <script src="js/extends/jquery.extends.spec.js"></script>
-    <script src="js/utils/textarea.spec.js"></script>
-    <script src="js/core.spec.js"></script>
-    <script src="js/ui/widget.spec.js"></script>
     <script>
         $(function() {
             //mocha.run();
-            $("textarea#demo").jencil();
+            $("textarea#demo").mojito();
         });
     </script>
 </head>

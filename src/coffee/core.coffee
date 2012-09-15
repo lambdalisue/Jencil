@@ -1,58 +1,37 @@
-class JencilCore
-  constructor: (textarea) ->
-    # memento caretaker
+class Profile
+  mainPanelClass: null
+  editorClass: null
+  viewerClass: null
+  helperClass: null
+  buttons: null
+
+class Jencil
+  constructor: (textarea, options) ->
+    @options = jQuery.extend({
+      'profile': Jencil.filetypes.html.HtmlProfile
+    }, options)
+    @element = textarea.hide()
+
     @caretaker = new Caretaker()
-    # profile
-    @profile = new MarkdownProfile()
-    # DOM
-    @element = textarea
-    @element.hide()
-    @fullscreen = new Fullscreen(@)
+    @caretaker.originator = => @editor()
+
     @wrapper = new Wrapper(@)
-    @element.after @fullscreen.element
-    @element.after @wrapper.element
-    # Add events
-    @update (value) =>
-      # update actual textarea
-      @element.val(value)
-    $(window).resize => @adjust()
+    @fullscreen = new Fullscreen(@)
 
-    @init().adjust()
+    @element.after(@wrapper.element).after(@fullscreen.element)
 
-  setProfile: (profile) ->
-    @wrapper.workspace.reconstructor(profile)
-
-  getEditor: ->
-    return @wrapper.workspace.editorPanel
-
-  getViewer: ->
-    return @wrapper.workspace.viewerPanel
-
-  init: ->
     @wrapper.init()
-    return @
+    @caretaker.save()
 
-  adjust: ->
-    @wrapper.adjust()
-    return @
+  editor: -> @wrapper.workspace.mainPanel.editorPanel or null
+  viewer: -> @wrapper.workspace.mainPanel.viewerPanel or null
+  helper: -> @wrapper.workspace.mainPanel.helperPanel or null
 
-  focus: ->
-    @getEditor().focus()
-    return @
-
-  update: (callback) ->
-    editor = @getEditor()
-    if callback?
-      editor.update(callback)
-      return @
-    @editor.update()
-    return @
-
-  options:
-    defaultSplitterVolume: 1
-    previewTemplatePath: null
-
-$.fn.jencil = (options) ->
+$.fn.mojito = (options) ->
   $this = $(this)
-  instance = new JencilCore($this)
-  $this.data('jencil', instance)
+  new Jencil($this, options)
+
+namespace 'Jencil.profiles', (exports) ->
+  exports.Profile = Profile
+namespace 'Jencil.utils', (exports) ->
+  exports.namespace = namespace

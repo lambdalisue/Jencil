@@ -11,6 +11,7 @@ animate = function(options) {
     end: 100,
     duration: 1000,
     callback: null,
+    done: null,
     easing: null
   }, options);
   startTime = animate.now();
@@ -25,7 +26,8 @@ animate = function(options) {
     if (epoch < options.duration) {
       return setTimeout(step, 1);
     } else {
-      return options.callback(options.end, options.duration);
+      options.callback(options.end, options.duration);
+      return typeof options.done === "function" ? options.done() : void 0;
     }
   };
   step();

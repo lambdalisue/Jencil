@@ -1,76 +1,68 @@
-var JencilCore;
+var Jencil, Profile;
 
-JencilCore = (function() {
+Profile = (function() {
 
-  function JencilCore(textarea) {
-    var _this = this;
-    this.caretaker = new Caretaker();
-    this.profile = new MarkdownProfile();
-    this.element = textarea;
-    this.element.hide();
-    this.fullscreen = new Fullscreen(this);
-    this.wrapper = new Wrapper(this);
-    this.element.after(this.fullscreen.element);
-    this.element.after(this.wrapper.element);
-    this.update(function(value) {
-      return _this.element.val(value);
-    });
-    $(window).resize(function() {
-      return _this.adjust();
-    });
-    this.init().adjust();
-  }
+  function Profile() {}
 
-  JencilCore.prototype.setProfile = function(profile) {
-    return this.wrapper.workspace.reconstructor(profile);
-  };
+  Profile.prototype.mainPanelClass = null;
 
-  JencilCore.prototype.getEditor = function() {
-    return this.wrapper.workspace.editorPanel;
-  };
+  Profile.prototype.editorClass = null;
 
-  JencilCore.prototype.getViewer = function() {
-    return this.wrapper.workspace.viewerPanel;
-  };
+  Profile.prototype.viewerClass = null;
 
-  JencilCore.prototype.init = function() {
-    this.wrapper.init();
-    return this;
-  };
+  Profile.prototype.helperClass = null;
 
-  JencilCore.prototype.adjust = function() {
-    this.wrapper.adjust();
-    return this;
-  };
+  Profile.prototype.buttons = null;
 
-  JencilCore.prototype.focus = function() {
-    this.getEditor().focus();
-    return this;
-  };
-
-  JencilCore.prototype.update = function(callback) {
-    var editor;
-    editor = this.getEditor();
-    if (callback != null) {
-      editor.update(callback);
-      return this;
-    }
-    this.editor.update();
-    return this;
-  };
-
-  JencilCore.prototype.options = {
-    defaultSplitterVolume: 1,
-    previewTemplatePath: null
-  };
-
-  return JencilCore;
+  return Profile;
 
 })();
 
-$.fn.jencil = function(options) {
-  var $this, instance;
+Jencil = (function() {
+
+  function Jencil(textarea, options) {
+    var _this = this;
+    this.options = jQuery.extend({
+      'profile': Jencil.filetypes.html.HtmlProfile
+    }, options);
+    this.element = textarea.hide();
+    this.caretaker = new Caretaker();
+    this.caretaker.originator = function() {
+      return _this.editor();
+    };
+    this.wrapper = new Wrapper(this);
+    this.fullscreen = new Fullscreen(this);
+    this.element.after(this.wrapper.element).after(this.fullscreen.element);
+    this.wrapper.init();
+    this.caretaker.save();
+  }
+
+  Jencil.prototype.editor = function() {
+    return this.wrapper.workspace.mainPanel.editorPanel || null;
+  };
+
+  Jencil.prototype.viewer = function() {
+    return this.wrapper.workspace.mainPanel.viewerPanel || null;
+  };
+
+  Jencil.prototype.helper = function() {
+    return this.wrapper.workspace.mainPanel.helperPanel || null;
+  };
+
+  return Jencil;
+
+})();
+
+$.fn.mojito = function(options) {
+  var $this;
   $this = $(this);
-  instance = new JencilCore($this);
-  return $this.data('jencil', instance);
+  return new Jencil($this, options);
 };
+
+namespace('Jencil.profiles', function(exports) {
+  return exports.Profile = Profile;
+});
+
+namespace('Jencil.utils', function(exports) {
+  return exports.namespace = namespace;
+});
