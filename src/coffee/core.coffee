@@ -27,7 +27,7 @@ class Jencil
   viewer: -> @wrapper.workspace.mainPanel.viewerPanel or null
   helper: -> @wrapper.workspace.mainPanel.helperPanel or null
 
-$.fn.mojito = (options) ->
+$.fn.jencil = (options) ->
   $this = $(this)
   new Jencil($this, options)
 
