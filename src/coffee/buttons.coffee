@@ -40,7 +40,7 @@ class CommandButton extends ActionButton
   constructor: (core, name, text, title, @command, shortcut) ->
     callback = ->
       editor = core.editor()
-      editor[@command].call(editor)
+      editor[command].call(editor)
     super core, name, text, title, callback, shortcut
 
   validate: ->

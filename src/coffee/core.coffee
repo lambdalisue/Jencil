@@ -29,7 +29,7 @@ class Jencil
 
 $.fn.jencil = (options) ->
   $this = $(this)
-  new Jencil($this, options)
+  $this.data('Jencil', new Jencil($this, options))
 
 namespace 'Jencil.profiles', (exports) ->
   exports.Profile = Profile

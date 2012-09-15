@@ -93,7 +93,7 @@ Workspace = (function(_super) {
   function Workspace(core) {
     Workspace.__super__.constructor.call(this, core);
     this.element.addClass('workspace');
-    this.profile(new HtmlProfile());
+    this.profile(new core.options.profile);
   }
 
   Workspace.prototype.profile = function(profile) {

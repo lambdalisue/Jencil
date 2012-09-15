@@ -36,7 +36,7 @@ class Workspace extends Panel
   constructor: (core) ->
     super core
     @element.addClass 'workspace'
-    @profile(new HtmlProfile())
+    @profile(new core.options.profile)
 
   profile: (profile) ->
     if profile?

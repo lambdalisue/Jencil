@@ -86,7 +86,7 @@ CommandButton = (function(_super) {
     callback = function() {
       var editor;
       editor = core.editor();
-      return editor[this.command].call(editor);
+      return editor[command].call(editor);
     };
     CommandButton.__super__.constructor.call(this, core, name, text, title, callback, shortcut);
   }

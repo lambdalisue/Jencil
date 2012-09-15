@@ -56,7 +56,7 @@ Jencil = (function() {
 $.fn.jencil = function(options) {
   var $this;
   $this = $(this);
-  return new Jencil($this, options);
+  return $this.data('Jencil', new Jencil($this, options));
 };
 
 namespace('Jencil.profiles', function(exports) {
