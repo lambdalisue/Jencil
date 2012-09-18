@@ -10,6 +10,6 @@ JavaScript crossbrowser Markup edtior written in CoffeeScript
 This script is inspired by `markItUp! <http://markitup.jaysalvat.com/home/>`_
 
 :Author: Alisue (lambdalisue@hashnote.net)
-:Version: 0.0.1
+:Version: 0.1.0
 :License: MIT License
-:Url: http://github.com/lambdalisue/Jencil 
+:Url: http://github.com/lambdalisue/Jencil
