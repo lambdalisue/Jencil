@@ -1,3 +1,0 @@
-var HtmlViewer;
-
-HtmlViewer = TemplateViewer;

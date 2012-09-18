@@ -1,76 +1,70 @@
-var JencilCore;
+var Profile;
 
-JencilCore = (function() {
+Profile = (function() {
 
-  function JencilCore(textarea) {
+  function Profile() {}
+
+  Profile.prototype.mainPanelClass = null;
+
+  Profile.prototype.editorClass = null;
+
+  Profile.prototype.viewerClass = null;
+
+  Profile.prototype.helperClass = null;
+
+  Profile.prototype.buttons = null;
+
+  return Profile;
+
+})();
+
+this.Jencil = (function() {
+
+  function Jencil(textarea, options) {
     var _this = this;
+    this.options = jQuery.extend({
+      'profile': Jencil.filetypes.html.HtmlProfile,
+      'resizable': true,
+      'enableTabIndent': true,
+      'enableAutoIndent': true
+    }, options);
+    this.element = textarea.hide();
     this.caretaker = new Caretaker();
-    this.profile = new MarkdownProfile();
-    this.element = textarea;
-    this.element.hide();
-    this.fullscreen = new Fullscreen(this);
+    this.caretaker.originator = function() {
+      return _this.editor();
+    };
     this.wrapper = new Wrapper(this);
-    this.element.after(this.fullscreen.element);
-    this.element.after(this.wrapper.element);
-    this.update(function(value) {
-      return _this.element.val(value);
-    });
-    $(window).resize(function() {
-      return _this.adjust();
-    });
-    this.init().adjust();
+    this.fullscreen = new Fullscreen(this);
+    this.element.after(this.wrapper.element).after(this.fullscreen.element);
+    this.wrapper.init();
+    this.wrapper.adjust();
+    this.caretaker.save();
   }
 
-  JencilCore.prototype.setProfile = function(profile) {
-    return this.wrapper.workspace.reconstructor(profile);
+  Jencil.prototype.editor = function() {
+    return this.wrapper.workspace.mainPanel.editorPanel || null;
   };
 
-  JencilCore.prototype.getEditor = function() {
-    return this.wrapper.workspace.editorPanel;
+  Jencil.prototype.viewer = function() {
+    return this.wrapper.workspace.mainPanel.viewerPanel || null;
   };
 
-  JencilCore.prototype.getViewer = function() {
-    return this.wrapper.workspace.viewerPanel;
+  Jencil.prototype.helper = function() {
+    return this.wrapper.workspace.mainPanel.helperPanel || null;
   };
 
-  JencilCore.prototype.init = function() {
-    this.wrapper.init();
-    return this;
-  };
-
-  JencilCore.prototype.adjust = function() {
-    this.wrapper.adjust();
-    return this;
-  };
-
-  JencilCore.prototype.focus = function() {
-    this.getEditor().focus();
-    return this;
-  };
-
-  JencilCore.prototype.update = function(callback) {
-    var editor;
-    editor = this.getEditor();
-    if (callback != null) {
-      editor.update(callback);
-      return this;
-    }
-    this.editor.update();
-    return this;
-  };
-
-  JencilCore.prototype.options = {
-    defaultSplitterVolume: 1,
-    previewTemplatePath: null
-  };
-
-  return JencilCore;
+  return Jencil;
 
 })();
 
 $.fn.jencil = function(options) {
-  var $this, instance;
-  $this = $(this);
-  instance = new JencilCore($this);
-  return $this.data('jencil', instance);
+  return new Jencil($(this), options);
 };
+
+namespace('Jencil.profiles', function(exports) {
+  return exports.Profile = Profile;
+});
+
+namespace('Jencil.utils', function(exports) {
+  return exports.namespace = namespace;
+});

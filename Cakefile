@@ -1,265 +1,406 @@
 $ = (_) -> _.src = "#{_.root}/#{_.src}"; _.dst = "#{_.root}/#{_.dst}"; return _
-# --- CONFIGURE ---------------------------------------------------
-NAME              = "jencil"
-VERSION           = "0.1.0"
-SRC_PATH          = $ {root: "./src", src: "coffee", dst: "js"}
-LIB_PATH          = $ {root: "./lib", src: "coffee", dst: "js"}
-TEST_PATH         = $ {root: "./test", src: "coffee", dst: "js"}
-STYLE_PATH        = $ {root: "./style", src: "less", dst: "css"}
-SRC_FILES         = [
-  'extends/jquery.extends',
-  'utils/memento',
-  'utils/textarea',
+###########################################################################
+### Config ###
+###########################################################################
+NAME                = "Jencil"
+VERSION             = "0.1.0"
+SRC_PATH            = $ {root: "./src", src: "coffee", dst: "js"}
+LIB_PATH            = $ {root: "./lib", src: "coffee", dst: "js"}
+TEST_PATH           = $ {root: "./test", src: "coffee", dst: "js"}
+STYLE_SRC_PATH      = $ {root: "./src", src: "less", dst: "css"}
+STYLE_LIB_PATH      = $ {root: "./lib", src: "less", dst: "css"}
+SRC_FILES           = [
+  'utils/namespace',
+  'utils/undo',
+  'utils/selection',
+  'utils/evolution',
+  'utils/curtain',
   'utils/animation',
   'core',
-  'commands',
-  'ui/widget',
-  'ui/splitter',
-  'ui/panel',
-  'ui/toolbar',
-  'ui/buttons/base',
-  'ui/buttons/general',
-  'ui/buttons/markup',
-  'ui/workspace',
-  'ui/editors/base',
-  'ui/editors/html',
-  'ui/editors/markdown',
-  'ui/viewers/base',
-  'ui/viewers/html',
-  'ui/viewers/markdown',
-  'profiles/base',
-  'profiles/html',
-  'profiles/markdown',
+  'widgets',
+  'splitter',
+  'editors',
+  'viewers',
+  'buttons',
+  'workspace',
+  'mainpanels',
+  'fullscreen',
+  'filetypes/html',
+  'filetypes/markdown',
 ]
-LIB_FILES         = [
-  'jquery.tabby',
-  'markdown',
+LIB_FILES           = [
   'shortcut',
+  'jquery.tabby',
+  'i18next-1.5.6',
 ]
-TEST_FILES        = [
-  'sandbox',
-  'extends/jquery.extends.spec',
-  'utils/textarea.spec',
-  'core.spec',
-  'ui/widget.spec',
-]
-STYLE_FILES       = [
+TEST_FILES          = []
+STYLE_SRC_FILES     = [
   'layout',
-#  'develop',
+  'splitter',
 ]
-YUI_COMPRESSOR    = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
-NODE_MODULES = [
+STYLE_LIB_FILES     = []
+YUI_COMPRESSOR      = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
+NODE_MODULES        = [
   'coffee-script',
   'less',
+  'mkdirp',
+  'exec-sync',
   'chai',
   'mocha',
   'sinon',
   'sinon-chai',
 ]
-# -----------------------------------------------------------------
+JS_HEADER           = """
+/**
+ * #{NAME} #{VERSION}
+ *
+ * Author:  lambdalisue
+ * URL:     http://hashnote.net/
+ * License: MIT License
+ * 
+ * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
+ *
+ */
+"""
+CSS_HEADER          = JS_HEADER
+CS_DEBUG_BLOCK_START    = "### DEBUG--- ###"
+CS_DEBUG_BLOCK_END      = "### ---DEBUG ###"
+LESS_DEBUG_BLOCK_START  = "/* DEBUG--- */"
+LESS_DEBUG_BLOCK_END    = "/* ---DEBUG */"
+
+###########################################################################
 fs = require 'fs'
 path = require 'path'
-{exec, spawn}   = require 'child_process'
+{exec, spawn} = require 'child_process'
 
-options =
-  encoding: 'utf-8'
-  watch: false
 option '-e', '--encoding', 'Encoding used for read/write a file'
 option '-w', '--watch', 'Continuously execute action'
+option '-v', '--verbose [VERBOSE]', 'set the logging level'
+option '-o', '--optimize', 'remove DEBUG code block before compile'
 
-mkdirpSync = (dir) ->
-  dir = path.resolve path.normalize dir
+###########################################################################
+### Utils ###
+###########################################################################
+blockRemove = (text, startMarker, endMarker) ->
+  pattern = new RegExp("")
+  pattern.compile("#{startMarker}(?:.|\n)*?#{endMarker}", "g")
+  return text.replace(pattern, "")
+
+compose = (files, dst, options) ->
+  buffer = new Array
+  for file in files
+    buffer.push fs.readFileSync file, options.encoding
+  buffer.unshift options.header if options.header?
+  buffer.push options.footer if options.footer?
+  fs.writeFileSync dst, buffer.join("\n"), options.encoding
+
+
+less = (src, dst, options, callback) ->
+  # create required dir tree
+  if not path.existsSync(path.dirname(dst))
+    mkdirp = require 'mkdirp'
+    mkdirp.sync path.dirname(dst)
+  # compile src => dst
+  exec "./node_modules/less/bin/lessc #{src} #{dst}", (err, stdout, stderr) ->
+    console.log stdout if stdout
+    console.log stderr if stderr
+
+coffee = (src, dst, options) ->
+  # set default value
+  options.bare = options.bare ? true
+  options.encoding = options.encoding ? 'utf-8'
+  # create required dir tree
+  if not path.existsSync(path.dirname(dst))
+    mkdirp = require 'mkdirp'
+    mkdirp.sync path.dirname(dst)
+  src = [src] if typeof src is 'string'
   try
-    fs.mkdirSync dir, 511
+    buffer = (fs.readFileSync(f, options.encoding) for f in src).join("\n")
+    buffer = blockRemove(buffer, CS_DEBUG_BLOCK_START, CS_DEBUG_BLOCK_END) if options.optimize
+    Coffee = require 'coffee-script'
+    buffer = Coffee.compile(buffer, {'bare': options.bare}) if buffer isnt ""
+    fs.writeFileSync dst, buffer, options.encoding if not options.dry
   catch e
-    switch e.errno
-      when constants.EEXIST
-        return
-      when constants.ENOENT
-        mkdirpSync path.dirname dir
-        mkdirpSync dir
-      else
-        throw e
-compileCoffeeScript = (pathset, filenames, anonymous=false) ->
-  coffee = require 'coffee-script'
-  compileSingle = (filename) ->
-    src = "#{pathset.src}/#{filename}.coffee"
-    dst = "#{pathset.dst}/#{filename}.js"
-    # log
-    console.log "Compile:", path.basename(src), "->", dst
-    if not path.existsSync(src) and path.existsSync(dst)
-      # this mean the file is written in javascript
-      return null
-    if not path.existsSync(path.dirname(dst))
-      mkdirpSync path.dirname(dst)
-    # compile src => dst
-    cs = fs.readFileSync(src, options.encoding)
-    js = coffee.compile cs, {'bare': not anonymous}
-    fs.writeFileSync dst, js
-    return [src, dst]
-  # compile all src files
-  for filename in filenames
-    do (filename) -> compileSingle filename
+    console.error e
 
-compileLess = (pathset, filenames) ->
-  #less = require 'less'
-  less = (src, dst) ->
-    exec "lessc #{src} #{dst}", (err, stdout, stderr) ->
-      console.log stdout if stdout
-      console.log stderr if stderr
-  compileSingle = (filename) ->
-    src = "#{pathset.src}/#{filename}.less"
-    dst = "#{pathset.dst}/#{filename}.css"
-    # log
-    console.log "Compile:", path.basename(src), "->", dst
-    if not path.existsSync(src) and path.existsSync(dst)
-      # this mean the file is written in css
-      return null
-    if not path.existsSync(path.dirname(dst))
-      mkdirpSync path.dirname(dst)
-    # compile src => dst
-    less src, dst
-    #less.render(fs.readFileSync(src, options.encoding), (e, css) ->
-    #  fs.writeFileSync dst, css
-    #)
-    return [src, dst]
-  # compile all src files
-  for filename in filenames
-    do (filename) -> compileSingle filename
-
-compose = (pathset, filenames, extension) ->
-  buffer = []
-  for filename in filenames
-    src = "#{pathset.dst}/#{filename}.#{extension}"
-    buf = fs.readFileSync(src, options.encoding)
-    buffer.push buf
-  buffer = buffer.join "\n"
-  return buffer
-
-composeCss = (pathset, filenames, output) ->
-  return if filenames.length is 0
-  buffer = compose(pathset, filenames, 'css')
-  console.log "Compose:", filenames.length, "files =>", output
-  fs.writeFileSync output, buffer, options.encoding
-
-composeJavaScript = (pathset, filenames, output, anonymous=false) ->
-  return if filenames.length is 0
-  buffer = compose(pathset, filenames, 'js')
-  if anonymous
-    buffer = ("    #{x}" for x in buffer.split("\n")).join("\n")
-    buffer = "(function() {\n#{buffer}\n}).call(this);"
-  console.log "Compose:", filenames.length, "files =>", output
-  fs.writeFileSync output, buffer, options.encoding
-
-minify = (src, dst) ->
-  console.log "Minify:", path.basename(src), "=>", dst
+minify = (src, dst, options, callback) ->
   exec "java -jar #{YUI_COMPRESSOR} #{src} -o #{dst}", (err, stdout, stderr) ->
     process.stdout.write stdout
     process.stderr.write stderr
+    callback?()
 
-mocha = (pathset, filenames) ->
-  args = ("#{pathset.dst}/#{filename}.js" for filename in filenames)
-  exec "mocha --compilers coffee:coffee-script #{args.join(" ")}", (err, stdout, stderr) ->
+lint = (src, options) ->
+  exec "./node_modules/coffeelint/bin/coffeelint #{src}", (err, stdout, stderr) ->
+    console.log stdout if stdout
+    console.log stderr if stderr
+
+mocha = (src, options) ->
+  exec "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script #{src}", (err, stdout, stderr) ->
     process.stdout.write stdout
     process.stderr.write stderr
 
+compileCS = (pathset, filenames, options) ->
+  compileSingle = (pathset, filenames, options) ->
+    for filename in filenames
+      src = "#{pathset.src}/#{filename}.coffee"
+      dst = "#{pathset.dst}/#{filename}.js"
+      if not path.existsSync(src) and path.existsSync(dst)
+        # The filename is for JavaScript and not for CoffeeScript
+        # so compile doesn't make any sence
+        switch options.verbose
+          when '0' then 
+          when '1' then process.stdout.write "."
+          else console.log "-", dst
+        continue
+      switch options.verbose
+        when '0' then 
+        when '1' then process.stdout.write "+"
+        else console.log "+", path.basename(src), "=>", dst
+      # compile
+      coffee src, dst, options
+      # watch
+      if options.watch? then do (src, dst) ->
+        fs.watchFile src, (c, p) -> 
+          console.log "+", path.basename(src), "=>", dst
+          coffee(src, dst, options)
+    console.log ""
+  compileMultiple = (pathset, filenames, options) ->
+    # just check
+    files = new Array
+    jsFiles = new Array
+    options.dry = true
+    for filename in filenames
+      src = "#{pathset.src}/#{filename}.coffee"
+      dst = "#{pathset.dst}/#{filename}.js"
+      if not path.existsSync(src) and path.existsSync(dst)
+        # The filename is for JavaScript and not for CoffeeScript
+        # so compile doesn't make any sence
+        switch options.verbose
+          when '0' then 
+          when '1' then process.stdout.write "."
+          else console.log "-", dst
+        jsFiles.push dst
+        continue
+      switch options.verbose
+        when '0' then 
+        when '1' then process.stdout.write "."
+        else console.log "+", path.basename(src), "=>", dst
+      # compile (dry)
+      coffee src, dst, options
+      files.push src
+    dst = "#{pathset.dst}/#{NAME}.js"
+    console.log "=>", dst if options.verbose isnt '0'
+    console.log ""
+    # compile
+    options.dry = false
+    options.bare = false
+    coffee files, dst, options
+    # compose existing jsFiles
+    jsFiles.push dst
+    compose jsFiles, dst, options if jsFiles.length > 0
+    # watch the file change
+    if options.watch?
+      for file in files then do (file, files, dst, jsFiles) ->
+        fs.watchFile file, (c, p) ->
+          console.log "=>", dst if options.verbose isnt '0'
+          coffee files, dst, options
+          compose jsFiles, dst, options if jsFiles.length > 0
+  console.log "Compile CoffeeScript files in #{pathset.root}" if options.verbose isnt '0'
+  if options.multiple?
+    compileMultiple pathset, filenames, options
+  else
+    compileSingle pathset, filenames, options
 
-task 'compile:coffee:src', 'Compile coffeescript files in src to bare javascript files', ->
-  compileCoffeeScript SRC_PATH, SRC_FILES
-task 'compile:coffee:lib', 'Compile coffeescript files in lib to bare javascript files', ->
-  compileCoffeeScript LIB_PATH, LIB_FILES
-task 'compile:coffee:test', 'Compile coffeescript files in test to bare javascript files', ->
-  compileCoffeeScript TEST_PATH, TEST_FILES, true
-task 'compile:coffee', 'Compile coffeescript files to bare javascript files', ->
-  invoke 'compile:coffee:src'
-  invoke 'compile:coffee:lib'
-  invoke 'compile:coffee:test'
+compileLESS = (pathset, filenames, options) ->
+  compileSingle = (pathset, filenames, options) ->
+    for filename in filenames
+      src = "#{pathset.src}/#{filename}.less"
+      dst = "#{pathset.dst}/#{filename}.css"
+      if not path.existsSync(src) and path.existsSync(dst)
+        # The filename is for CSS and not for LESS
+        # so compile doesn't make any sence
+        switch options.verbose
+          when '0' then 
+          when '1' then process.stdout.write "."
+          else console.log "-", dst
+        continue
+      switch options.verbose
+        when '0' then 
+        when '1' then process.stdout.write "+"
+        else console.log "+", path.basename(src), "=>", dst
+      # compile
+      less src, dst, options
+      # watch
+      if options.watch? then do (src, dst) ->
+        fs.watchFile src, (c, p) -> 
+          console.log "+", path.basename(src), "=>", dst
+          less(src, dst, options)
+    console.log ""
+  console.log "Compile LESS files in #{pathset.root}" if options.verbose isnt '0'
+  compileSingle pathset, filenames, options
 
-task 'compile:less', 'Compile less files to css files', ->
-  compileLess STYLE_PATH, STYLE_FILES
 
-
-task 'compose:js:src', 'Compose javascript files in src to a single javascript file', ->
-  filename = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.src.js"
-  composeJavaScript SRC_PATH, SRC_FILES, filename
-task 'compose:js:lib', 'Compose javascript files in lib to a single javascript file', ->
-  filename = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.lib.js"
-  composeJavaScript LIB_PATH, LIB_FILES, filename
-task 'compose:js', 'Compose javascript files to a single javascript file', ->
-  invoke 'compose:js:src'
-  invoke 'compose:js:lib'
-  filename = "#{NAME}.#{VERSION}"
-  composeJavaScript SRC_PATH, ["#{filename}.lib", "#{filename}.src"], "#{SRC_PATH.dst}/#{filename}.js", true
-task 'compose:css', 'Compose css files to a single css file', ->
-  filename = "#{STYLE_PATH.dst}/#{NAME}.#{VERSION}.css"
-  composeCss STYLE_PATH, STYLE_FILES, filename
-
-task 'minify:js', 'Minify javascript file', ->
-  src = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
-  dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.min.js"
-  minify src, dst
-
-task 'minify:css', 'Minify css file', ->
-  src = "#{STYLE_PATH.dst}/#{NAME}.#{VERSION}.css"
-  dst = "#{STYLE_PATH.dst}/#{NAME}.#{VERSION}.min.css"
-  minify src, dst
-
-task 'test', 'Run test', (options) ->
-  invoke 'compile:coffee'
-  mocha TEST_PATH, TEST_FILES
-  if options.watch
-    for filename in SRC_FILES
-      src = "#{SRC_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'test' if path.existsSync src
-    for filename in LIB_FILES
-      src = "#{LIB_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'test' if path.existsSync src
-    for filename in TEST_FILES
-      src = "#{TEST_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'test' if path.existsSync src
-
-task 'build:develop', 'Build as develop mode', (options) ->
-  invoke 'compile:coffee'
-  invoke 'compile:less'
-  if options.watch
-    for filename in SRC_FILES
-      src = "#{SRC_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'compile:coffee:src' if path.existsSync src
-    for filename in LIB_FILES
-      src = "#{LIB_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'compile:coffee:lib' if path.existsSync src
-    for filename in TEST_FILES
-      src = "#{TEST_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'compile:coffee:test' if path.existsSync src
-    for filename in STYLE_FILES
-      src = "#{STYLE_PATH.src}/#{filename}.less"
-      fs.watchFile src, (c, p) -> invoke 'compile:less' if path.existsSync src
-
-task 'build:release', 'Build as release mode', (options) ->
-  invoke 'compile:coffee'
-  invoke 'compose:js'
-  invoke 'minify:js'
-  invoke 'compile:less'
-  invoke 'compose:css'
-  invoke 'minify:css'
-  if options.watch
-    for filename in SRC_FILES
-      src = "#{SRC_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'build:release' if path.existsSync src
-    for filename in LIB_FILES
-      src = "#{LIB_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'build:release' if path.existsSync src
-    for filename in TEST_FILES
-      src = "#{TEST_PATH.src}/#{filename}.coffee"
-      fs.watchFile src, (c, p) -> invoke 'build:release' if path.existsSync src
-    for filename in STYLE_FILES
-      src = "#{STYLE_PATH.src}/#{filename}.less"
-      fs.watchFile src, (c, p) -> invoke 'build:release' if path.existsSync src
-
-task 'install:node', 'Install required node modules', ->
+###########################################################################
+### Tasks ###
+###########################################################################
+task 'install:modules', 'Install required node modules', (options) ->
   install = (module_name) ->
     exec "npm install #{module_name}", (err, stdout, stderr) ->
       process.stdout.write stdout
       process.stderr.write stderr
   for module in NODE_MODULES
     install module
+
+### compile:style ###
+task 'compile:style:src', 'Compile src LESS files to css files', (options) ->
+  compileLESS STYLE_SRC_PATH, STYLE_SRC_FILES, options
+task 'compile:style:lib', 'Compile lib LESS files to css files', (options) ->
+  compileLESS STYLE_LIB_PATH, STYLE_LIB_FILES, options
+### compile:develop ###
+task 'compile:develop:src', 'Compile src CoffeeScript files to bare javascript files', (options) ->
+  compileCS SRC_PATH, SRC_FILES, options
+task 'compile:develop:lib', 'Compile lib CoffeeScript files to bare javascript files', (options) ->
+  compileCS LIB_PATH, LIB_FILES, options
+task 'compile:develop', 'Compile CoffeeScript/LESS files to javascript/css files', (options) ->
+  invoke 'compile:develop:src'
+  invoke 'compile:develop:lib'
+  invoke 'compile:style:src'
+  invoke 'compile:style:lib'
+
+### compile:release ###
+task 'compile:release:src', 'Compile src CoffeeScript files to a single javascript file', (options) ->
+  options.multiple = true
+  compileCS SRC_PATH, SRC_FILES, options
+task 'compile:release:lib', 'Compile lib CoffeeScript files to a single javascript file', (options) ->
+  options.multiple = true
+  compileCS LIB_PATH, LIB_FILES, options
+task 'compile:release', 'Compile CoffeeScript/LESS files to javascript/css files', (options) ->
+  invoke 'compile:release:src'
+  invoke 'compile:release:lib'
+  invoke 'compile:style:src'
+  invoke 'compile:style:lib'
+  
+task 'compose:js', 'Compose compiled javascript files into a single javascript file', (options) ->
+  SRC_FILE = "#{SRC_PATH.dst}/#{NAME}.js"
+  LIB_FILE = "#{LIB_PATH.dst}/#{NAME}.js"
+  files = [LIB_FILE, SRC_FILE]
+  #files = [SRC_FILE, LIB_FILE]
+  dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
+
+  console.log "Compose compiled javascript files" if options.verbose isnt '0'
+  if options.verbose isnt '0'
+    for file in files
+      switch options.verbose
+        when '1' then process.stdout.write "."
+        else console.log "+", file
+  console.log "=>", dst if options.verbose isnt '0'
+  console.log ""
+  options.header = JS_HEADER
+  compose files, dst, options
+
+task 'compose:css', 'Compose compiled css files into a single css file', (options) ->
+  srcFiles = ("#{STYLE_SRC_PATH.dst}/#{filename}.css" for filename in STYLE_SRC_FILES)
+  libFiles = ("#{STYLE_LIB_PATH.dst}/#{filename}.css" for filename in STYLE_LIB_FILES)
+  files = srcFiles.concat libFiles
+  dst = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
+
+  console.log "Compose compiled css files" if options.verbose isnt '0'
+  if options.verbose isnt '0'
+    for file in files
+      switch options.verbose
+        when '1' then process.stdout.write "."
+        else console.log "+", file
+  console.log "=>", dst if options.verbose isnt '0'
+  console.log ""
+  options.header = CSS_HEADER
+  compose files, dst, options
+
+task 'minify:js', 'Minify javascript file', (options) ->
+  src = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
+  dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.min.js"
+  console.log "Minify javascript file" if options.verbose isnt '0'
+  console.log path.basename(src), "=>", dst if options.verbose isnt '0'
+  minify src, dst, options, ->
+    # Add header
+    options.header = JS_HEADER
+    compose [dst], dst, options
+
+task 'minify:css', 'Minify css file', (options) ->
+  src = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
+  dst = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.min.css"
+  console.log "Minify css file" if options.verbose isnt '0'
+  console.log path.basename(src), "=>", dst if options.verbose isnt '0'
+  minify src, dst, options, ->
+    # Add header
+    options.header = CSS_HEADER
+    compose [dst], dst, options
+
+task 'test:mocha', 'Run mocha test', (options) ->
+  files = ("#{TEST_PATH.src}/#{filename}.coffee" for filename in TEST_FILES)
+  mocha files.join(" "), options
+
+task 'test:lint', 'Run lint test', (options) ->
+  files = ("#{SRC_PATH.src}/#{filename}.coffee" for filename in SRC_FILES)
+  lint files.join(" "), options
+
+task 'develop', 'Develop', (options) ->
+  options.watch = true
+  invoke 'test:lint'
+  invoke 'test:mocha'
+  invoke 'compile:develop'
+
+task 'release', 'Release', (options) ->
+  invoke 'test:lint'
+  invoke 'test:mocha'
+  invoke 'compile:release'
+  invoke 'compose:js'
+  invoke 'compose:css'
+  invoke 'minify:js'
+  invoke 'minify:css'
+
+task 'clean', 'Clean files', (options) ->
+  exec "rm -r #{SRC_PATH.dst}"
+  exec "rm -r #{STYLE_SRC_PATH.dst}"
+
+listen = (port=8000) ->
+  root = process.cwd()
+  loadStaticFile = (uri, response) ->
+    tmp = uri.split(".")
+    type = tmp[tmp.length-1]
+    filename = path.join(root, uri)
+
+    path.exists(filename, (exists) ->
+      if not exists
+        response.writeHead(404, {'Content-Type': 'text/plain'})
+        response.write("404 Not found\n#{filename}\n")
+        response.end()
+        return
+
+      fs.readFile(filename, 'binary', (err, file) ->
+        if err?
+          response.writeHead(500, {'Content-Type': 'text/plain'})
+          response.write(err + "\n#{filename}\n")
+          response.end()
+          return
+
+        switch type
+          when 'html' then response.writeHead(200, {'Content-Type': 'text/html'})
+          when 'js' then response.writeHead(200, {'Content-Type': 'text/javascript'})
+          when 'css' then response.writeHead(200, {'Content-Type': 'text/css'})
+          else response.writeHead(200, {'Content-Type': 'text/html'})
+
+        response.write(file, 'binary')
+        response.end()
+      )
+    )
+  http = require 'http'
+  url = require 'url'
+  server = http.createServer (req, res) ->
+    uri = url.parse(req.url).pathname
+    loadStaticFile uri, res
+  server.listen(process.env.PORT || port)
+
+task 'demo', 'Start demo server', (options) ->
+  console.log "Start demo server..."
+  console.log "Access http://localhost:8000/test/runner.html"
+  listen(8000)

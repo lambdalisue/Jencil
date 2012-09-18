@@ -8,6 +8,7 @@ animate = (options) ->
     end: 100
     duration: 1000
     callback: null
+    done: null
     easing: null
   }, options)
   startTime = animate.now()
@@ -22,6 +23,7 @@ animate = (options) ->
       setTimeout(step, 1)
     else
       options.callback options.end, options.duration
+      options.done?()
   step()
   return null
 animate.now = -> (new Date()).getTime()
