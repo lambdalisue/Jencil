@@ -12,7 +12,9 @@ class Selection
     else if @element.setSelectionRange? # W3C
       s = @element.selectionStart
       e = @element.selectionEnd
-    return [s, e]
+    caret = [s, e]
+    caret.isCollapse = s == e
+    return caret
   _setCaret: (start, end) ->
     scrollTop = @element.scrollTop
     if @element.setSelectionRange?
@@ -38,29 +40,15 @@ class Selection
       return @_setCaret start, end
     return @_getCaret()
 
-  caretMove: (offset) ->
-    [s, e] = @caret()
-    return @caret(s+offset, e+offset)
-
-  lineCaret: ->
-    [s, e] = @caret()
-    value = @element.value
-    s = value.lastIndexOf("\n", s - 1) + 1
-    e = value.indexOf("\n", s)
-    e = value.length if e == -1
-    return [s, e]
+  caretOffset: (offset) ->
+    caret = @caret()
+    return @caret(caret[0]+offset)
 
   _replace: (str, start, end) ->
     scrollTop = @element.scrollTop
-    if @document.selection # MSIE and Opera
-      @element.focus()
-      range = document.selection.createRange()
-      range.text = str
-      range.select()
-    else if @element.setSelectionRange # Gecko and Webkit
-      b = @element.value.substring 0, start
-      a = @element.value.substring end
-      @element.value = b + str + a
+    b = @element.value.substring 0, start
+    a = @element.value.substring end
+    @element.value = b + str + a
     @element.scrollTop = scrollTop
     return @
 
@@ -90,11 +78,6 @@ class Selection
       return @_setText(str, keepSelection)
     return @_getText()
 
-  line: ->
-    value = @element.value
-    [s, e] = @lineCaret()
-    return value.substr(s, e-s)
-
   insertBefore: (str, keepSelection) ->
     scrollTop = @element.scrollTop
     [s, e] = @caret()
@@ -122,18 +105,55 @@ class Selection
     @element.scrollTop = scrollTop
     return @
 
-  wrap: (b, a, keepSelection) ->
+  enclose: (lhs, rhs, keepSelection) ->
     scrollTop = @element.scrollTop
     text = @text()
-    if text.indexOf(b) is 0 and text.lastIndexOf(a) is (text.length - a.length)
-      str = text.substring b.length, text.length - a.length
+    if text.indexOf(lhs) is 0 and text.lastIndexOf(rhs) is (text.length - rhs.length)
+      # already wrapped, remove existing wrapping
+      str = text.substring lhs.length, text.length - rhs.length
       @text str, keepSelection
     else
       [s, e] = @caret()
-      @_replace b + text + a, s, e
-      e = s + b.length + text.length + a.length
+      @_replace lhs + text + rhs, s, e
+      e = s + lhs.length + text.length + rhs.length
       s = e if not keepSelection
       @caret s, e
     @element.focus()
     @element.scrollTop = scrollTop
     return @
+
+  _getLineCaretOfCaret: (caret) ->
+    value = @element.value
+    s = value.lastIndexOf("\n", caret - 1) + 1
+    e = value.indexOf("\n", caret)
+    e = value.length if e == -1
+    return [s, e]
+  _getLineCaret: ->
+    return @_getLineCaretOfCaret(@caret()[0])
+
+  _getLine: ->
+    [s, e] = @_getLineCaret()
+    return @element.value.substring s, e
+  _setLine: (line, keepSelection) ->
+    scrollTop = @element.scrollTop
+    [s, e] = @_getLineCaret()
+    @_replace line, s, e
+    e = s + line.length
+    s = e if not keepSelection
+    @caret s, e
+    @element.focus()
+    @element.scrollTop = scrollTop
+    return @
+
+  line: (value, keepSelection) ->
+    if value?
+      return @_setLine(value, keepSelection)
+    return @_getLine()
+
+  selectWholeLine: (caret) ->
+    [s, e] = @_getLineCaretOfCaret(caret)
+    return @caret s, e
+
+  selectWholeCurrentLine: ->
+    [s, e] = @_getLineCaretOfCaret(@caret()[0])
+    return @caret s, e

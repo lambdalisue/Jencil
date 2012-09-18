@@ -29,10 +29,9 @@ SRC_FILES           = [
   'filetypes/markdown',
 ]
 LIB_FILES           = [
-  'jquery.tabby',
-  'markdown',
   'shortcut',
-  'i18next-1.5.5.min',
+  'jquery.tabby',
+  'i18next-1.5.6',
 ]
 TEST_FILES          = []
 STYLE_SRC_FILES     = [
@@ -284,8 +283,8 @@ task 'compile:release', 'Compile CoffeeScript/LESS files to javascript/css files
 task 'compose:js', 'Compose compiled javascript files into a single javascript file', (options) ->
   SRC_FILE = "#{SRC_PATH.dst}/#{NAME}.js"
   LIB_FILE = "#{LIB_PATH.dst}/#{NAME}.js"
-  #files = [LIB_FILE, SRC_FILE]
-  files = [SRC_FILE, LIB_FILE]
+  files = [LIB_FILE, SRC_FILE]
+  #files = [SRC_FILE, LIB_FILE]
   dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
 
   console.log "Compose compiled javascript files" if options.verbose isnt '0'
@@ -401,5 +400,7 @@ listen = (port=8000) ->
     loadStaticFile uri, res
   server.listen(process.env.PORT || port)
 
-task 'server:listen', 'Start demo server', (options) ->
-  listen()
+task 'demo', 'Start demo server', (options) ->
+  console.log "Start demo server..."
+  console.log "Access http://localhost:8000/test/runner.html"
+  listen(8000)

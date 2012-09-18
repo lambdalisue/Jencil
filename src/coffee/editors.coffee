@@ -32,8 +32,6 @@ class BaseEditor extends Panel
   image: null
   unorderedList: null
   orderedList: null
-  indent: null
-  outdent: null
 
 
 class TextEditor extends BaseEditor
@@ -48,16 +46,21 @@ class TextEditor extends BaseEditor
       'resize': 'none'
     @textarea = evolute(@textarea)
     @textarea.selection = new Selection(window.document, @textarea.get(0))
-    @textarea.tabby({'tabString': '    '}) if $.fn.tabby?
+    @textarea.tabby({'tabString': '    '}) if $.fn.tabby? and @core.options.enableTabIndent
     @textarea.autoindent = (e) =>
       if e.which == 13
         # store the snapshot
         @core.caretaker.save()
         # add newline with leading spaces
         line = @textarea.selection.line()
+        # call preNewLineCallback
+        @textarea.autoindent.preCallback?(e, line)
+        # Add newline and leading white spaces
         indent = line.replace(/^(\s*).*$/, "$1")
         insert = "\n#{indent}"
         @textarea.selection.insertAfter(insert, false)
+        # call postNewLineCallback()
+        @textarea.autoindent.postCallback?(e, line, indent, insert)
         @textarea.focus()
         # cancel bubbling
         e.stopPropagation()
@@ -67,8 +70,8 @@ class TextEditor extends BaseEditor
         # call change event
         @change()
         return false
-    @textarea.on 'keydown', (e) => @textarea.autoindent(e)
-    @textarea.on 'click blur', => @change()
+    @textarea.on 'keydown', (e) => @textarea.autoindent(e) if @core.options.enableAutoIndent
+    @textarea.on 'keypress keyup click blur', => @change()
 
   val: (value) ->
     if value?
@@ -94,29 +97,40 @@ class TextEditor extends BaseEditor
     @textarea.outerHeight @element.height()
     return @
 
-  wrap: (b, a, keepSelection=true) ->
-    @textarea.selection.wrap(b, a, keepSelection)
-    @core.caretaker.save()
-    @change()
-    return @
-
   selection: (str, keepSelection=true) ->
     if str?
       @textarea.selection.text(str, keepSelection)
       @core.caretaker.save()
-      @change()
-      return @
+      return @change()
     return @textarea.selection.text()
-  
+
+  enclose: (b, a, keepSelection=true) ->
+    caret = @textarea.selection.caret()
+    if caret[0] == caret[1]
+      # select current line before
+      @textarea.selection.selectWholeCurrentLine()
+    @textarea.selection.enclose(b, a, keepSelection)
+    @core.caretaker.save()
+    return @change()
+
   insertBefore: (str, keepSelection=true) ->
+    caret = @textarea.selection.caret()
+    if caret[0] == caret[1]
+      # select current line before
+      @textarea.selection.selectWholeCurrentLine()
     @textarea.selection.insertBefore(str, keepSelection)
     @core.caretaker.save()
-    return @
+    return @change()
 
   insertAfter: (str, keepSelection=true) ->
+    caret = @textarea.selection.caret()
+    if caret[0] == caret[1]
+      # select current line before
+      @textarea.selection.selectWholeCurrentLine()
     @textarea.selection.insertAfter(str, keepSelection)
     @core.caretaker.save()
-    return @
+    return @change()
+
 
 namespace 'Jencil.ui.widgets.editors', (exports) ->
   exports.BaseEditor = BaseEditor

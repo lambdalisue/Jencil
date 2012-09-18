@@ -35,10 +35,10 @@ class MarkdownEditor extends HtmlEditor
     @insertBefore "###### "
 
   bold: ->
-    @wrap "**", "**"
+    @enclose "**", "**"
 
   italic: ->
-    @wrap "*", "*"
+    @enclose "*", "*"
 
   anchor: ->
     text = @selection()
@@ -51,23 +51,61 @@ class MarkdownEditor extends HtmlEditor
     src = window.prompt("Please input a image url", "http://")
     alt = window.prompt("(Optional) Please input a alt message", "Image")
     @selection "![#{alt}](#{src})"
-    
+
   unorderedList: ->
     text = @selection()
     text = ("-   #{x}" for x in text.split("\n"))
     text.unshift("")
     text.push("")
     @selection text.join("\n")
+
   orderedList: ->
     text = @selection()
     text = ("#{i}. #{x}" for x, i in text.split("\n"))
     text.unshift("")
     text.push("")
     @selection text.join("\n")
-    
-  indent: ->
-    text = @selection()
-    text = ("  #{x}" for x in text.split("\n"))
-    text.unshift("")
-    text.push("")
-    @selection text.join("\n")
+
+class MarkdownHelper extends Jencil.ui.widgets.panels.Panel
+  constructor: (core) ->
+    super core
+    @element.addClass 'helper'
+
+class MarkdownProfile extends Jencil.profiles.Profile
+  constructor: ->
+    @mainPanelClass = Jencil.ui.widgets.panels.TrimainPanel
+    @editorClass = MarkdownEditor
+    @viewerClass = MarkdownViewer
+    @helperClass = MarkdownHelper 
+    @defaultVolume = 1
+    @defaultVolume2 = 1
+
+    @toolbarButtons = [
+      'Undo', 'Redo', 'Separator',
+      ['h1', 'H1'],
+      ['h2', 'H2'],
+      ['h3', 'H3'],
+      ['h4', 'H4'],
+      ['h5', 'H5'],
+      ['h6', 'H6'],
+      'Separator',
+      ['bold', 'Bold', 'Ctrl+B'],
+      ['italic', 'Italic', 'Ctrl+I'],
+      'Separator',
+      ['anchor', 'Anchor link'],
+      ['image', 'Image'],
+      ['unorderedList', 'Unordered list'],
+      ['orderedList', 'Ordered list'],
+      'Separator',
+      'Fullscreen',
+    ]
+    @statusbarButtons = [
+      'Viewer',
+      'Helper',
+    ]
+
+# Export
+Jencil.utils.namespace 'Jencil.filetypes.markdown', (exports) ->
+  exports.MarkdownEditor = MarkdownEditor
+  exports.MarkdownViewer = MarkdownViewer
+  exports.MarkdownProfile = MarkdownProfile

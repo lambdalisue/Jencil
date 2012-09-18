@@ -19,9 +19,9 @@
             ignoreLeaks: true
         });
     </script>
+    <!--
     <link rel="stylesheet" href="../src/css/layout.css">
     <script src="../lib/js/jquery.tabby.js"></script>
-    <script src="../lib/js/markdown.js"></script>
     <script src="../lib/js/shortcut.js"></script>
     <script src="../src/js/utils/namespace.js"></script>
     <script src="../src/js/utils/evolution.js"></script>
@@ -39,15 +39,23 @@
     <script src="../src/js/fullscreen.js"></script>
     <script src="../src/js/mainpanels.js"></script>
     <script src="../src/js/filetypes/html.js"></script>
-    <!--
-    <link rel="stylesheet" href="../style/css/jencil.0.1.0.min.css">
-    <script src="../src/js/jencil.0.1.0.min.js"></script>
+    <script src="../src/js/filetypes/markdown.js"></script>
     -->
+
+    <link rel="stylesheet" href="../src/css/Jencil.0.1.0.min.css">
+    <script src="../src/js/Jencil.0.1.0.min.js"></script>
+    <!--
+    <script src="../src/js/Jencil.0.1.0.js"></script>
+    -->
+
     <script src="js/sandbox.js"></script>
     <script>
         $(function() {
             //mocha.run();
-            $("textarea#demo").jencil();
+            $("textarea#demo").jencil({
+                //'profile': Jencil.filetypes.markdown.MarkdownProfile
+                'profile': Jencil.filetypes.html.HtmlProfile
+            });
         });
     </script>
 </head>

@@ -4,7 +4,6 @@ class MonomainPanel
     editorPanel.element.addClass 'mainPanel'
     return editorPanel
 
-
 class DimainPanel extends VerticalPanel
   constructor: (core, profile) ->
     @editorPanel = new profile.editorClass(core)
@@ -21,7 +20,7 @@ class TrimainPanel extends HorizontalPanel
     @viewerPanel = new profile.viewerClass(core)
     @helperPanel = new profile.helperClass(core)
     @verticalPanel = new VerticalPanel core, @editorPanel, @viewerPanel, profile.defaultVolume
-    super @verticalPanel, @helperPanel, profile.defaultVolume2
+    super core, @verticalPanel, @helperPanel, profile.defaultVolume2
     @element.addClass 'mainPanel'
     # Connect editorPanel and viewerPanel
     @editorPanel.change (value) => @viewerPanel.update(value)

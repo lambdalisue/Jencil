@@ -7,7 +7,7 @@ class Wrapper extends Panel
 
   init: ->
     # if `resizable` of jQuery-UI is available
-    if @element.resizable?
+    if @element.resizable? and @core.options.resizable is true
       @element.resizable
         start: =>
           @core.editor()?.curtain?.on()
@@ -24,7 +24,6 @@ class Wrapper extends Panel
           @core.helper()?.curtain?.off()
           @adjust()
     @workspace.init()
-    return @adjust()
 
   adjust: ->
     @workspace.element.outerWidth true, @element.width()
@@ -42,6 +41,8 @@ class Workspace extends Panel
     if profile?
       @element.empty()
       @mainPanel = new profile.mainPanelClass(@core, profile)
+      # connect mainPanel.editorPanel and actual element
+      @mainPanel.editorPanel.change (value) => @core.element.val value
       # toolbar
       @toolbar = new Toolbar(@core)
       for button in profile.toolbarButtons
@@ -63,22 +64,26 @@ class Workspace extends Panel
     @toolbar.init()
     @statusbar.init()
     @mainPanel.init()
-    @adjust()
 
   adjust: ->
     @toolbar.element.outerWidth true, @element.width()
     @statusbar.element.outerWidth true, @element.width()
     @mainPanel.element.outerWidth true, @element.width()
+    # Hack: refresh DOM to reset outerHeight of toolbar/statusbar correctly
+    @mainPanel.element.outerHeight true, @element.height()
+    @mainPanel.adjust()
+    # --- /refresh
+    offset1 = @toolbar.element.outerHeight(true)
+    offset2 = @statusbar.element.outerHeight(true)
+    @mainPanel.element.outerHeight true, @element.height() - (offset1 + offset2)
     @toolbar.adjust()
     @statusbar.adjust()
-    offset = @toolbar.element.outerHeight(true) + @statusbar.element.outerHeight(true)
-    @mainPanel.element.outerHeight true, @element.height() - offset
     @mainPanel.adjust()
     return @
 
-  update: ->
+  update: (force) ->
     if @mainPanel.editorPanel and @mainPanel.viewerPanel
-      @mainPanel.viewerPanel.update @mainPanel.editorPanel.val()
+      @mainPanel.viewerPanel.update @mainPanel.editorPanel.val(), force
 
 
 class Bar extends Panel

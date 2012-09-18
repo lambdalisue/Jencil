@@ -36,6 +36,7 @@ class MultiplePanel extends Panel
       @_togglePanel(1, callbackOn, callbackOff)
     @snd.show = show
     @snd.hide = hide
+    @splitter.element.dblclick => @snd.toggle()
 
 
   init: ->
@@ -44,22 +45,22 @@ class MultiplePanel extends Panel
     @snd.init()
 
   _togglePanel: (to, callbackOn, callbackOff) ->
-      volume = @splitter.volume()
-      callbackDone = null
-      if 0 < volume < 1
-        end = to
-        @splitter._previousVolume = volume
-        callbackDone = callbackOff
-      else
-        end = @splitter._previousVolume or @splitter.defaultVolume
-        end = 0.5 if end == to
-        callbackDone = callbackOn
-      animate
-        done: callbackDone
-        start: volume
-        end: end
-        duration: 500
-        callback: (value, epoch) => @splitter.volume value
+    volume = @splitter.volume()
+    callbackDone = null
+    if 0 < volume < 1
+      end = to
+      @splitter._previousVolume = volume
+      callbackDone = callbackOff
+    else
+      end = @splitter._previousVolume or @splitter.defaultVolume
+      end = 0.5 if end == to
+      callbackDone = callbackOn
+    animate
+      done: callbackDone
+      start: volume
+      end: end
+      duration: 500
+      callback: (value, epoch) => @splitter.volume value
 
 
 class VerticalPanel extends MultiplePanel
@@ -72,6 +73,7 @@ class VerticalPanel extends MultiplePanel
     @fst.element.outerHeight true, @element.height()
     @snd.element.outerHeight true, @element.height()
     @splitter.element.outerHeight true, @element.height()
+    # splitter will call @fst.adjust and @snd.adjust
     @splitter.adjust()
     return @
 
@@ -86,6 +88,7 @@ class HorizontalPanel extends MultiplePanel
     @fst.element.outerWidth true, @element.width()
     @snd.element.outerWidth true, @element.width()
     @splitter.element.outerWidth true, @element.width()
+    # splitter will call @fst.adjust and @snd.adjust
     @splitter.adjust()
     return @
 

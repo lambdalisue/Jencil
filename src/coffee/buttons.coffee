@@ -43,6 +43,9 @@ class CommandButton extends ActionButton
       editor[command].call(editor)
     super core, name, text, title, callback, shortcut
 
+  init: ->
+    @validate()
+
   validate: ->
     editor = @core.editor()
     if not editor[@command]?
