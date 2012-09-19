@@ -18,7 +18,9 @@
     <script src="javascripts/Jencil.0.1.0.min.js"></script>
     <script>
         $(function(){
-            $("textarea#demo").jencil();
+            $("textarea#demo").jencil({
+                defaultVolume2: 0.7
+            });
         });
     </script>
   </head>
@@ -46,10 +48,15 @@
 
         <p>The features below are available</p>
         <ul>
+            <li>Undo/Redo</li>
             <li>Resizable</li>
-            <li>Scalable preview panel</li>
+            <li>Scalable quick viewer panel</li>
+            <li>Scalable help panel</li>
             <li>Fullscreen mode</li>
             <li>Keyboard shortcut</li>
+            <li>Tab indentation</li>
+            <li>Autoindent</li>
+            <li>Smart insert (p, li)</li>
         </ul>
 
       </section>
@@ -59,6 +66,6 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
