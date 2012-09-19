@@ -12,23 +12,6 @@ Originator = (function() {
     throw new Error("NotImplementedError");
   };
 
-  /* DEBUG---
-  */
-
-
-  Originator.validate = function(instance) {
-    if (!(instance.createMemento != null)) {
-      throw new Error("Originator instance need `createMemento` method");
-    }
-    if (!(instance.setMemento != null)) {
-      throw new Error("Originator instance need `setMemento` method");
-    }
-  };
-
-  /* ---DEBUG
-  */
-
-
   return Originator;
 
 })();
@@ -43,13 +26,6 @@ Caretaker = (function() {
 
   Caretaker.prototype.originator = function(originator) {
     if (originator != null) {
-      /* DEBUG---
-      */
-
-      Originator.validate(originator);
-      /* ---DEBUG
-      */
-
       this._originator = originator;
       return this;
     }

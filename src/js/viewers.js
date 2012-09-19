@@ -28,6 +28,7 @@ TemplateViewer = (function(_super) {
 
   function TemplateViewer(core) {
     TemplateViewer.__super__.constructor.call(this, core);
+    this.templatePath = this.core.options.viewerTemplatePath;
     this.element.css({
       'position': 'relative'
     });

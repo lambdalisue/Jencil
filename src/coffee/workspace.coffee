@@ -1,7 +1,9 @@
 class Wrapper extends Panel
-  constructor: (core) ->
+  constructor: (core, width, height) ->
     super core
     @element.addClass 'jencil wrapper'
+    @element.width width
+    @element.height height
     @workspace = new Workspace(@core)
     @workspace.element.appendTo @element
 
@@ -35,7 +37,7 @@ class Workspace extends Panel
   constructor: (core) ->
     super core
     @element.addClass 'workspace'
-    @profile(new core.options.profile)
+    @profile(new core.options.profile(@core.options))
 
   profile: (profile) ->
     if profile?

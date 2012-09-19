@@ -16,26 +16,32 @@ SRC_FILES           = [
   'utils/evolution',
   'utils/curtain',
   'utils/animation',
+  'utils/autoindent',
   'core',
   'widgets',
   'splitter',
   'editors',
   'viewers',
+  'helpers',
   'buttons',
   'workspace',
   'mainpanels',
   'fullscreen',
-  'filetypes/html',
-  'filetypes/markdown',
+  'types/html/editor',
+  'types/html/viewer',
+  'types/html/helper',
+  'types/html/profile',
 ]
 LIB_FILES           = [
   'shortcut',
-  'jquery.tabby',
+  'jquery.textarea',
   'i18next-1.5.6',
 ]
 TEST_FILES          = []
 STYLE_SRC_FILES     = [
   'layout',
+  'button',
+  'helper',
   'splitter',
 ]
 STYLE_LIB_FILES     = []

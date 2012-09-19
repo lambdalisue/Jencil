@@ -5,14 +5,6 @@ class Originator
   setMemento: (memento) ->
     throw new Error("NotImplementedError")
 
-  ### DEBUG--- ###
-  @validate: (instance) ->
-    if not instance.createMemento?
-      throw new Error("Originator instance need `createMemento` method")
-    if not instance.setMemento?
-      throw new Error("Originator instance need `setMemento` method")
-  ### ---DEBUG ###
-
 
 class Caretaker
   constructor: (originator) ->
@@ -22,10 +14,6 @@ class Caretaker
 
   originator: (originator) ->
     if originator?
-      ### DEBUG--- ###
-      # validate the originator instance
-      Originator.validate(originator)
-      ### ---DEBUG ###
       @_originator = originator
       return @
     return originator

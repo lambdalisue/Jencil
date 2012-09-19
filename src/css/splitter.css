@@ -1,4 +1,21 @@
-.hello {
-  background: red;
-  color: blue;
+.jencil .workspace .panel {
+  position: relative;
+}
+.jencil .workspace .panel .splitter {
+  position: absolute;
+  cursor: move;
+}
+.jencil .workspace .panel .splitter.vertical {
+  top: 0;
+  width: 7px;
+  height: 100%;
+  cursor: col-resize;
+  background: url(img/splitterv.png) 50% 50% no-repeat;
+}
+.jencil .workspace .panel .splitter.horizontal {
+  left: 0;
+  width: 100%;
+  height: 7px;
+  cursor: row-resize;
+  background: url(img/splitterh.png) 50% 50% no-repeat;
 }

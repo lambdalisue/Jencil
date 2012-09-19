@@ -1,148 +1,30 @@
 @import "mixin";
 
-.panelMixin {
-    .border-radius(5px);
-    padding: 10px;
-    border: 1px solid #e4e4e4;
-    background: #f9f9f9;
-}
-
 .jencil {
     .panelMixin;
-    width: 640px;
-    height: 320px;
 
-    .workspace {
-        .toolbar, .statusbar {
-            width: 100%;
-            height: auto;
+    .workspace .mainPanel {
+        padding: 5px 0;
+        background: #f9f9f9;
 
-            &:before, &:after {
-                content: "";
-                display: block;
-                clear: both;
+        .panel{
+            &.left {
+                margin-right: 5px;
             }
-
-            .separator, .button {
-                display: block;
-                float: left;
+            &.right {
+                margin-left: 5px;
             }
-
-            .separator {
-                height: 14px;
-                margin: 2px 0;
-                margin-left: 6px;
-                padding-right: 6px;
-                border-left: 1px solid #e4e4e4;
-                text-indent: -10000px;
+            &.top {
+                margin-bottom: 5px;
             }
-
-            .button {
-                margin: 0 1px;
-                padding: 2px;
-                outline: none;
-                border: 1px solid #f9f9f9;
-                cursor: pointer;
-                .border-radius(5px);
-
-                &:hover {
-                    background: #eaeaea;
-                }
-
-                span {
-                    display: block;
-                    width: 16px;
-                    height: 16px;
-                    text-indent: -10000px;
-                    background-image: url(img/sprite.png) !important;
-                    background: url(img/sprite.gif) no-repeat;
-                }
+            &.bottom {
+                margin-top: 10px;
             }
-        }
-        .statusbar {
-            .separator, .button {
-                display: block;
-                float: right;
-            }
-        }
-
-        .mainPanel {
-            padding: 5px 0;
-            background: #f9f9f9;
-
-            .panel{
-                &.left {
-                    margin-right: 5px;
-                }
-                &.right {
-                    margin-left: 5px;
-                }
-                &.top {
-                    margin-bottom: 5px;
-                }
-                &.bottom {
-                    margin-top: 10px;
-                }
-                &.editor, &.viewer {
-                    .panelMixin;
-                    background: #ffffff;
-                }
-            }
-
-        }
-        .panel.multiple {
-            position: relative;
-            .splitter {
-                position: absolute;
-                cursor: move;
-                &.vertical {
-                    top: 0;
-                    width: 7px;
-                    height: 100%;
-                    cursor: col-resize;
-                    background: url(img/splitterv.png) 50% 50% no-repeat;
-                }
-                &.horizontal {
-                    left: 0;
-                    width: 100%;
-                    height: 7px;
-                    cursor: row-resize;
-                    background: url(img/splitterh.png) 50% 50% no-repeat;
-                }
+            &.editor, &.viewer {
+                .panelMixin;
+                background: #ffffff;
             }
         }
     }
 }
 
-.jencil .workspace .button {
-    &.hide span,
-    &.disabled span {
-        opacity: 0.5;
-    }
-    &.undo span { background-position: -0px 0px; }
-    &.redo span { background-position: -16px 0px; }
-    &.h1 span { background-position: -32px 0px; }
-    &.h2 span { background-position: -48px 0px; }
-    &.h3 span { background-position: -64px 0px; }
-    &.h4 span { background-position: -80px 0px; }
-    &.h5 span { background-position: -96px 0px; }
-    &.h6 span { background-position: -112px 0px; }
-    &.bold span { background-position: -128px 0px; }
-    &.italic span { background-position: -144px 0px; }
-    &.underline span { background-position: -160px 0px; }
-    &.strike span { background-position: -176px 0px; }
-    &.subscript span { background-position: -192px 0px; }
-    &.superscript span { background-position: -208px 0px; }
-    &.anchorLink span { background-position: -224px 0px; }
-    &.image span { background-position: -240px 0px; }
-    &.unorderedList span { background-position: -256px 0px; }
-    &.orderedList span { background-position: -272px 0px; }
-    &.pre span { background-position: -288px 0px; }
-    &.code span { background-position: -304px 0px; }
-    &.quote span { background-position: -320px 0px; }
-    &.blockquote span { background-position: -336px 0px; }
-    &.viewer span { background-position: -352px 0px; }
-    &.helper span { background-position: -368px 0px; }
-    &.fullscreen span { background-position: -384px 0px; }
-    &.fullscreen.hide span { background-position: -400px 0px; }
-}

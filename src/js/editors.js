@@ -87,39 +87,21 @@ TextEditor = (function(_super) {
       'resize': 'none'
     });
     this.textarea = evolute(this.textarea);
-    this.textarea.selection = new Selection(window.document, this.textarea.get(0));
+    this.textarea.on('keydown', function(e) {
+      if (e.which !== 13) {
+        return;
+      }
+      return _this.core.caretaker.save();
+    });
     if (($.fn.tabby != null) && this.core.options.enableTabIndent) {
       this.textarea.tabby({
-        'tabString': '    '
+        'tabString': this.core.options.tabString
       });
     }
-    this.textarea.autoindent = function(e) {
-      var indent, insert, line, _base, _base1;
-      if (e.which === 13) {
-        _this.core.caretaker.save();
-        line = _this.textarea.selection.line();
-        if (typeof (_base = _this.textarea.autoindent).preCallback === "function") {
-          _base.preCallback(e, line);
-        }
-        indent = line.replace(/^(\s*).*$/, "$1");
-        insert = "\n" + indent;
-        _this.textarea.selection.insertAfter(insert, false);
-        if (typeof (_base1 = _this.textarea.autoindent).postCallback === "function") {
-          _base1.postCallback(e, line, indent, insert);
-        }
-        _this.textarea.focus();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        e.preventDefault();
-        _this.change();
-        return false;
-      }
-    };
-    this.textarea.on('keydown', function(e) {
-      if (_this.core.options.enableAutoIndent) {
-        return _this.textarea.autoindent(e);
-      }
-    });
+    this.textarea = autoIndentable(this.textarea);
+    if (!this.core.options.enableAutoIndent) {
+      this.textarea.autoIndent.disable();
+    }
     this.textarea.on('keypress keyup click blur', function() {
       return _this.change();
     });

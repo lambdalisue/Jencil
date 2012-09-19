@@ -3,22 +3,35 @@ class Profile
   editorClass: null
   viewerClass: null
   helperClass: null
-  buttons: null
+  toolbarButtons: null
+  statusbarButtons: null
+  defaultVolume: null
+  defaultVolume2: null
+
+  constructor: (@options) -> @
 
 class @Jencil
   constructor: (textarea, options) ->
     @options = jQuery.extend({
-      'profile': Jencil.filetypes.html.HtmlProfile,
+      'profile': Jencil.profiles.HtmlProfile
       'resizable': true,
       'enableTabIndent': true,
       'enableAutoIndent': true,
+      'tabString': '    ',
+      'defaultVolume': null,
+      'defaultVolume2': null,
+      'width': 640,
+      'height': 620,
+      'editorTemplatePath': null,   # Not used yet
+      'viewerTemplatePath': null,
+      'helperTemplatePath': null,
     }, options)
     @element = textarea.hide()
 
     @caretaker = new Caretaker()
     @caretaker.originator = => @editor()
 
-    @wrapper = new Wrapper(@)
+    @wrapper = new Wrapper(@, @options.width, @options.height)
     @fullscreen = new Fullscreen(@)
 
     @element.after(@wrapper.element).after(@fullscreen.element)
@@ -35,5 +48,6 @@ $.fn.jencil = (options) -> new Jencil($(this), options)
 
 namespace 'Jencil.profiles', (exports) ->
   exports.Profile = Profile
+
 namespace 'Jencil.utils', (exports) ->
   exports.namespace = namespace

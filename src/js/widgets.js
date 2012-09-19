@@ -92,29 +92,37 @@ MultiplePanel = (function(_super) {
   };
 
   MultiplePanel.prototype._togglePanel = function(to, callbackOn, callbackOff) {
-    var callbackDone, end, volume,
+    var callbackDone, end, volume, _callbackDone,
       _this = this;
+    if (this._animating) {
+      return;
+    }
     volume = this.splitter.volume();
     callbackDone = null;
     if ((0 < volume && volume < 1)) {
       end = to;
       this.splitter._previousVolume = volume;
-      callbackDone = callbackOff;
+      _callbackDone = callbackOff;
     } else {
       end = this.splitter._previousVolume || this.splitter.defaultVolume;
       if (end === to) {
         end = 0.5;
       }
-      callbackDone = callbackOn;
+      _callbackDone = callbackOn;
     }
+    this._animating = true;
+    callbackDone = function() {
+      _this._animating = false;
+      return typeof _callbackDone === "function" ? _callbackDone() : void 0;
+    };
     return animate({
-      done: callbackDone,
       start: volume,
       end: end,
       duration: 500,
-      callback: function(value, epoch) {
+      callbackEach: function(value, epoch) {
         return _this.splitter.volume(value);
-      }
+      },
+      callbackDone: callbackDone
     });
   };
 
