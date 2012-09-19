@@ -1,5 +1,5 @@
 (function() {
-  var ActionButton, AjaxViewer, Bar, BaseEditor, BaseViewer, Button, Caretaker, CommandButton, DimainPanel, Fullscreen, FullscreenButton, GithubFlavorMarkdownViewer, HelperButton, HorizontalPanel, HorizontalSplitter, HtmlEditor, HtmlHelper, HtmlProfile, HtmlViewer, MarkdownEditor, MarkdownHelper, MarkdownProfile, MarkdownViewer, MonomainPanel, MultiplePanel, Originator, Panel, Profile, RedoButton, Selection, Separator, Splitter, Statusbar, TemplateViewer, TextEditor, Toolbar, TrimainPanel, UndoButton, VerticalPanel, VerticalSplitter, ViewerButton, Widget, Workspace, Wrapper, animate, buttonFactory, curtainFactory, evolute,
+  var ActionButton, AjaxViewer, Bar, BaseEditor, BaseHelper, BaseViewer, Button, Caretaker, CommandButton, DimainPanel, Fullscreen, FullscreenButton, HTML_HELPER_HTML, HelperButton, HorizontalPanel, HorizontalSplitter, HtmlEditor, HtmlHelper, HtmlProfile, HtmlViewer, MonomainPanel, MultiplePanel, Originator, Panel, Profile, RedoButton, Selection, Separator, Splitter, Statusbar, TemplateHelper, TemplateViewer, TextEditor, Toolbar, TrimainPanel, UndoButton, VerticalPanel, VerticalSplitter, ViewerButton, Widget, Workspace, Wrapper, animate, autoIndentable, autoIndentableHtml, buttonFactory, curtainFactory, evolute, headerMarkup,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -30,23 +30,6 @@
       throw new Error("NotImplementedError");
     };
 
-    /* DEBUG---
-    */
-
-
-    Originator.validate = function(instance) {
-      if (!(instance.createMemento != null)) {
-        throw new Error("Originator instance need `createMemento` method");
-      }
-      if (!(instance.setMemento != null)) {
-        throw new Error("Originator instance need `setMemento` method");
-      }
-    };
-
-    /* ---DEBUG
-    */
-
-
     return Originator;
 
   })();
@@ -61,13 +44,6 @@
 
     Caretaker.prototype.originator = function(originator) {
       if (originator != null) {
-        /* DEBUG---
-        */
-
-        Originator.validate(originator);
-        /* ---DEBUG
-        */
-
         this._originator = originator;
         return this;
       }
@@ -554,57 +530,161 @@
     return curtain;
   };
 
-  animate = function(options) {
-    /*
-      Animate using easing function
-    */
+  /*
+  animation
+  
+  Animate value via easing function
+  
+  The following library is required to use this library
+  
+  - jQuery
+  
+  Author:   lambdalisue (lambdalisue@hashnote.net)
+  License:  MIT License
+  
+  Copyright(C) 2012 lambdalisue, hasnote.net allright reserved
+  */
 
-    var difference, startTime, step;
-    options = $.extend({
+
+  animate = (function() {
+    var defaultOptions, now;
+    now = function() {
+      return (new Date()).getTime();
+    };
+    defaultOptions = {
       start: 0,
       end: 100,
       duration: 1000,
-      callback: null,
-      done: null,
-      easing: null
-    }, options);
-    startTime = animate.now();
-    difference = options.end - options.start;
-    options.easing = options.easing || animate.easings["default"];
-    step = function() {
-      var epoch, x;
-      epoch = animate.now() - startTime;
-      x = options.easing(epoch, 0, 1, options.duration);
-      x = x * difference + options.start;
-      options.callback(x, epoch);
-      if (epoch < options.duration) {
-        return setTimeout(step, 1);
-      } else {
-        options.callback(options.end, options.duration);
-        return typeof options.done === "function" ? options.done() : void 0;
-      }
+      callbackEach: null,
+      callbackDone: null,
+      easing: jQuery.easing.swing
     };
-    step();
-    return null;
-  };
+    return function(options) {
+      var difference, startTime, step;
+      options = jQuery.extend(defaultOptions, options);
+      startTime = now();
+      difference = options.end - options.start;
+      step = function() {
+        var epoch, x;
+        epoch = now() - startTime;
+        x = options.easing(epoch / options.duration, epoch, 0, 1, options.duration);
+        x = x * difference + options.start;
+        options.callbackEach(x, epoch);
+        if (epoch < options.duration) {
+          return setTimeout(step, 1);
+        } else {
+          options.callbackEach(options.end, options.duration);
+          return typeof options.callbackDone === "function" ? options.callbackDone() : void 0;
+        }
+      };
+      return step();
+    };
+  })();
 
-  animate.now = function() {
-    return (new Date()).getTime();
-  };
+  /*
+  autoindent
+  
+  Enable auto indentation feature in textarea
+  It is suitable with jquery.tabby.js which enable tab indentation in textarea
+  
+  The following library is required to use this library
+  
+  - jQuery
+  - selection
+  
+  Note:
+    You should use this library as CoffeeScript that's why I didn't
+    add `autoIndentable` in window namespace
+  
+  Usage:
+  
+    textarea = $('textarea')
+    textarea = autoIndentable(textarea)
+  
+    # auto indent feature is enable at default.
+    # you can disable it with
+    textarea.autoIndent.disable()
+  
+    # and enable again with
+    textarea.autoIndent.enable()
+  
+    # and also, you can add some pre/post callback
+    # which is called pre/post step of adding newline
+    # and white spaces with
+    textarea.autoIndent.pre = (e, line) ->
+      # e = Event object of jQuery
+      # line = current line of caret exists
+      console.log "This function is called before newline adding"
+    textarea.autoIndent.post = (e, line, indent, insert) ->
+      # e = Event object of jQuery
+      # line = current line of caret exists
+      # indent = leading white spaces of current line
+      # insert = newline and indent which is added after the caret
+      console.log "This function is called after newline adding"
+  
+  Author:   lambdalisue (lambdalisue@hashnote.net)
+  License:  MIT License
+  
+  Copyright(C) 2012 lambdalisue, hasnote.net allright reserved
+  */
 
-  animate.easings = {
-    "default": function(t, start, end, duration) {
-      return jQuery.easing.swing(t / duration, t, start, end, duration);
-    }
-  };
 
-  if (typeof exports !== "undefined" && exports !== null) {
-    exports.animate = animate;
-  }
+  autoIndentable = (function() {
+    var autoIndent;
+    autoIndent = function(e) {
+      var indent, insert, line, _ref, _ref1;
+      if (e.which !== 13) {
+        return;
+      }
+      line = this.selection.line();
+      if ((_ref = this.autoIndent.pre) != null) {
+        _ref.call(this, e, line);
+      }
+      indent = line.replace(/^([\t\s]*).*$/, "$1");
+      insert = "\n" + indent;
+      this.selection.insertAfter(insert, false);
+      if ((_ref1 = this.autoIndent.post) != null) {
+        _ref1.call(this, e, line, indent, insert);
+      }
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      this.focus();
+      return false;
+    };
+    return function(textarea, pre, post) {
+      if (!(textarea instanceof jQuery)) {
+        textarea = $(textarea);
+      }
+      if (!(textarea.selection != null)) {
+        textarea.selection = new Selection(document, textarea.get(0));
+      }
+      textarea.autoIndent = function(e) {
+        return autoIndent.call(textarea, e);
+      };
+      textarea.autoIndent.enable = function() {
+        textarea.on('keydown', textarea.autoIndent);
+        return textarea;
+      };
+      textarea.autoIndent.disable = function() {
+        textarea.off('keydown', textarea.autoIndent);
+        return textarea;
+      };
+      if (pre != null) {
+        textarea.autoIndent.pre = function(e, line) {
+          return pre.call(textarea, e, line);
+        };
+      }
+      if (post != null) {
+        textarea.autoIndent.post = function(e, line, indent, insert) {
+          return post.call(textarea, e, line, indent, insert);
+        };
+      }
+      return textarea.autoIndent.enable();
+    };
+  })();
 
   Profile = (function() {
-
-    function Profile() {}
 
     Profile.prototype.mainPanelClass = null;
 
@@ -614,7 +694,19 @@
 
     Profile.prototype.helperClass = null;
 
-    Profile.prototype.buttons = null;
+    Profile.prototype.toolbarButtons = null;
+
+    Profile.prototype.statusbarButtons = null;
+
+    Profile.prototype.defaultVolume = null;
+
+    Profile.prototype.defaultVolume2 = null;
+
+    function Profile(options) {
+      this.options = options;
+      this;
+
+    }
 
     return Profile;
 
@@ -625,17 +717,25 @@
     function Jencil(textarea, options) {
       var _this = this;
       this.options = jQuery.extend({
-        'profile': Jencil.filetypes.html.HtmlProfile,
+        'profile': Jencil.profiles.HtmlProfile,
         'resizable': true,
         'enableTabIndent': true,
-        'enableAutoIndent': true
+        'enableAutoIndent': true,
+        'tabString': '    ',
+        'defaultVolume': null,
+        'defaultVolume2': null,
+        'width': 640,
+        'height': 620,
+        'editorTemplatePath': null,
+        'viewerTemplatePath': null,
+        'helperTemplatePath': null
       }, options);
       this.element = textarea.hide();
       this.caretaker = new Caretaker();
       this.caretaker.originator = function() {
         return _this.editor();
       };
-      this.wrapper = new Wrapper(this);
+      this.wrapper = new Wrapper(this, this.options.width, this.options.height);
       this.fullscreen = new Fullscreen(this);
       this.element.after(this.wrapper.element).after(this.fullscreen.element);
       this.wrapper.init();
@@ -761,29 +861,37 @@
     };
 
     MultiplePanel.prototype._togglePanel = function(to, callbackOn, callbackOff) {
-      var callbackDone, end, volume,
+      var callbackDone, end, volume, _callbackDone,
         _this = this;
+      if (this._animating) {
+        return;
+      }
       volume = this.splitter.volume();
       callbackDone = null;
       if ((0 < volume && volume < 1)) {
         end = to;
         this.splitter._previousVolume = volume;
-        callbackDone = callbackOff;
+        _callbackDone = callbackOff;
       } else {
         end = this.splitter._previousVolume || this.splitter.defaultVolume;
         if (end === to) {
           end = 0.5;
         }
-        callbackDone = callbackOn;
+        _callbackDone = callbackOn;
       }
+      this._animating = true;
+      callbackDone = function() {
+        _this._animating = false;
+        return typeof _callbackDone === "function" ? _callbackDone() : void 0;
+      };
       return animate({
-        done: callbackDone,
         start: volume,
         end: end,
         duration: 500,
-        callback: function(value, epoch) {
+        callbackEach: function(value, epoch) {
           return _this.splitter.volume(value);
-        }
+        },
+        callbackDone: callbackDone
       });
     };
 
@@ -1271,39 +1379,21 @@
         'resize': 'none'
       });
       this.textarea = evolute(this.textarea);
-      this.textarea.selection = new Selection(window.document, this.textarea.get(0));
+      this.textarea.on('keydown', function(e) {
+        if (e.which !== 13) {
+          return;
+        }
+        return _this.core.caretaker.save();
+      });
       if (($.fn.tabby != null) && this.core.options.enableTabIndent) {
         this.textarea.tabby({
-          'tabString': '    '
+          'tabString': this.core.options.tabString
         });
       }
-      this.textarea.autoindent = function(e) {
-        var indent, insert, line, _base, _base1;
-        if (e.which === 13) {
-          _this.core.caretaker.save();
-          line = _this.textarea.selection.line();
-          if (typeof (_base = _this.textarea.autoindent).preCallback === "function") {
-            _base.preCallback(e, line);
-          }
-          indent = line.replace(/^(\s*).*$/, "$1");
-          insert = "\n" + indent;
-          _this.textarea.selection.insertAfter(insert, false);
-          if (typeof (_base1 = _this.textarea.autoindent).postCallback === "function") {
-            _base1.postCallback(e, line, indent, insert);
-          }
-          _this.textarea.focus();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          e.preventDefault();
-          _this.change();
-          return false;
-        }
-      };
-      this.textarea.on('keydown', function(e) {
-        if (_this.core.options.enableAutoIndent) {
-          return _this.textarea.autoindent(e);
-        }
-      });
+      this.textarea = autoIndentable(this.textarea);
+      if (!this.core.options.enableAutoIndent) {
+        this.textarea.autoIndent.disable();
+      }
       this.textarea.on('keypress keyup click blur', function() {
         return _this.change();
       });
@@ -1426,6 +1516,7 @@
 
     function TemplateViewer(core) {
       TemplateViewer.__super__.constructor.call(this, core);
+      this.templatePath = this.core.options.viewerTemplatePath;
       this.element.css({
         'position': 'relative'
       });
@@ -1551,6 +1642,106 @@
     exports.BaseViewer = BaseViewer;
     exports.TemplateViewer = TemplateViewer;
     return exports.AjaxViewer = AjaxViewer;
+  });
+
+  BaseHelper = (function(_super) {
+
+    __extends(BaseHelper, _super);
+
+    function BaseHelper(core, selector, context) {
+      if (selector == null) {
+        selector = '<div>';
+      }
+      BaseHelper.__super__.constructor.call(this, core, selector, context);
+      this.element.addClass('helper');
+    }
+
+    return BaseHelper;
+
+  })(Panel);
+
+  TemplateHelper = (function(_super) {
+
+    __extends(TemplateHelper, _super);
+
+    function TemplateHelper(core) {
+      TemplateHelper.__super__.constructor.call(this, core);
+      this.templatePath = this.core.options.helperTemplatePath;
+      this.element.css({
+        'position': 'relative'
+      });
+      this.curtain = curtainFactory(this.element);
+      this.iframe = $('<iframe>').appendTo(this.element).css({
+        margin: '0',
+        padding: '0',
+        border: 'none',
+        outline: 'none',
+        resize: 'none',
+        width: '100%',
+        height: '100%',
+        overflow: 'visible'
+      });
+      this.iframe.attr('frameborder', 0);
+      this.iframe = evolute(this.iframe);
+      this.iframe.init = function() {
+        var iframe;
+        iframe = this.get(0);
+        if (iframe.contentDocument != null) {
+          this.document = iframe.contentDocument;
+        } else {
+          this.document = iframe.contentWindow.document;
+        }
+        return this.document.write('<body></body>');
+      };
+      this.iframe.write = function(value) {
+        var scrollTop;
+        if (this.document != null) {
+          try {
+            scrollTop = this.document.documentElement.scrollTop;
+          } catch (e) {
+            scrollTop = 0;
+          }
+          this.document.open();
+          this.document.write(value);
+          this.document.close();
+          this.document.documentElement.scrollTop = scrollTop;
+          this.width(this.document.scrollLeft);
+          this.height(this.document.scrollTop);
+          return true;
+        }
+        return false;
+      };
+      this.iframe.loadTemplate = function(templatePath) {
+        var _this = this;
+        return $.ajax({
+          url: templatePath,
+          success: function(data) {
+            return _this.write(data);
+          }
+        });
+      };
+    }
+
+    TemplateHelper.prototype.init = function() {
+      this.iframe.init();
+      if (this.templatePath != null) {
+        return this.iframe.loadTemplate(this.templatePath);
+      }
+    };
+
+    TemplateHelper.prototype.adjust = function() {
+      this.iframe.outerWidth(this.element.width());
+      this.iframe.outerHeight(this.element.height());
+      return this;
+    };
+
+    return TemplateHelper;
+
+  })(BaseHelper);
+
+  namespace('Jencil.ui.widgets.helpers', function(exports) {
+    exports.BaseHelper = BaseHelper;
+    return exports.TemplateHelper = TemplateHelper;
   });
 
   Separator = (function(_super) {
@@ -1796,7 +1987,7 @@
       callback = function(e) {
         return _this.core.viewer().toggle();
       };
-      ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Toggle viewer', 'Viewer', callback);
+      ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Toggle viewer', 'Viewer', callback, 'Ctrl+Q');
     }
 
     ViewerButton.prototype.validate = function() {
@@ -1838,7 +2029,7 @@
       callback = function(e) {
         return _this.core.helper().toggle();
       };
-      HelperButton.__super__.constructor.call(this, core, 'helper', 'Toggle helper', 'Helper', callback);
+      HelperButton.__super__.constructor.call(this, core, 'helper', 'Toggle helper', 'Helper', callback, 'Ctrl+H');
     }
 
     HelperButton.prototype.validate = function() {
@@ -1911,9 +2102,11 @@
 
     __extends(Wrapper, _super);
 
-    function Wrapper(core) {
+    function Wrapper(core, width, height) {
       Wrapper.__super__.constructor.call(this, core);
       this.element.addClass('jencil wrapper');
+      this.element.width(width);
+      this.element.height(height);
       this.workspace = new Workspace(this.core);
       this.workspace.element.appendTo(this.element);
     }
@@ -1997,7 +2190,7 @@
     function Workspace(core) {
       Workspace.__super__.constructor.call(this, core);
       this.element.addClass('workspace');
-      this.profile(new core.options.profile);
+      this.profile(new core.options.profile(this.core.options));
     }
 
     Workspace.prototype.profile = function(profile) {
@@ -2270,64 +2463,73 @@
 
   })(Panel);
 
-  HtmlEditor = (function(_super) {
-
-    __extends(HtmlEditor, _super);
-
-    function HtmlEditor(core) {
-      var singleLineTags, x,
-        _this = this;
-      HtmlEditor.__super__.constructor.call(this, core);
-      singleLineTags = (function() {
-        var _i, _len, _ref, _results;
-        _ref = ['p', 'li'];
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          _results.push(["<" + x + ">", "</" + x + ">", new RegExp("^\s*<" + x + ">"), new RegExp("</" + x + ">\s*$")]);
-        }
-        return _results;
-      })();
-      this.textarea.autoindent.preCallback = function(e, line) {
-        var lineCaret, pattern, _i, _len;
-        if (e.shiftKey) {
+  autoIndentableHtml = (function() {
+    var PATTERNS, post, pre, x;
+    PATTERNS = (function() {
+      var _i, _len, _ref, _results;
+      _ref = ['p', 'li'];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        x = _ref[_i];
+        _results.push([x, new RegExp("^[\s\t]*<" + x + ">"), new RegExp("</" + x + ">[\s\t]*$")]);
+      }
+      return _results;
+    })();
+    pre = function(e, line) {
+      var lineCaret, pattern, _i, _len;
+      console.log("@", this);
+      if (e.shiftKey) {
+        return;
+      }
+      for (_i = 0, _len = PATTERNS.length; _i < _len; _i++) {
+        pattern = PATTERNS[_i];
+        if (pattern[1].test(line) || pattern[2].test(line)) {
+          lineCaret = this.selection._getLineCaret();
+          this.selection.caret(lineCaret[1]);
           return;
         }
-        for (_i = 0, _len = singleLineTags.length; _i < _len; _i++) {
-          pattern = singleLineTags[_i];
-          if (pattern[3].test(line)) {
-            lineCaret = _this.textarea.selection._getLineCaret();
-            _this.textarea.selection.caret(lineCaret[1]);
-            return;
-          }
-        }
-      };
-      this.textarea.autoindent.postCallback = function(e, line) {
-        var pattern, _i, _len;
-        if (e.shiftKey) {
+      }
+    };
+    post = function(e, line, indent, insert) {
+      var pattern, _i, _len;
+      if (e.shiftKey) {
+        return;
+      }
+      for (_i = 0, _len = PATTERNS.length; _i < _len; _i++) {
+        pattern = PATTERNS[_i];
+        if (pattern[2].test(line)) {
+          x = pattern[0];
+          this.selection.insertAfter("<" + x + "></" + x + ">", false);
+          this.selection.caretOffset(-(3 + x.length));
           return;
         }
-        for (_i = 0, _len = singleLineTags.length; _i < _len; _i++) {
-          pattern = singleLineTags[_i];
-          if (pattern[3].test(line)) {
-            _this.textarea.selection.insertAfter("" + pattern[0] + pattern[1], false);
-            _this.textarea.selection.caretOffset(-pattern[1].length);
-            return;
-          }
-        }
+      }
+    };
+    return function(textarea) {
+      if (!(textarea.autoIndent != null)) {
+        textarea = autoIndentable(textarea);
+      }
+      textarea.autoIndent.pre = function(e, line) {
+        return pre.call(textarea, e, line);
       };
-    }
+      textarea.autoIndent.post = function(e, line, indent, insert) {
+        return post.call(textarea, e, line, indent, insert);
+      };
+      return textarea;
+    };
+  })();
 
-    HtmlEditor._headerPattern = new RegExp("^<h([1-6])>(.*)</h[1-6]>\n?$");
-
-    HtmlEditor.prototype._header = function(n) {
+  headerMarkup = (function() {
+    var PATTERN;
+    PATTERN = new RegExp("^<h([1-6])>(.*)</h[1-6]>\n?$");
+    return function(n) {
       var caret, replacement, text;
       caret = this.textarea.selection.caret();
       if (caret[0] === caret[1]) {
         this.textarea.selection.selectWholeCurrentLine();
       }
       text = this.selection();
-      if (HtmlEditor._headerPattern.test(text)) {
+      if (PATTERN.test(text)) {
         if (RegExp.$1 === n.toString()) {
           replacement = RegExp.$2;
         } else {
@@ -2338,29 +2540,39 @@
         return this.enclose("<h" + n + ">", "</h" + n + ">\n");
       }
     };
+  })();
+
+  HtmlEditor = (function(_super) {
+
+    __extends(HtmlEditor, _super);
+
+    function HtmlEditor(core) {
+      HtmlEditor.__super__.constructor.call(this, core);
+      this.textarea = autoIndentableHtml(this.textarea);
+    }
 
     HtmlEditor.prototype.h1 = function() {
-      return this._header(1);
+      return headerMarkup.call(this, 1);
     };
 
     HtmlEditor.prototype.h2 = function() {
-      return this._header(2);
+      return headerMarkup.call(this, 2);
     };
 
     HtmlEditor.prototype.h3 = function() {
-      return this._header(3);
+      return headerMarkup.call(this, 3);
     };
 
     HtmlEditor.prototype.h4 = function() {
-      return this._header(4);
+      return headerMarkup.call(this, 4);
     };
 
     HtmlEditor.prototype.h5 = function() {
-      return this._header(5);
+      return headerMarkup.call(this, 5);
     };
 
     HtmlEditor.prototype.h6 = function() {
-      return this._header(6);
+      return headerMarkup.call(this, 6);
     };
 
     HtmlEditor.prototype.bold = function() {
@@ -2466,7 +2678,17 @@
 
   })(Jencil.ui.widgets.editors.TextEditor);
 
+  Jencil.utils.namespace('Jencil.ui.widgets.editors', function(exports) {
+    return exports.HtmlEditor = HtmlEditor;
+  });
+
   HtmlViewer = Jencil.ui.widgets.viewers.TemplateViewer;
+
+  Jencil.utils.namespace('Jencil.ui.widgets.viewers', function(exports) {
+    return exports.HtmlViewer = HtmlViewer;
+  });
+
+  HTML_HELPER_HTML = "<h1>Keyboard shortcut</h1>\n<p><span class=\"key\">Ctrl+Z</span>Undo<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>Redo<p>\n<p><span class=\"key\">Ctrl+B</span>Make selected text property as <b>Bold</b><p>\n<p><span class=\"key\">Ctrl+I</span>Make selected text property as <i>Italic</i><p>\n<p><span class=\"key\">Ctrl+U</span>Underline selected text like <u>Underline</u><p>\n<p><span class=\"key\">Ctrl+F</span>Toggle fullscreen mode<p>\n<p><span class=\"key\">Ctrl+Q</span>Toggle quick viewer panel<p>\n<p><span class=\"key\">Ctrl+H</span>Toggle help panel<p>";
 
   HtmlHelper = (function(_super) {
 
@@ -2474,24 +2696,28 @@
 
     function HtmlHelper(core) {
       HtmlHelper.__super__.constructor.call(this, core);
-      this.element.addClass('helper');
+      this.element.html(HTML_HELPER_HTML);
     }
 
     return HtmlHelper;
 
-  })(Jencil.ui.widgets.panels.Panel);
+  })(Jencil.ui.widgets.helpers.BaseHelper);
+
+  namespace('Jencil.ui.widgets.helpers', function(exports) {
+    return exports.HtmlHelper = HtmlHelper;
+  });
 
   HtmlProfile = (function(_super) {
 
     __extends(HtmlProfile, _super);
 
-    function HtmlProfile() {
+    function HtmlProfile(options) {
       this.mainPanelClass = Jencil.ui.widgets.panels.TrimainPanel;
       this.editorClass = HtmlEditor;
       this.viewerClass = HtmlViewer;
       this.helperClass = HtmlHelper;
-      this.defaultVolume = 1;
-      this.defaultVolume2 = 1;
+      this.defaultVolume = options.defaultVolume || 1;
+      this.defaultVolume2 = options.defaultVolume2 || 1;
       this.toolbarButtons = ['Undo', 'Redo', 'Separator', ['h1', 'H1'], ['h2', 'H2'], ['h3', 'H3'], ['h4', 'H4'], ['h5', 'H5'], ['h6', 'H6'], 'Separator', ['bold', 'Bold', 'Ctrl+B'], ['italic', 'Italic', 'Ctrl+I'], ['underline', 'Underline', 'Ctrl+U'], ['strike', 'Strikeout'], ['superscript', 'Superscript'], ['subscript', 'Subscript'], 'Separator', ['anchorLink', 'Anchor link'], ['image', 'Image'], ['unorderedList', 'Unordered list'], ['orderedList', 'Ordered list'], ['quote', 'Quote'], ['blockquote', 'Blockquote'], ['code', 'Code'], ['pre', 'Pre'], 'Separator', 'Fullscreen'];
       this.statusbarButtons = ['Viewer', 'Helper'];
     }
@@ -2500,193 +2726,8 @@
 
   })(Jencil.profiles.Profile);
 
-  Jencil.utils.namespace('Jencil.filetypes.html', function(exports) {
-    exports.HtmlEditor = HtmlEditor;
-    exports.HtmlViewer = HtmlViewer;
+  Jencil.utils.namespace('Jencil.profiles', function(exports) {
     return exports.HtmlProfile = HtmlProfile;
-  });
-
-  MarkdownViewer = (function(_super) {
-
-    __extends(MarkdownViewer, _super);
-
-    function MarkdownViewer(core) {
-      var config;
-      config = {
-        type: 'POST',
-        dataType: 'text',
-        data: function(value) {
-          return {
-            text: value,
-            mode: 'markdown'
-          };
-        },
-        url: 'https://api.github.com/markdown'
-      };
-      MarkdownViewer.__super__.constructor.call(this, core, config);
-    }
-
-    return MarkdownViewer;
-
-  })(AjaxViewer);
-
-  GithubFlavorMarkdownViewer = (function(_super) {
-
-    __extends(GithubFlavorMarkdownViewer, _super);
-
-    function GithubFlavorMarkdownViewer(core) {
-      var config;
-      config = {
-        type: 'POST',
-        dataType: 'text',
-        data: function(value) {
-          return {
-            text: value,
-            mode: 'gfm'
-          };
-        },
-        url: 'https://api.github.com/markdown'
-      };
-      GithubFlavorMarkdownViewer.__super__.constructor.call(this, core, config);
-    }
-
-    return GithubFlavorMarkdownViewer;
-
-  })(AjaxViewer);
-
-  MarkdownEditor = (function(_super) {
-
-    __extends(MarkdownEditor, _super);
-
-    function MarkdownEditor() {
-      return MarkdownEditor.__super__.constructor.apply(this, arguments);
-    }
-
-    MarkdownEditor.prototype.h1 = function() {
-      return this.insertBefore("# ");
-    };
-
-    MarkdownEditor.prototype.h2 = function() {
-      return this.insertBefore("## ");
-    };
-
-    MarkdownEditor.prototype.h3 = function() {
-      return this.insertBefore("### ");
-    };
-
-    MarkdownEditor.prototype.h4 = function() {
-      return this.insertBefore("#### ");
-    };
-
-    MarkdownEditor.prototype.h5 = function() {
-      return this.insertBefore("##### ");
-    };
-
-    MarkdownEditor.prototype.h6 = function() {
-      return this.insertBefore("###### ");
-    };
-
-    MarkdownEditor.prototype.bold = function() {
-      return this.enclose("**", "**");
-    };
-
-    MarkdownEditor.prototype.italic = function() {
-      return this.enclose("*", "*");
-    };
-
-    MarkdownEditor.prototype.anchor = function() {
-      var href, text;
-      text = this.selection();
-      if (!text) {
-        text = window.prompt("Please input a link text", "Here");
-      }
-      href = window.prompt("Please input a link url", "http://");
-      return this.selection("[" + text + "](" + href + ")");
-    };
-
-    MarkdownEditor.prototype.image = function() {
-      var alt, src;
-      src = window.prompt("Please input a image url", "http://");
-      alt = window.prompt("(Optional) Please input a alt message", "Image");
-      return this.selection("![" + alt + "](" + src + ")");
-    };
-
-    MarkdownEditor.prototype.unorderedList = function() {
-      var text, x;
-      text = this.selection();
-      text = (function() {
-        var _i, _len, _ref, _results;
-        _ref = text.split("\n");
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          _results.push("-   " + x);
-        }
-        return _results;
-      })();
-      text.unshift("");
-      text.push("");
-      return this.selection(text.join("\n"));
-    };
-
-    MarkdownEditor.prototype.orderedList = function() {
-      var i, text, x;
-      text = this.selection();
-      text = (function() {
-        var _i, _len, _ref, _results;
-        _ref = text.split("\n");
-        _results = [];
-        for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-          x = _ref[i];
-          _results.push("" + i + ". " + x);
-        }
-        return _results;
-      })();
-      text.unshift("");
-      text.push("");
-      return this.selection(text.join("\n"));
-    };
-
-    return MarkdownEditor;
-
-  })(HtmlEditor);
-
-  MarkdownHelper = (function(_super) {
-
-    __extends(MarkdownHelper, _super);
-
-    function MarkdownHelper(core) {
-      MarkdownHelper.__super__.constructor.call(this, core);
-      this.element.addClass('helper');
-    }
-
-    return MarkdownHelper;
-
-  })(Jencil.ui.widgets.panels.Panel);
-
-  MarkdownProfile = (function(_super) {
-
-    __extends(MarkdownProfile, _super);
-
-    function MarkdownProfile() {
-      this.mainPanelClass = Jencil.ui.widgets.panels.TrimainPanel;
-      this.editorClass = MarkdownEditor;
-      this.viewerClass = MarkdownViewer;
-      this.helperClass = MarkdownHelper;
-      this.defaultVolume = 1;
-      this.defaultVolume2 = 1;
-      this.toolbarButtons = ['Undo', 'Redo', 'Separator', ['h1', 'H1'], ['h2', 'H2'], ['h3', 'H3'], ['h4', 'H4'], ['h5', 'H5'], ['h6', 'H6'], 'Separator', ['bold', 'Bold', 'Ctrl+B'], ['italic', 'Italic', 'Ctrl+I'], 'Separator', ['anchor', 'Anchor link'], ['image', 'Image'], ['unorderedList', 'Unordered list'], ['orderedList', 'Ordered list'], 'Separator', 'Fullscreen'];
-      this.statusbarButtons = ['Viewer', 'Helper'];
-    }
-
-    return MarkdownProfile;
-
-  })(Jencil.profiles.Profile);
-
-  Jencil.utils.namespace('Jencil.filetypes.markdown', function(exports) {
-    exports.MarkdownEditor = MarkdownEditor;
-    exports.MarkdownViewer = MarkdownViewer;
-    return exports.MarkdownProfile = MarkdownProfile;
   });
 
 }).call(this);

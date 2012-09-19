@@ -1,35 +1,42 @@
-animate = (options) ->
-  ###
-  Animate using easing function
+###
+animation
 
-  ###
-  options = $.extend({
-    start: 0
-    end: 100
-    duration: 1000
-    callback: null
-    done: null
-    easing: null
-  }, options)
-  startTime = animate.now()
-  difference = options.end - options.start
-  options.easing = options.easing or animate.easings.default
-  step = ->
-    epoch = animate.now() - startTime
-    x = options.easing(epoch, 0, 1, options.duration)
-    x = x * difference + options.start
-    options.callback x, epoch
-    if epoch < options.duration
-      setTimeout(step, 1)
-    else
-      options.callback options.end, options.duration
-      options.done?()
-  step()
-  return null
-animate.now = -> (new Date()).getTime()
-animate.easings = {
-  default: (t, start, end, duration) ->
-    jQuery.easing.swing(t/duration, t, start, end, duration)
-}
+Animate value via easing function
 
-exports?.animate = animate
+The following library is required to use this library
+
+- jQuery
+
+Author:   lambdalisue (lambdalisue@hashnote.net)
+License:  MIT License
+
+Copyright(C) 2012 lambdalisue, hasnote.net allright reserved
+###
+animate = do ->
+  now = -> (new Date()).getTime()
+  defaultOptions =
+    start: 0, end: 100, duration: 1000
+    callbackEach: null
+    callbackDone: null
+    easing: jQuery.easing.swing
+  return (options) ->
+    options = jQuery.extend(defaultOptions, options)
+    # keep and calculate required variables
+    startTime = now()
+    difference = options.end - options.start
+    step = ->
+      # calculate x
+      epoch = now() - startTime
+      x = options.easing(epoch/options.duration, epoch, 0, 1, options.duration)
+      x = x * difference + options.start
+      # call callback
+      options.callbackEach x, epoch
+      # exit check
+      if epoch < options.duration
+        setTimeout(step, 1)
+      else
+        # call last callback and done
+        options.callbackEach options.end, options.duration
+        options.callbackDone?()
+    # start animation
+    step()

@@ -10,6 +10,7 @@ class BaseViewer extends Panel
 class TemplateViewer extends BaseViewer
   constructor: (core) ->
     super core
+    @templatePath = @core.options.viewerTemplatePath
     @element.css
       'position': 'relative'
     @curtain = curtainFactory(@element)

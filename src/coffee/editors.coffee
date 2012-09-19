@@ -45,32 +45,19 @@ class TextEditor extends BaseEditor
       'outline': 'none'
       'resize': 'none'
     @textarea = evolute(@textarea)
-    @textarea.selection = new Selection(window.document, @textarea.get(0))
-    @textarea.tabby({'tabString': '    '}) if $.fn.tabby? and @core.options.enableTabIndent
-    @textarea.autoindent = (e) =>
-      if e.which == 13
-        # store the snapshot
-        @core.caretaker.save()
-        # add newline with leading spaces
-        line = @textarea.selection.line()
-        # call preNewLineCallback
-        @textarea.autoindent.preCallback?(e, line)
-        # Add newline and leading white spaces
-        indent = line.replace(/^(\s*).*$/, "$1")
-        insert = "\n#{indent}"
-        @textarea.selection.insertAfter(insert, false)
-        # call postNewLineCallback()
-        @textarea.autoindent.postCallback?(e, line, indent, insert)
-        @textarea.focus()
-        # cancel bubbling
-        e.stopPropagation()
-        e.stopImmediatePropagation()
-        # stop default
-        e.preventDefault()
-        # call change event
-        @change()
-        return false
-    @textarea.on 'keydown', (e) => @textarea.autoindent(e) if @core.options.enableAutoIndent
+    # Store memento everytime when RETURN key is downed so user can undo
+    # This must be called before autoIndentable because autoIndent feature
+    # kill event bubbling
+    @textarea.on 'keydown', (e) =>
+      return if e.which isnt 13
+      @core.caretaker.save()
+    # Add tab feature
+    if $.fn.tabby? and @core.options.enableTabIndent
+      @textarea.tabby({'tabString': @core.options.tabString})
+    # Add auto indent feature (it will also add textarea.selection automatically)
+    @textarea = autoIndentable(@textarea)
+    @textarea.autoIndent.disable() if not @core.options.enableAutoIndent
+    # Call `change()` method everytime when the textarea is updated
     @textarea.on 'keypress keyup click blur', => @change()
 
   val: (value) ->

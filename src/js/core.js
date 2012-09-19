@@ -2,8 +2,6 @@ var Profile;
 
 Profile = (function() {
 
-  function Profile() {}
-
   Profile.prototype.mainPanelClass = null;
 
   Profile.prototype.editorClass = null;
@@ -12,7 +10,19 @@ Profile = (function() {
 
   Profile.prototype.helperClass = null;
 
-  Profile.prototype.buttons = null;
+  Profile.prototype.toolbarButtons = null;
+
+  Profile.prototype.statusbarButtons = null;
+
+  Profile.prototype.defaultVolume = null;
+
+  Profile.prototype.defaultVolume2 = null;
+
+  function Profile(options) {
+    this.options = options;
+    this;
+
+  }
 
   return Profile;
 
@@ -23,17 +33,25 @@ this.Jencil = (function() {
   function Jencil(textarea, options) {
     var _this = this;
     this.options = jQuery.extend({
-      'profile': Jencil.filetypes.html.HtmlProfile,
+      'profile': Jencil.profiles.HtmlProfile,
       'resizable': true,
       'enableTabIndent': true,
-      'enableAutoIndent': true
+      'enableAutoIndent': true,
+      'tabString': '    ',
+      'defaultVolume': null,
+      'defaultVolume2': null,
+      'width': 640,
+      'height': 620,
+      'editorTemplatePath': null,
+      'viewerTemplatePath': null,
+      'helperTemplatePath': null
     }, options);
     this.element = textarea.hide();
     this.caretaker = new Caretaker();
     this.caretaker.originator = function() {
       return _this.editor();
     };
-    this.wrapper = new Wrapper(this);
+    this.wrapper = new Wrapper(this, this.options.width, this.options.height);
     this.fullscreen = new Fullscreen(this);
     this.element.after(this.wrapper.element).after(this.fullscreen.element);
     this.wrapper.init();

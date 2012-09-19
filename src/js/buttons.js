@@ -245,7 +245,7 @@ ViewerButton = (function(_super) {
     callback = function(e) {
       return _this.core.viewer().toggle();
     };
-    ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Toggle viewer', 'Viewer', callback);
+    ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Toggle viewer', 'Viewer', callback, 'Ctrl+Q');
   }
 
   ViewerButton.prototype.validate = function() {
@@ -287,7 +287,7 @@ HelperButton = (function(_super) {
     callback = function(e) {
       return _this.core.helper().toggle();
     };
-    HelperButton.__super__.constructor.call(this, core, 'helper', 'Toggle helper', 'Helper', callback);
+    HelperButton.__super__.constructor.call(this, core, 'helper', 'Toggle helper', 'Helper', callback, 'Ctrl+H');
   }
 
   HelperButton.prototype.validate = function() {

@@ -6,9 +6,11 @@ Wrapper = (function(_super) {
 
   __extends(Wrapper, _super);
 
-  function Wrapper(core) {
+  function Wrapper(core, width, height) {
     Wrapper.__super__.constructor.call(this, core);
     this.element.addClass('jencil wrapper');
+    this.element.width(width);
+    this.element.height(height);
     this.workspace = new Workspace(this.core);
     this.workspace.element.appendTo(this.element);
   }
@@ -92,7 +94,7 @@ Workspace = (function(_super) {
   function Workspace(core) {
     Workspace.__super__.constructor.call(this, core);
     this.element.addClass('workspace');
-    this.profile(new core.options.profile);
+    this.profile(new core.options.profile(this.core.options));
   }
 
   Workspace.prototype.profile = function(profile) {

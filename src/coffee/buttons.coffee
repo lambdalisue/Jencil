@@ -116,7 +116,7 @@ class FullscreenButton extends ActionButton
   constructor: (core) ->
     callback = (e) =>
       @core.fullscreen.toggle()
-    super core, 'fullscreen', 'Toggle fullscreen', 'Fullscreen', callback, 'Ctrl+F'
+    super core, 'fullscreen', 'Toggle fullscreen', 'Fullscreen', callback, 'Ctrl+F' # Fullscreen
 
   init: ->
     check = =>
@@ -132,7 +132,7 @@ class ViewerButton extends ActionButton
   constructor: (core) ->
     callback = (e) =>
       @core.viewer().toggle()
-    super core, 'viewer', 'Toggle viewer', 'Viewer', callback
+    super core, 'viewer', 'Toggle viewer', 'Viewer', callback, 'Ctrl+Q' # Quick view
 
   validate: ->
     if not @core.viewer()
@@ -155,7 +155,7 @@ class HelperButton extends ActionButton
   constructor: (core) ->
     callback = (e) =>
       @core.helper().toggle()
-    super core, 'helper', 'Toggle helper', 'Helper', callback
+    super core, 'helper', 'Toggle helper', 'Helper', callback, 'Ctrl+H' # Help
 
   validate: ->
     if not @core.helper()
