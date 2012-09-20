@@ -7,6 +7,38 @@
  * 
  * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
  *
+ * This application include following Library inside
+ * 
+ * Tabby jQuery plugin version 0.12
+ * Ted Devito - http://teddevito.com/demos/textarea.html
+ * Copyright (c) 2009 Ted Devito
+ *
+ * shortcut.js
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Version : 2.01.B
+ * By Binny V A
+ * License : BSD
+ */
+/**
+ * #{NAME} #{VERSION}
+ *
+ * Author:  lambdalisue
+ * URL:     http://hashnote.net/
+ * License: MIT License
+ * 
+ * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
+ *
+ * This application include following Library inside
+ * 
+ * Tabby jQuery plugin version 0.12
+ * Ted Devito - http://teddevito.com/demos/textarea.html
+ * Copyright (c) 2009 Ted Devito
+ *
+ * shortcut.js
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Version : 2.01.B
+ * By Binny V A
+ * License : BSD
  */
 /**
  * http://www.openjs.com/scripts/events/keyboard_shortcuts/
@@ -232,6 +264,23 @@ shortcut = {
 	}
 };
 
+/**
+ * #{NAME} #{VERSION}
+ *
+ * Author:  lambdalisue
+ * URL:     http://hashnote.net/
+ * License: MIT License
+ * 
+ * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
+ *
+ * This application include following Library inside
+ * 
+ * Tabby jQuery plugin version 0.12
+ * Ted Devito - http://teddevito.com/demos/textarea.html
+ * Copyright (c) 2009 Ted Devito
+ *
+ *
+ */
 /*
  *	Tabby jQuery plugin version 0.12
  *
