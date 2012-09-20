@@ -48,6 +48,7 @@ STYLE_LIB_FILES     = []
 YUI_COMPRESSOR      = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
 NODE_MODULES        = [
   'coffee-script',
+  'coffeelint',
   'less',
   'mkdirp',
   'exec-sync',
@@ -73,7 +74,7 @@ CS_DEBUG_BLOCK_START    = "### DEBUG--- ###"
 CS_DEBUG_BLOCK_END      = "### ---DEBUG ###"
 LESS_DEBUG_BLOCK_START  = "/* DEBUG--- */"
 LESS_DEBUG_BLOCK_END    = "/* ---DEBUG */"
-
+COFFEELINT_CONFIG_FILE  = "coffeelint.config.json"
 ###########################################################################
 fs = require 'fs'
 path = require 'path'
@@ -136,7 +137,7 @@ minify = (src, dst, options, callback) ->
     callback?()
 
 lint = (src, options) ->
-  exec "./node_modules/coffeelint/bin/coffeelint #{src}", (err, stdout, stderr) ->
+  exec "./node_modules/coffeelint/bin/coffeelint -f #{COFFEELINT_CONFIG_FILE} #{src}", (err, stdout, stderr) ->
     console.log stdout if stdout
     console.log stderr if stderr
 
@@ -249,7 +250,7 @@ compileLESS = (pathset, filenames, options) ->
 ###########################################################################
 ### Tasks ###
 ###########################################################################
-task 'install:modules', 'Install required node modules', (options) ->
+task 'install', 'Install required node modules', (options) ->
   install = (module_name) ->
     exec "npm install #{module_name}", (err, stdout, stderr) ->
       process.stdout.write stdout
