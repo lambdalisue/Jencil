@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <link rel="stylesheet" href="stylesheets/Jencil.0.1.0.min.css">
+    <link rel="stylesheet" href="publish/Jencil.0.1.2.min.css">
     <link rel="stylesheet" href="javascripts/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
@@ -15,11 +15,14 @@
     <![endif]-->
     <script src="javascripts/jquery-1.8.0.min.js"></script>
     <script src="javascripts/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
-    <script src="javascripts/Jencil.0.1.0.min.js"></script>
+    <script src="javascripts/i18next-1.5.6.js"></script>
+    <script src="publish/Jencil.0.1.2.min.js"></script>
     <script>
         $(function(){
-            $("textarea#demo").jencil({
-                defaultVolume2: 0.7
+            i18n.init(function(){
+                $("textarea#demo").jencil({
+                    defaultVolume2: 0.7
+                });
             });
         });
     </script>
@@ -32,7 +35,6 @@
 
         <p class="view"><a href="https://github.com/lambdalisue/Jencil">View the Project on GitHub <small>lambdalisue/Jencil</small></a></p>
 
-
         <ul>
           <li><a href="https://github.com/lambdalisue/Jencil/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/lambdalisue/Jencil/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -43,6 +45,8 @@
         <h3>Welcome to Jencil Demo page.</h3>
 
         <p>This is under developing. Currently it is working as <b>HTML</b> mode.</p>
+
+        <p>Change UI Language type to: <a href="?setLng=ja-JP">日本語</a> | <a href="?setLng=en-US">English</a></p>
 
         <p><textarea id="demo"></textarea></p>
 
@@ -57,6 +61,7 @@
             <li>Tab indentation</li>
             <li>Autoindent</li>
             <li>Smart insert (p, li)</li>
+            <li>Internationalization</li>
         </ul>
 
       </section>
