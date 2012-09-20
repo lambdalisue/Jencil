@@ -72,3 +72,7 @@ namespace('Jencil.profiles', function(exports) {
 namespace('Jencil.utils', function(exports) {
   return exports.namespace = namespace;
 });
+
+namespace('Jencil', function(exports) {
+  return exports.t = translate;
+});

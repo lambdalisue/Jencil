@@ -17,6 +17,7 @@ SRC_FILES           = [
   'utils/curtain',
   'utils/animation',
   'utils/autoindent',
+  'utils/i18n',
   'core',
   'widgets',
   'splitter',
@@ -35,7 +36,6 @@ SRC_FILES           = [
 LIB_FILES           = [
   'shortcut',
   'jquery.textarea',
-  'i18next-1.5.6',
 ]
 TEST_FILES          = []
 STYLE_SRC_FILES     = [

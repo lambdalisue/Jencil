@@ -52,3 +52,6 @@ namespace 'Jencil.profiles', (exports) ->
 
 namespace 'Jencil.utils', (exports) ->
   exports.namespace = namespace
+
+namespace 'Jencil', (exports) ->
+  exports.t = translate

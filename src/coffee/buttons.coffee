@@ -7,8 +7,8 @@ class Separator extends Widget
 class Button extends Widget
   constructor: (core, @name, @text, @title) ->
     super core, '<a>'
-    @text = @text or @name
-    @title = @title or @text
+    @text = Jencil.t(@text or @name)
+    @title = Jencil.t(@title or @text)
     @element.addClass('button').addClass(name)
     @element.append($("<span>#{@text}</span>"))
     @element.attr 'title', @title
@@ -132,7 +132,7 @@ class ViewerButton extends ActionButton
   constructor: (core) ->
     callback = (e) =>
       @core.viewer().toggle()
-    super core, 'viewer', 'Toggle viewer', 'Viewer', callback, 'Ctrl+Q' # Quick view
+    super core, 'viewer', 'Quick view', 'Quick view', callback, 'Ctrl+Q' # Quick view
 
   validate: ->
     if not @core.viewer()
@@ -155,7 +155,7 @@ class HelperButton extends ActionButton
   constructor: (core) ->
     callback = (e) =>
       @core.helper().toggle()
-    super core, 'helper', 'Toggle helper', 'Helper', callback, 'Ctrl+H' # Help
+    super core, 'helper', 'Help', 'Help', callback, 'Ctrl+H' # Help
 
   validate: ->
     if not @core.helper()
