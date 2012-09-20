@@ -19,7 +19,6 @@
             ignoreLeaks: true
         });
     </script>
-    <!--
     <link rel="stylesheet" href="../src/css/layout.css">
     <link rel="stylesheet" href="../src/css/button.css">
     <link rel="stylesheet" href="../src/css/helper.css">
@@ -47,19 +46,18 @@
     <script src="../src/js/types/html/viewer.js"></script>
     <script src="../src/js/types/html/helper.js"></script>
     <script src="../src/js/types/html/profile.js"></script>
-    -->
 
+    <!--
     <link rel="stylesheet" href="../src/css/Jencil.0.1.0.min.css">
     <script src="../src/js/Jencil.0.1.0.min.js"></script>
+    -->
 
     <script src="js/sandbox.js"></script>
     <script>
         $(function() {
             //mocha.run();
             $("textarea#demo").jencil({
-                'profile': Jencil.profiles.HtmlProfile,
-                'defaultVolume': 0.6,
-                'defaultVolume2': 0.68,
+                'profile': 'Html',
                 'width': 960,
             });
         });

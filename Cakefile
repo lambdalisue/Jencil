@@ -343,6 +343,9 @@ task 'minify:css', 'Minify css file', (options) ->
     compose [dst], dst, options
 
 task 'test:mocha', 'Run mocha test', (options) ->
+  if not TEST_FILES or TEST_FILES.length == 0
+    console.log "No test files are specified"
+    return
   files = ("#{TEST_PATH.src}/#{filename}.coffee" for filename in TEST_FILES)
   mocha files.join(" "), options
 

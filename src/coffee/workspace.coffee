@@ -37,10 +37,16 @@ class Workspace extends Panel
   constructor: (core) ->
     super core
     @element.addClass 'workspace'
-    @profile(new core.options.profile(@core.options))
+    @profile(core.options.profile)
 
   profile: (profile) ->
     if profile?
+      if typeof profile is 'string'
+        profile = @core.options.profiles[profile]
+      # extend
+      profile = jQuery.extend(DefaultProfile, profile)
+      profile.defaultVolume = @core.options.defaultVolume or profile.defaultVolume
+      profile.defaultVolume2 = @core.options.defaultVolume2 or profile.defaultVolume2
       @element.empty()
       @mainPanel = new profile.mainPanelClass(@core, profile)
       # connect mainPanel.editorPanel and actual element

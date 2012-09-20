@@ -94,13 +94,19 @@ Workspace = (function(_super) {
   function Workspace(core) {
     Workspace.__super__.constructor.call(this, core);
     this.element.addClass('workspace');
-    this.profile(new core.options.profile(this.core.options));
+    this.profile(core.options.profile);
   }
 
   Workspace.prototype.profile = function(profile) {
     var button, _i, _j, _len, _len1, _ref, _ref1,
       _this = this;
     if (profile != null) {
+      if (typeof profile === 'string') {
+        profile = this.core.options.profiles[profile];
+      }
+      profile = jQuery.extend(DefaultProfile, profile);
+      profile.defaultVolume = this.core.options.defaultVolume || profile.defaultVolume;
+      profile.defaultVolume2 = this.core.options.defaultVolume2 || profile.defaultVolume2;
       this.element.empty();
       this.mainPanel = new profile.mainPanelClass(this.core, profile);
       this.mainPanel.editorPanel.change(function(value) {
