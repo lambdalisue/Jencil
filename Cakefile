@@ -3,7 +3,7 @@ $ = (_) -> _.src = "#{_.root}/#{_.src}"; _.dst = "#{_.root}/#{_.dst}"; return _
 ### Config ###
 ###########################################################################
 NAME                = "Jencil"
-VERSION             = "0.1.0"
+VERSION             = "0.1.2"
 SRC_PATH            = $ {root: "./src", src: "coffee", dst: "js"}
 LIB_PATH            = $ {root: "./lib", src: "coffee", dst: "js"}
 TEST_PATH           = $ {root: "./test", src: "coffee", dst: "js"}
@@ -17,6 +17,7 @@ SRC_FILES           = [
   'utils/curtain',
   'utils/animation',
   'utils/autoindent',
+  'utils/i18n',
   'core',
   'widgets',
   'splitter',
@@ -35,7 +36,6 @@ SRC_FILES           = [
 LIB_FILES           = [
   'shortcut',
   'jquery.textarea',
-  'i18next-1.5.6',
 ]
 TEST_FILES          = []
 STYLE_SRC_FILES     = [
@@ -48,6 +48,7 @@ STYLE_LIB_FILES     = []
 YUI_COMPRESSOR      = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
 NODE_MODULES        = [
   'coffee-script',
+  'coffeelint',
   'less',
   'mkdirp',
   'exec-sync',
@@ -66,6 +67,17 @@ JS_HEADER           = """
  * 
  * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
  *
+ * This application include following Library inside
+ * 
+ * Tabby jQuery plugin version 0.12
+ * Ted Devito - http://teddevito.com/demos/textarea.html
+ * Copyright (c) 2009 Ted Devito
+ *
+ * shortcut.js
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Version : 2.01.B
+ * By Binny V A
+ * License : BSD
  */
 """
 CSS_HEADER          = JS_HEADER
@@ -73,7 +85,7 @@ CS_DEBUG_BLOCK_START    = "### DEBUG--- ###"
 CS_DEBUG_BLOCK_END      = "### ---DEBUG ###"
 LESS_DEBUG_BLOCK_START  = "/* DEBUG--- */"
 LESS_DEBUG_BLOCK_END    = "/* ---DEBUG */"
-
+COFFEELINT_CONFIG_FILE  = "coffeelint.config.json"
 ###########################################################################
 fs = require 'fs'
 path = require 'path'
@@ -136,7 +148,7 @@ minify = (src, dst, options, callback) ->
     callback?()
 
 lint = (src, options) ->
-  exec "./node_modules/coffeelint/bin/coffeelint #{src}", (err, stdout, stderr) ->
+  exec "./node_modules/coffeelint/bin/coffeelint -f #{COFFEELINT_CONFIG_FILE} #{src}", (err, stdout, stderr) ->
     console.log stdout if stdout
     console.log stderr if stderr
 
@@ -249,7 +261,7 @@ compileLESS = (pathset, filenames, options) ->
 ###########################################################################
 ### Tasks ###
 ###########################################################################
-task 'install:modules', 'Install required node modules', (options) ->
+task 'install', 'Install required node modules', (options) ->
   install = (module_name) ->
     exec "npm install #{module_name}", (err, stdout, stderr) ->
       process.stdout.write stdout
@@ -342,6 +354,9 @@ task 'minify:css', 'Minify css file', (options) ->
     compose [dst], dst, options
 
 task 'test:mocha', 'Run mocha test', (options) ->
+  if not TEST_FILES or TEST_FILES.length == 0
+    console.log "No test files are specified"
+    return
   files = ("#{TEST_PATH.src}/#{filename}.coffee" for filename in TEST_FILES)
   mocha files.join(" "), options
 
@@ -410,3 +425,16 @@ task 'demo', 'Start demo server', (options) ->
   console.log "Start demo server..."
   console.log "Access http://localhost:8000/test/runner.html"
   listen(8000)
+
+task 'publish', 'Publish this application', (options) ->
+  invoke 'release'
+  js = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
+  jsMin = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.min.js"
+  css = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
+  cssMin = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.min.css"
+  exec "cp #{js} publish/#{NAME}.#{VERSION}.js"
+  exec "cp #{jsMin} publish/#{NAME}.#{VERSION}.min.js"
+  exec "cp #{css} publish/#{NAME}.#{VERSION}.css"
+  exec "cp #{cssMin} publish/#{NAME}.#{VERSION}.min.css"
+  exec "cp README.rst publish/README.rst"
+  exec "cp -rf #{STYLE_SRC_PATH.dst}/img publish/"

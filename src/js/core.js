@@ -1,39 +1,25 @@
-var Profile;
+var DefaultProfile;
 
-Profile = (function() {
-
-  Profile.prototype.mainPanelClass = null;
-
-  Profile.prototype.editorClass = null;
-
-  Profile.prototype.viewerClass = null;
-
-  Profile.prototype.helperClass = null;
-
-  Profile.prototype.toolbarButtons = null;
-
-  Profile.prototype.statusbarButtons = null;
-
-  Profile.prototype.defaultVolume = null;
-
-  Profile.prototype.defaultVolume2 = null;
-
-  function Profile(options) {
-    this.options = options;
-    this;
-
-  }
-
-  return Profile;
-
-})();
+DefaultProfile = {
+  mainPanelClass: null,
+  editorClass: null,
+  viewerClass: null,
+  helperClass: null,
+  toolbarButtons: [],
+  statusbarButtons: [],
+  defaultVolume: null,
+  defaultVolume2: null
+};
 
 this.Jencil = (function() {
 
   function Jencil(textarea, options) {
     var _this = this;
     this.options = jQuery.extend({
-      'profile': Jencil.profiles.HtmlProfile,
+      'profile': 'Html',
+      'profiles': {
+        'Html': Jencil.profiles.HtmlProfile
+      },
       'resizable': true,
       'enableTabIndent': true,
       'enableAutoIndent': true,
@@ -80,9 +66,13 @@ $.fn.jencil = function(options) {
 };
 
 namespace('Jencil.profiles', function(exports) {
-  return exports.Profile = Profile;
+  return exports.DefaultProfile = DefaultProfile;
 });
 
 namespace('Jencil.utils', function(exports) {
   return exports.namespace = namespace;
+});
+
+namespace('Jencil', function(exports) {
+  return exports.t = translate;
 });

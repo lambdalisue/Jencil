@@ -24,8 +24,8 @@ Button = (function(_super) {
     this.text = text;
     this.title = title;
     Button.__super__.constructor.call(this, core, '<a>');
-    this.text = this.text || this.name;
-    this.title = this.title || this.text;
+    this.text = Jencil.t(this.text || this.name);
+    this.title = Jencil.t(this.title || this.text);
     this.element.addClass('button').addClass(name);
     this.element.append($("<span>" + this.text + "</span>"));
     this.element.attr('title', this.title);
@@ -245,7 +245,7 @@ ViewerButton = (function(_super) {
     callback = function(e) {
       return _this.core.viewer().toggle();
     };
-    ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Toggle viewer', 'Viewer', callback, 'Ctrl+Q');
+    ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Quick view', 'Quick view', callback, 'Ctrl+Q');
   }
 
   ViewerButton.prototype.validate = function() {
@@ -287,7 +287,7 @@ HelperButton = (function(_super) {
     callback = function(e) {
       return _this.core.helper().toggle();
     };
-    HelperButton.__super__.constructor.call(this, core, 'helper', 'Toggle helper', 'Helper', callback, 'Ctrl+H');
+    HelperButton.__super__.constructor.call(this, core, 'helper', 'Help', 'Help', callback, 'Ctrl+H');
   }
 
   HelperButton.prototype.validate = function() {

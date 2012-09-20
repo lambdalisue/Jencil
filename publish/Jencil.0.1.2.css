@@ -1,5 +1,5 @@
 /**
- * Jencil 0.1.0
+ * Jencil 0.1.2
  *
  * Author:  lambdalisue
  * URL:     http://hashnote.net/
@@ -7,6 +7,17 @@
  * 
  * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
  *
+ * This application include following Library inside
+ * 
+ * Tabby jQuery plugin version 0.12
+ * Ted Devito - http://teddevito.com/demos/textarea.html
+ * Copyright (c) 2009 Ted Devito
+ *
+ * shortcut.js
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Version : 2.01.B
+ * By Binny V A
+ * License : BSD
  */
 .panelMixin {
   border-radius: 5px;

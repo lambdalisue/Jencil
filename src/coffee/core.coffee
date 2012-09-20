@@ -1,19 +1,20 @@
-class Profile
+DefaultProfile =
   mainPanelClass: null
   editorClass: null
   viewerClass: null
   helperClass: null
-  toolbarButtons: null
-  statusbarButtons: null
+  toolbarButtons: []
+  statusbarButtons: []
   defaultVolume: null
   defaultVolume2: null
-
-  constructor: (@options) -> @
 
 class @Jencil
   constructor: (textarea, options) ->
     @options = jQuery.extend({
-      'profile': Jencil.profiles.HtmlProfile
+      'profile': 'Html',
+      'profiles': {
+        'Html': Jencil.profiles.HtmlProfile
+      },
       'resizable': true,
       'enableTabIndent': true,
       'enableAutoIndent': true,
@@ -47,7 +48,10 @@ class @Jencil
 $.fn.jencil = (options) -> new Jencil($(this), options)
 
 namespace 'Jencil.profiles', (exports) ->
-  exports.Profile = Profile
+  exports.DefaultProfile = DefaultProfile
 
 namespace 'Jencil.utils', (exports) ->
   exports.namespace = namespace
+
+namespace 'Jencil', (exports) ->
+  exports.t = translate

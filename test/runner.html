@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./vender/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
     <script src="./vender/jquery-1.8.0.min.js"></script>
     <script src="./vender/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="./vender/i18next-1.5.6.js"></script>
     <script src="./vender/sinon-1.4.2.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
@@ -19,7 +20,6 @@
             ignoreLeaks: true
         });
     </script>
-    <!--
     <link rel="stylesheet" href="../src/css/layout.css">
     <link rel="stylesheet" href="../src/css/button.css">
     <link rel="stylesheet" href="../src/css/helper.css">
@@ -33,6 +33,7 @@
     <script src="../src/js/utils/undo.js"></script>
     <script src="../src/js/utils/animation.js"></script>
     <script src="../src/js/utils/autoindent.js"></script>
+    <script src="../src/js/utils/i18n.js"></script>
     <script src="../src/js/core.js"></script>
     <script src="../src/js/widgets.js"></script>
     <script src="../src/js/splitter.js"></script>
@@ -47,20 +48,20 @@
     <script src="../src/js/types/html/viewer.js"></script>
     <script src="../src/js/types/html/helper.js"></script>
     <script src="../src/js/types/html/profile.js"></script>
-    -->
 
-    <link rel="stylesheet" href="../src/css/Jencil.0.1.0.min.css">
-    <script src="../src/js/Jencil.0.1.0.min.js"></script>
+    <!--
+    <link rel="stylesheet" href="../src/css/Jencil.0.1.2.min.css">
+    <script src="../src/js/Jencil.0.1.2.min.js"></script>
+    -->
 
     <script src="js/sandbox.js"></script>
     <script>
         $(function() {
-            //mocha.run();
-            $("textarea#demo").jencil({
-                'profile': Jencil.profiles.HtmlProfile,
-                'defaultVolume': 0.6,
-                'defaultVolume2': 0.68,
-                'width': 960,
+            i18n.init(function(t){
+                $("textarea#demo").jencil({
+                    'profile': 'Html',
+                    'width': 960,
+                });
             });
         });
     </script>
@@ -71,6 +72,8 @@
     <hr>
     <textarea id="demo"></textarea>
     <hr>
+    <a href="?setLng=ja-JP">日本語</a>
+    <a href="?setLng=en-US">英語</a>
     <div id="mocha"></div>
 </body>
 </html>
