@@ -3,7 +3,7 @@ $ = (_) -> _.src = "#{_.root}/#{_.src}"; _.dst = "#{_.root}/#{_.dst}"; return _
 ### Config ###
 ###########################################################################
 NAME                = "Jencil"
-VERSION             = "0.1.0"
+VERSION             = "0.1.2"
 SRC_PATH            = $ {root: "./src", src: "coffee", dst: "js"}
 LIB_PATH            = $ {root: "./lib", src: "coffee", dst: "js"}
 TEST_PATH           = $ {root: "./test", src: "coffee", dst: "js"}
