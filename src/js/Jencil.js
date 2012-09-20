@@ -1,5 +1,5 @@
 (function() {
-  var ActionButton, AjaxViewer, Bar, BaseEditor, BaseHelper, BaseViewer, Button, Caretaker, CommandButton, DimainPanel, Fullscreen, FullscreenButton, HTML_HELPER_HTML, HelperButton, HorizontalPanel, HorizontalSplitter, HtmlEditor, HtmlHelper, HtmlProfile, HtmlViewer, MonomainPanel, MultiplePanel, Originator, Panel, Profile, RedoButton, Selection, Separator, Splitter, Statusbar, TemplateHelper, TemplateViewer, TextEditor, Toolbar, TrimainPanel, UndoButton, VerticalPanel, VerticalSplitter, ViewerButton, Widget, Workspace, Wrapper, animate, autoIndentable, autoIndentableHtml, buttonFactory, curtainFactory, evolute, headerMarkup,
+  var ActionButton, AjaxViewer, Bar, BaseEditor, BaseHelper, BaseViewer, Button, Caretaker, CommandButton, DefaultProfile, DimainPanel, Fullscreen, FullscreenButton, HelperButton, HorizontalPanel, HorizontalSplitter, HtmlEditor, HtmlHelper, HtmlProfile, HtmlViewer, MonomainPanel, MultiplePanel, Originator, Panel, RedoButton, Selection, Separator, Splitter, Statusbar, TemplateHelper, TemplateViewer, TextEditor, Toolbar, TrimainPanel, UndoButton, VerticalPanel, VerticalSplitter, ViewerButton, Widget, Workspace, Wrapper, animate, autoIndentable, autoIndentableHtml, buttonFactory, curtainFactory, evolute, headerMarkup, translate,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -684,40 +684,38 @@
     };
   })();
 
-  Profile = (function() {
+  if (window.i18n != null) {
+    translate = function(key) {
+      return i18n.t(key, {
+        defaultValue: key
+      });
+    };
+  } else {
+    translate = function(key) {
+      return key;
+    };
+  }
 
-    Profile.prototype.mainPanelClass = null;
-
-    Profile.prototype.editorClass = null;
-
-    Profile.prototype.viewerClass = null;
-
-    Profile.prototype.helperClass = null;
-
-    Profile.prototype.toolbarButtons = null;
-
-    Profile.prototype.statusbarButtons = null;
-
-    Profile.prototype.defaultVolume = null;
-
-    Profile.prototype.defaultVolume2 = null;
-
-    function Profile(options) {
-      this.options = options;
-      this;
-
-    }
-
-    return Profile;
-
-  })();
+  DefaultProfile = {
+    mainPanelClass: null,
+    editorClass: null,
+    viewerClass: null,
+    helperClass: null,
+    toolbarButtons: [],
+    statusbarButtons: [],
+    defaultVolume: null,
+    defaultVolume2: null
+  };
 
   this.Jencil = (function() {
 
     function Jencil(textarea, options) {
       var _this = this;
       this.options = jQuery.extend({
-        'profile': Jencil.profiles.HtmlProfile,
+        'profile': 'Html',
+        'profiles': {
+          'Html': Jencil.profiles.HtmlProfile
+        },
         'resizable': true,
         'enableTabIndent': true,
         'enableAutoIndent': true,
@@ -764,11 +762,15 @@
   };
 
   namespace('Jencil.profiles', function(exports) {
-    return exports.Profile = Profile;
+    return exports.DefaultProfile = DefaultProfile;
   });
 
   namespace('Jencil.utils', function(exports) {
     return exports.namespace = namespace;
+  });
+
+  namespace('Jencil', function(exports) {
+    return exports.t = translate;
   });
 
   Widget = (function() {
@@ -1766,8 +1768,8 @@
       this.text = text;
       this.title = title;
       Button.__super__.constructor.call(this, core, '<a>');
-      this.text = this.text || this.name;
-      this.title = this.title || this.text;
+      this.text = Jencil.t(this.text || this.name);
+      this.title = Jencil.t(this.title || this.text);
       this.element.addClass('button').addClass(name);
       this.element.append($("<span>" + this.text + "</span>"));
       this.element.attr('title', this.title);
@@ -1987,7 +1989,7 @@
       callback = function(e) {
         return _this.core.viewer().toggle();
       };
-      ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Toggle viewer', 'Viewer', callback, 'Ctrl+Q');
+      ViewerButton.__super__.constructor.call(this, core, 'viewer', 'Quick view', 'Quick view', callback, 'Ctrl+Q');
     }
 
     ViewerButton.prototype.validate = function() {
@@ -2029,7 +2031,7 @@
       callback = function(e) {
         return _this.core.helper().toggle();
       };
-      HelperButton.__super__.constructor.call(this, core, 'helper', 'Toggle helper', 'Helper', callback, 'Ctrl+H');
+      HelperButton.__super__.constructor.call(this, core, 'helper', 'Help', 'Help', callback, 'Ctrl+H');
     }
 
     HelperButton.prototype.validate = function() {
@@ -2190,13 +2192,19 @@
     function Workspace(core) {
       Workspace.__super__.constructor.call(this, core);
       this.element.addClass('workspace');
-      this.profile(new core.options.profile(this.core.options));
+      this.profile(core.options.profile);
     }
 
     Workspace.prototype.profile = function(profile) {
       var button, _i, _j, _len, _len1, _ref, _ref1,
         _this = this;
       if (profile != null) {
+        if (typeof profile === 'string') {
+          profile = this.core.options.profiles[profile];
+        }
+        profile = jQuery.extend(DefaultProfile, profile);
+        profile.defaultVolume = this.core.options.defaultVolume || profile.defaultVolume;
+        profile.defaultVolume2 = this.core.options.defaultVolume2 || profile.defaultVolume2;
         this.element.empty();
         this.mainPanel = new profile.mainPanelClass(this.core, profile);
         this.mainPanel.editorPanel.change(function(value) {
@@ -2688,14 +2696,14 @@
     return exports.HtmlViewer = HtmlViewer;
   });
 
-  HTML_HELPER_HTML = "<h1>Keyboard shortcut</h1>\n<p><span class=\"key\">Ctrl+Z</span>Undo<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>Redo<p>\n<p><span class=\"key\">Ctrl+B</span>Make selected text property as <b>Bold</b><p>\n<p><span class=\"key\">Ctrl+I</span>Make selected text property as <i>Italic</i><p>\n<p><span class=\"key\">Ctrl+U</span>Underline selected text like <u>Underline</u><p>\n<p><span class=\"key\">Ctrl+F</span>Toggle fullscreen mode<p>\n<p><span class=\"key\">Ctrl+Q</span>Toggle quick viewer panel<p>\n<p><span class=\"key\">Ctrl+H</span>Toggle help panel<p>";
-
   HtmlHelper = (function(_super) {
 
     __extends(HtmlHelper, _super);
 
     function HtmlHelper(core) {
+      var HTML_HELPER_HTML;
       HtmlHelper.__super__.constructor.call(this, core);
+      HTML_HELPER_HTML = "<p><span class=\"key\">Ctrl+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+B</span>" + (Jencil.t("Make selected text property as <b>Bold</b>")) + "<p>\n<p><span class=\"key\">Ctrl+I</span>" + (Jencil.t("Make selected text property as <i>Italic</i>")) + "<p>\n<p><span class=\"key\">Ctrl+U</span>" + (Jencil.t("Underline selected text like <u>Underline</u>")) + "<p>\n<p><span class=\"key\">Ctrl+F</span>" + (Jencil.t("Toggle fullscreen mode")) + "<p>\n<p><span class=\"key\">Ctrl+Q</span>" + (Jencil.t("Toggle quick view")) + "<p>\n<p><span class=\"key\">Ctrl+H</span>" + (Jencil.t("Toggle help")) + "<p>";
       this.element.html(HTML_HELPER_HTML);
     }
 
@@ -2707,24 +2715,16 @@
     return exports.HtmlHelper = HtmlHelper;
   });
 
-  HtmlProfile = (function(_super) {
-
-    __extends(HtmlProfile, _super);
-
-    function HtmlProfile(options) {
-      this.mainPanelClass = Jencil.ui.widgets.panels.TrimainPanel;
-      this.editorClass = HtmlEditor;
-      this.viewerClass = HtmlViewer;
-      this.helperClass = HtmlHelper;
-      this.defaultVolume = options.defaultVolume || 1;
-      this.defaultVolume2 = options.defaultVolume2 || 1;
-      this.toolbarButtons = ['Undo', 'Redo', 'Separator', ['h1', 'H1'], ['h2', 'H2'], ['h3', 'H3'], ['h4', 'H4'], ['h5', 'H5'], ['h6', 'H6'], 'Separator', ['bold', 'Bold', 'Ctrl+B'], ['italic', 'Italic', 'Ctrl+I'], ['underline', 'Underline', 'Ctrl+U'], ['strike', 'Strikeout'], ['superscript', 'Superscript'], ['subscript', 'Subscript'], 'Separator', ['anchorLink', 'Anchor link'], ['image', 'Image'], ['unorderedList', 'Unordered list'], ['orderedList', 'Ordered list'], ['quote', 'Quote'], ['blockquote', 'Blockquote'], ['code', 'Code'], ['pre', 'Pre'], 'Separator', 'Fullscreen'];
-      this.statusbarButtons = ['Viewer', 'Helper'];
-    }
-
-    return HtmlProfile;
-
-  })(Jencil.profiles.Profile);
+  HtmlProfile = {
+    mainPanelClass: Jencil.ui.widgets.panels.TrimainPanel,
+    editorClass: HtmlEditor,
+    viewerClass: HtmlViewer,
+    helperClass: HtmlHelper,
+    defaultVolume: 1,
+    defaultVolume2: 0.7,
+    toolbarButtons: ['Undo', 'Redo', 'Separator', ['h1', 'H1'], ['h2', 'H2'], ['h3', 'H3'], ['h4', 'H4'], ['h5', 'H5'], ['h6', 'H6'], 'Separator', ['bold', 'Bold', 'Ctrl+B'], ['italic', 'Italic', 'Ctrl+I'], ['underline', 'Underline', 'Ctrl+U'], ['strike', 'Strikeout'], ['superscript', 'Superscript'], ['subscript', 'Subscript'], 'Separator', ['anchorLink', 'Anchor link'], ['image', 'Image'], ['unorderedList', 'Unordered list'], ['orderedList', 'Ordered list'], ['quote', 'Quote'], ['blockquote', 'Blockquote'], ['code', 'Code'], ['pre', 'Pre'], 'Separator', 'Fullscreen'],
+    statusbarButtons: ['Viewer', 'Helper']
+  };
 
   Jencil.utils.namespace('Jencil.profiles', function(exports) {
     return exports.HtmlProfile = HtmlProfile;

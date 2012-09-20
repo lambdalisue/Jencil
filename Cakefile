@@ -67,6 +67,17 @@ JS_HEADER           = """
  * 
  * Copyright (C) 2012 lambdalisue, hashnote.net allright reserved.
  *
+ * This application include following Library inside
+ * 
+ * Tabby jQuery plugin version 0.12
+ * Ted Devito - http://teddevito.com/demos/textarea.html
+ * Copyright (c) 2009 Ted Devito
+ *
+ * shortcut.js
+ * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+ * Version : 2.01.B
+ * By Binny V A
+ * License : BSD
  */
 """
 CSS_HEADER          = JS_HEADER
@@ -414,3 +425,16 @@ task 'demo', 'Start demo server', (options) ->
   console.log "Start demo server..."
   console.log "Access http://localhost:8000/test/runner.html"
   listen(8000)
+
+task 'publish', 'Publish this application', (options) ->
+  invoke 'release'
+  js = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
+  jsMin = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.min.js"
+  css = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
+  cssMin = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.min.css"
+  exec "cp #{js} publish/#{NAME}.#{VERSION}.js"
+  exec "cp #{jsMin} publish/#{NAME}.#{VERSION}.min.js"
+  exec "cp #{css} publish/#{NAME}.#{VERSION}.css"
+  exec "cp #{cssMin} publish/#{NAME}.#{VERSION}.min.css"
+  exec "cp README.rst publish/README.rst"
+  exec "cp -rf #{STYLE_SRC_PATH.dst}/img publish/"
