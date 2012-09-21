@@ -15,7 +15,8 @@ Fullscreen = (function(_super) {
       'top': '0',
       'left': '0',
       'width': '100%',
-      'height': '100%'
+      'height': '100%',
+      'z-index': 100
     });
     this.curtain = $('<div>').addClass('curtain');
     this.curtain.css({
