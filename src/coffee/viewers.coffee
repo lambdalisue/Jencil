@@ -32,6 +32,7 @@ class TemplateViewer extends BaseViewer
       else
         @document = iframe.contentWindow.document
       @document.write '<body></body>'
+
     @iframe.write = (value) ->
       if @document?
         try
@@ -41,6 +42,8 @@ class TemplateViewer extends BaseViewer
         @document.open()
         @document.write value
         @document.close()
+        # add target="_blank" to all anchor links
+        $("a", $(@document)).attr('target', '_blank')
         @document.documentElement.scrollTop = scrollTop
         # resize
         @width @document.scrollLeft

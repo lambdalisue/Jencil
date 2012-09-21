@@ -66,6 +66,7 @@ TemplateViewer = (function(_super) {
         this.document.open();
         this.document.write(value);
         this.document.close();
+        $("a", $(this.document)).attr('target', '_blank');
         this.document.documentElement.scrollTop = scrollTop;
         this.width(this.document.scrollLeft);
         this.height(this.document.scrollTop);
