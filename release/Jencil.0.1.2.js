@@ -1421,7 +1421,7 @@ shortcut = {
     MultiplePanel.prototype._togglePanel = function(to, callbackOn, callbackOff) {
       var callbackDone, end, volume, _callbackDone,
         _this = this;
-      if (this._animating) {
+      if (MultiplePanel._animating) {
         return;
       }
       volume = this.splitter.volume();
@@ -1437,9 +1437,9 @@ shortcut = {
         }
         _callbackDone = callbackOn;
       }
-      this._animating = true;
+      MultiplePanel._animating = true;
       callbackDone = function() {
-        _this._animating = false;
+        MultiplePanel._animating = false;
         return typeof _callbackDone === "function" ? _callbackDone() : void 0;
       };
       return animate({
@@ -2112,6 +2112,7 @@ shortcut = {
           this.document.open();
           this.document.write(value);
           this.document.close();
+          $("a", $(this.document)).attr('target', '_blank');
           this.document.documentElement.scrollTop = scrollTop;
           this.width(this.document.scrollLeft);
           this.height(this.document.scrollTop);
@@ -2752,7 +2753,7 @@ shortcut = {
     }
 
     Workspace.prototype.profile = function(profile) {
-      var button, _i, _j, _len, _len1, _ref, _ref1,
+      var button, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3,
         _this = this;
       if (profile != null) {
         if (typeof profile === 'string') {
@@ -2763,20 +2764,25 @@ shortcut = {
         profile.defaultVolume2 = this.core.options.defaultVolume2 || profile.defaultVolume2;
         this.element.empty();
         this.mainPanel = new profile.mainPanelClass(this.core, profile);
-        this.mainPanel.editorPanel.change(function(value) {
-          return _this.core.element.val(value);
-        });
+        if ((_ref = this.mainPanel.editorPanel) != null) {
+          _ref.val(this.core.element.val());
+        }
+        if ((_ref1 = this.mainPanel.editorPanel) != null) {
+          _ref1.change(function(value) {
+            return _this.core.element.val(value);
+          });
+        }
         this.toolbar = new Toolbar(this.core);
-        _ref = profile.toolbarButtons;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          button = _ref[_i];
+        _ref2 = profile.toolbarButtons;
+        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+          button = _ref2[_i];
           button = buttonFactory(this.core, button);
           this.toolbar.addButton(button);
         }
         this.statusbar = new Statusbar(this.core);
-        _ref1 = profile.statusbarButtons;
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          button = _ref1[_j];
+        _ref3 = profile.statusbarButtons;
+        for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
+          button = _ref3[_j];
           button = buttonFactory(this.core, button);
           this.statusbar.addButton(button);
         }
@@ -2947,7 +2953,8 @@ shortcut = {
         'top': '0',
         'left': '0',
         'width': '100%',
-        'height': '100%'
+        'height': '100%',
+        'z-index': 100
       });
       this.curtain = $('<div>').addClass('curtain');
       this.curtain.css({
@@ -3259,7 +3266,7 @@ shortcut = {
     function HtmlHelper(core) {
       var HTML_HELPER_HTML;
       HtmlHelper.__super__.constructor.call(this, core);
-      HTML_HELPER_HTML = "<p><span class=\"key\">Ctrl+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+B</span>" + (Jencil.t("Make selected text property as <b>Bold</b>")) + "<p>\n<p><span class=\"key\">Ctrl+I</span>" + (Jencil.t("Make selected text property as <i>Italic</i>")) + "<p>\n<p><span class=\"key\">Ctrl+U</span>" + (Jencil.t("Underline selected text like <u>Underline</u>")) + "<p>\n<p><span class=\"key\">Ctrl+F</span>" + (Jencil.t("Toggle fullscreen mode")) + "<p>\n<p><span class=\"key\">Ctrl+Q</span>" + (Jencil.t("Toggle quick view")) + "<p>\n<p><span class=\"key\">Ctrl+H</span>" + (Jencil.t("Toggle help")) + "<p>";
+      HTML_HELPER_HTML = "<p><span class=\"key\">Ctrl+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>" + (Jencil.t("Redo")) + "<p>\n<p><span class=\"key\">Ctrl+B</span>" + (Jencil.t("Make selected text property as <b>Bold</b>")) + "<p>\n<p><span class=\"key\">Ctrl+I</span>" + (Jencil.t("Make selected text property as <i>Italic</i>")) + "<p>\n<p><span class=\"key\">Ctrl+U</span>" + (Jencil.t("Underline selected text like <u>Underline</u>")) + "<p>\n<p><span class=\"key\">Ctrl+F</span>" + (Jencil.t("Toggle fullscreen mode")) + "<p>\n<p><span class=\"key\">Ctrl+Q</span>" + (Jencil.t("Toggle quick view")) + "<p>\n<p><span class=\"key\">Ctrl+H</span>" + (Jencil.t("Toggle help")) + "<p>";
       this.element.html(HTML_HELPER_HTML);
     }
 

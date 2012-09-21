@@ -94,7 +94,7 @@ MultiplePanel = (function(_super) {
   MultiplePanel.prototype._togglePanel = function(to, callbackOn, callbackOff) {
     var callbackDone, end, volume, _callbackDone,
       _this = this;
-    if (this._animating) {
+    if (MultiplePanel._animating) {
       return;
     }
     volume = this.splitter.volume();
@@ -110,9 +110,9 @@ MultiplePanel = (function(_super) {
       }
       _callbackDone = callbackOn;
     }
-    this._animating = true;
+    MultiplePanel._animating = true;
     callbackDone = function() {
-      _this._animating = false;
+      MultiplePanel._animating = false;
       return typeof _callbackDone === "function" ? _callbackDone() : void 0;
     };
     return animate({

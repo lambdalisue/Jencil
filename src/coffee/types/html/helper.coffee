@@ -3,7 +3,7 @@ class HtmlHelper extends Jencil.ui.widgets.helpers.BaseHelper
     super core
     HTML_HELPER_HTML = """
     <p><span class="key">Ctrl+Z</span>#{Jencil.t("Undo")}<p>
-    <p><span class="key">Ctrl+Shift+Z</span>#{Jencil.t("Undo")}<p>
+    <p><span class="key">Ctrl+Shift+Z</span>#{Jencil.t("Redo")}<p>
     <p><span class="key">Ctrl+B</span>#{Jencil.t("Make selected text property as <b>Bold</b>")}<p>
     <p><span class="key">Ctrl+I</span>#{Jencil.t("Make selected text property as <i>Italic</i>")}<p>
     <p><span class="key">Ctrl+U</span>#{Jencil.t("Underline selected text like <u>Underline</u>")}<p>

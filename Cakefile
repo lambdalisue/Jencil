@@ -3,12 +3,13 @@ $ = (_) -> _.src = "#{_.root}/#{_.src}"; _.dst = "#{_.root}/#{_.dst}"; return _
 ### Config ###
 ###########################################################################
 NAME                = "Jencil"
-VERSION             = "0.1.2"
+VERSION             = "0.1.3"
 SRC_PATH            = $ {root: "./src", src: "coffee", dst: "js"}
 LIB_PATH            = $ {root: "./lib", src: "coffee", dst: "js"}
 TEST_PATH           = $ {root: "./test", src: "coffee", dst: "js"}
 STYLE_SRC_PATH      = $ {root: "./src", src: "less", dst: "css"}
 STYLE_LIB_PATH      = $ {root: "./lib", src: "less", dst: "css"}
+RELEASE_PATH        = "./release"
 SRC_FILES           = [
   'utils/namespace',
   'utils/undo',
@@ -85,7 +86,7 @@ CS_DEBUG_BLOCK_START    = "### DEBUG--- ###"
 CS_DEBUG_BLOCK_END      = "### ---DEBUG ###"
 LESS_DEBUG_BLOCK_START  = "/* DEBUG--- */"
 LESS_DEBUG_BLOCK_END    = "/* ---DEBUG */"
-COFFEELINT_CONFIG_FILE  = "coffeelint.config.json"
+COFFEELINT_CONFIG_FILE  = "./config/coffeelint.json"
 ###########################################################################
 fs = require 'fs'
 path = require 'path'
@@ -303,7 +304,12 @@ task 'compose:js', 'Compose compiled javascript files into a single javascript f
   LIB_FILE = "#{LIB_PATH.dst}/#{NAME}.js"
   files = [LIB_FILE, SRC_FILE]
   #files = [SRC_FILE, LIB_FILE]
-  dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
+  #dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
+  dst = "#{RELEASE_PATH}/#{NAME}.#{VERSION}.js"
+
+  if not path.existsSync(path.dirname(dst))
+    mkdirp = require 'mkdirp'
+    mkdirp.sync path.dirname(dst)
 
   console.log "Compose compiled javascript files" if options.verbose isnt '0'
   if options.verbose isnt '0'
@@ -320,7 +326,12 @@ task 'compose:css', 'Compose compiled css files into a single css file', (option
   srcFiles = ("#{STYLE_SRC_PATH.dst}/#{filename}.css" for filename in STYLE_SRC_FILES)
   libFiles = ("#{STYLE_LIB_PATH.dst}/#{filename}.css" for filename in STYLE_LIB_FILES)
   files = srcFiles.concat libFiles
-  dst = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
+  #dst = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
+  dst = "#{RELEASE_PATH}/#{NAME}.#{VERSION}.css"
+
+  if not path.existsSync(path.dirname(dst))
+    mkdirp = require 'mkdirp'
+    mkdirp.sync path.dirname(dst)
 
   console.log "Compose compiled css files" if options.verbose isnt '0'
   if options.verbose isnt '0'
@@ -334,8 +345,8 @@ task 'compose:css', 'Compose compiled css files into a single css file', (option
   compose files, dst, options
 
 task 'minify:js', 'Minify javascript file', (options) ->
-  src = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
-  dst = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.min.js"
+  src = "#{RELEASE_PATH}/#{NAME}.#{VERSION}.js"
+  dst = "#{RELEASE_PATH}/#{NAME}.#{VERSION}.min.js"
   console.log "Minify javascript file" if options.verbose isnt '0'
   console.log path.basename(src), "=>", dst if options.verbose isnt '0'
   minify src, dst, options, ->
@@ -344,8 +355,8 @@ task 'minify:js', 'Minify javascript file', (options) ->
     compose [dst], dst, options
 
 task 'minify:css', 'Minify css file', (options) ->
-  src = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
-  dst = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.min.css"
+  src = "#{RELEASE_PATH}/#{NAME}.#{VERSION}.css"
+  dst = "#{RELEASE_PATH}/#{NAME}.#{VERSION}.min.css"
   console.log "Minify css file" if options.verbose isnt '0'
   console.log path.basename(src), "=>", dst if options.verbose isnt '0'
   minify src, dst, options, ->
@@ -378,6 +389,8 @@ task 'release', 'Release', (options) ->
   invoke 'compose:css'
   invoke 'minify:js'
   invoke 'minify:css'
+  exec "cp README.rst #{RELEASE_PATH}/README.rst"
+  exec "cp -rf #{STYLE_SRC_PATH.dst}/img #{RELEASE_PATH}/"
 
 task 'clean', 'Clean files', (options) ->
   exec "rm -r #{SRC_PATH.dst}"
@@ -425,16 +438,3 @@ task 'demo', 'Start demo server', (options) ->
   console.log "Start demo server..."
   console.log "Access http://localhost:8000/test/runner.html"
   listen(8000)
-
-task 'publish', 'Publish this application', (options) ->
-  invoke 'release'
-  js = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.js"
-  jsMin = "#{SRC_PATH.dst}/#{NAME}.#{VERSION}.min.js"
-  css = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.css"
-  cssMin = "#{STYLE_SRC_PATH.dst}/#{NAME}.#{VERSION}.min.css"
-  exec "cp #{js} publish/#{NAME}.#{VERSION}.js"
-  exec "cp #{jsMin} publish/#{NAME}.#{VERSION}.min.js"
-  exec "cp #{css} publish/#{NAME}.#{VERSION}.css"
-  exec "cp #{cssMin} publish/#{NAME}.#{VERSION}.min.css"
-  exec "cp README.rst publish/README.rst"
-  exec "cp -rf #{STYLE_SRC_PATH.dst}/img publish/"

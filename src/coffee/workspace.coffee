@@ -49,8 +49,10 @@ class Workspace extends Panel
       profile.defaultVolume2 = @core.options.defaultVolume2 or profile.defaultVolume2
       @element.empty()
       @mainPanel = new profile.mainPanelClass(@core, profile)
+      # update editor panel
+      @mainPanel.editorPanel?.val @core.element.val()
       # connect mainPanel.editorPanel and actual element
-      @mainPanel.editorPanel.change (value) => @core.element.val value
+      @mainPanel.editorPanel?.change (value) => @core.element.val value
       # toolbar
       @toolbar = new Toolbar(@core)
       for button in profile.toolbarButtons

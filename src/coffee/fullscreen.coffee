@@ -8,6 +8,7 @@ class Fullscreen extends Panel
       'left': '0'
       'width': '100%'
       'height': '100%'
+      'z-index': 100
     @curtain = $('<div>').addClass('curtain')
     @curtain.css
       'position': 'absolute'
