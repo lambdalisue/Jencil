@@ -1,6 +1,7 @@
-var __slice = [].slice;
+var namespace,
+  __slice = [].slice;
 
-window.namespace = function(target, name, block) {
+namespace = function(target, name, block) {
   var item, top, _i, _len, _ref, _ref1;
   if (arguments.length < 3) {
     _ref = [(typeof exports !== 'undefined' ? exports : window)].concat(__slice.call(arguments)), target = _ref[0], name = _ref[1], block = _ref[2];
@@ -13,3 +14,11 @@ window.namespace = function(target, name, block) {
   }
   return block(target, top);
 };
+
+if (typeof window !== "undefined" && window !== null) {
+  window.namespace = namespace;
+}
+
+if (typeof exports !== "undefined" && exports !== null) {
+  exports.namespace = namespace;
+}

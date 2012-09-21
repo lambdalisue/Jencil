@@ -53,18 +53,6 @@ evolute = (function() {
     }
     return this._outerHeight(includeMargin);
   };
-  nonContentWidth = function(includeMargin) {
-    if (includeMargin == null) {
-      includeMargin = false;
-    }
-    return this.outerWidth(includeMargin) - this.width();
-  };
-  nonContentHeight = function(includeMargin) {
-    if (includeMargin == null) {
-      includeMargin = false;
-    }
-    return this.outerHeight(includeMargin) - this.height();
-  };
   ncss = function(propertyName, defaultValue) {
     var value;
     if (defaultValue == null) {

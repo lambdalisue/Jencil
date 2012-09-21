@@ -31,12 +31,6 @@ evolute = do ->
       return @height(value - offset)
     return @_outerHeight(includeMargin)
 
-  nonContentWidth = (includeMargin=false) ->
-    return @outerWidth(includeMargin) - @width()
-
-  nonContentHeight = (includeMargin=false) ->
-    return @outerHeight(includeMargin) - @height()
-
   ncss = (propertyName, defaultValue=null) ->
     value = @css propertyName
     return defaultValue if value in ['', 'none', null, undefined, NaN]

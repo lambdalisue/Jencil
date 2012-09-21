@@ -55,25 +55,44 @@
     -->
 
     <script src="js/sandbox.js"></script>
+    <script src="js/utils/evolution.spec.js"></script>
     <script>
         $(function() {
+            mocha.run();
             i18n.init(function(t){
                 $("textarea#demo").jencil({
                     'profile': 'Html',
-                    'width': 960,
+                    'width': 700,
                 });
             });
         });
     </script>
+
+    <style>
+        #lhs {
+            float: left;
+            width: 50%;
+        }
+        #rhs {
+            float: right;
+            width: 50%;
+        }
+        #rhs:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    </style>
 </head>
 <body>
-    <h1>Jencil Alpha</h1>
-    <p>Markup text editor written in CoffeeScript</p>
-    <hr>
-    <textarea id="demo"></textarea>
-    <hr>
-    <a href="?setLng=ja-JP">日本語</a>
-    <a href="?setLng=en-US">英語</a>
-    <div id="mocha"></div>
+    <div id="lhs">
+        <div id="mocha"></div>
+    </div>
+    <div id="rhs">
+        <p>Language:
+            <a href="?setLng=ja-JP">日本語</a> | <a href="?setLng=en-US">英語</a>
+        </p>
+        <textarea id="demo"></textarea>
+    </div>
 </body>
 </html>

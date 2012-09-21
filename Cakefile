@@ -38,7 +38,10 @@ LIB_FILES           = [
   'shortcut',
   'jquery.textarea',
 ]
-TEST_FILES          = []
+TEST_FILES          = [
+  'sandbox',
+  'utils/evolution.spec',
+]
 STYLE_SRC_FILES     = [
   'layout',
   'button',
@@ -280,9 +283,12 @@ task 'compile:develop:src', 'Compile src CoffeeScript files to bare javascript f
   compileCS SRC_PATH, SRC_FILES, options
 task 'compile:develop:lib', 'Compile lib CoffeeScript files to bare javascript files', (options) ->
   compileCS LIB_PATH, LIB_FILES, options
+task 'compile:test', 'Compile test CoffeeScript files to bare javascript files', (options) ->
+  compileCS TEST_PATH, TEST_FILES, options
 task 'compile:develop', 'Compile CoffeeScript/LESS files to javascript/css files', (options) ->
   invoke 'compile:develop:src'
   invoke 'compile:develop:lib'
+  invoke 'compile:test'
   invoke 'compile:style:src'
   invoke 'compile:style:lib'
 
@@ -365,6 +371,7 @@ task 'minify:css', 'Minify css file', (options) ->
     compose [dst], dst, options
 
 task 'test:mocha', 'Run mocha test', (options) ->
+  invoke "compile:test"
   if not TEST_FILES or TEST_FILES.length == 0
     console.log "No test files are specified"
     return
