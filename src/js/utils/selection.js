@@ -23,7 +23,6 @@ Selection = (function() {
       e = this.element.selectionEnd;
     }
     caret = [s, e];
-    caret.isCollapse = s === e;
     return caret;
   };
 
@@ -45,7 +44,7 @@ Selection = (function() {
   };
 
   Selection.prototype.caret = function(start, end) {
-    if ((start != null) && typeof start === 'array') {
+    if ((start != null) && start instanceof Array) {
       end = start[1];
       start = start[0];
     }
@@ -64,7 +63,7 @@ Selection = (function() {
     return this.caret(caret[0] + offset);
   };
 
-  Selection.prototype._replace = function(str, start, end) {
+  Selection.prototype.replace = function(str, start, end) {
     var a, b, scrollTop;
     scrollTop = this.element.scrollTop;
     b = this.element.value.substring(0, start);
@@ -90,7 +89,7 @@ Selection = (function() {
     var e, s, scrollTop, _ref;
     scrollTop = this.element.scrollTop;
     _ref = this.caret(), s = _ref[0], e = _ref[1];
-    this._replace(str, s, e);
+    this.replace(str, s, e);
     e = s + str.length;
     if (!keepSelection) {
       s = e;
@@ -113,7 +112,7 @@ Selection = (function() {
     scrollTop = this.element.scrollTop;
     _ref = this.caret(), s = _ref[0], e = _ref[1];
     text = this.text();
-    this._replace(str + text, s, e);
+    this.replace(str + text, s, e);
     e = s + str.length;
     if (!keepSelection) {
       s = e;
@@ -129,7 +128,7 @@ Selection = (function() {
     scrollTop = this.element.scrollTop;
     _ref = this.caret(), s = _ref[0], e = _ref[1];
     text = this.text();
-    this._replace(text + str, s, e);
+    this.replace(text + str, s, e);
     s = e;
     e = e + str.length;
     if (!keepSelection) {
@@ -150,7 +149,7 @@ Selection = (function() {
       this.text(str, keepSelection);
     } else {
       _ref = this.caret(), s = _ref[0], e = _ref[1];
-      this._replace(lhs + text + rhs, s, e);
+      this.replace(lhs + text + rhs, s, e);
       e = s + lhs.length + text.length + rhs.length;
       if (!keepSelection) {
         s = e;
@@ -162,32 +161,29 @@ Selection = (function() {
     return this;
   };
 
-  Selection.prototype._getLineCaretOfCaret = function(caret) {
+  Selection.prototype.lineCaret = function(pos) {
     var e, s, value;
+    pos = pos || this.caret()[0];
     value = this.element.value;
-    s = value.lastIndexOf("\n", caret - 1) + 1;
-    e = value.indexOf("\n", caret);
+    s = value.lastIndexOf("\n", pos - 1) + 1;
+    e = value.indexOf("\n", pos);
     if (e === -1) {
       e = value.length;
     }
     return [s, e];
   };
 
-  Selection.prototype._getLineCaret = function() {
-    return this._getLineCaretOfCaret(this.caret()[0]);
-  };
-
   Selection.prototype._getLine = function() {
     var e, s, _ref;
-    _ref = this._getLineCaret(), s = _ref[0], e = _ref[1];
+    _ref = this.lineCaret(), s = _ref[0], e = _ref[1];
     return this.element.value.substring(s, e);
   };
 
   Selection.prototype._setLine = function(line, keepSelection) {
     var e, s, scrollTop, _ref;
     scrollTop = this.element.scrollTop;
-    _ref = this._getLineCaret(), s = _ref[0], e = _ref[1];
-    this._replace(line, s, e);
+    _ref = this.lineCaret(), s = _ref[0], e = _ref[1];
+    this.replace(line, s, e);
     e = s + line.length;
     if (!keepSelection) {
       s = e;
@@ -205,16 +201,14 @@ Selection = (function() {
     return this._getLine();
   };
 
-  Selection.prototype.selectWholeLine = function(caret) {
+  Selection.prototype.selectWholeLine = function(pos) {
     var e, s, _ref;
-    _ref = this._getLineCaretOfCaret(caret), s = _ref[0], e = _ref[1];
+    _ref = this.lineCaret(pos), s = _ref[0], e = _ref[1];
     return this.caret(s, e);
   };
 
   Selection.prototype.selectWholeCurrentLine = function() {
-    var e, s, _ref;
-    _ref = this._getLineCaretOfCaret(this.caret()[0]), s = _ref[0], e = _ref[1];
-    return this.caret(s, e);
+    return this.selectWholeLine(null);
   };
 
   return Selection;

@@ -11,10 +11,16 @@ describe "utils.evolution.evolute", ->
     instance = evolute(instance)
     instance.should.be.a.instanceof(jQuery)
 
-  instance = $(sandbox.createElement('div'))
-  instance = evolute(instance)
+  instance = null
 
   before ->
+    instance = $(sandbox.createElement('div'))
+    instance = evolute(instance)
+
+  after ->
+    sandbox.removeAllChildren()
+
+  beforeEach ->
     # set width/height
     instance.width WIDTH
     instance.height HEIGHT

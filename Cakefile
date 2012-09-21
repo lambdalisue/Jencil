@@ -41,6 +41,7 @@ LIB_FILES           = [
 TEST_FILES          = [
   'sandbox',
   'utils/evolution.spec',
+  'utils/selection.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',

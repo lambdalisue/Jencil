@@ -20,9 +20,15 @@ describe("utils.evolution.evolute", function() {
     instance = evolute(instance);
     return instance.should.be.a["instanceof"](jQuery);
   });
-  instance = $(sandbox.createElement('div'));
-  instance = evolute(instance);
+  instance = null;
   before(function() {
+    instance = $(sandbox.createElement('div'));
+    return instance = evolute(instance);
+  });
+  after(function() {
+    return sandbox.removeAllChildren();
+  });
+  beforeEach(function() {
     instance.width(WIDTH);
     instance.height(HEIGHT);
     return instance.css({
