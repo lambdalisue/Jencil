@@ -98,7 +98,7 @@ Workspace = (function(_super) {
   }
 
   Workspace.prototype.profile = function(profile) {
-    var button, _i, _j, _len, _len1, _ref, _ref1,
+    var button, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3,
       _this = this;
     if (profile != null) {
       if (typeof profile === 'string') {
@@ -109,20 +109,25 @@ Workspace = (function(_super) {
       profile.defaultVolume2 = this.core.options.defaultVolume2 || profile.defaultVolume2;
       this.element.empty();
       this.mainPanel = new profile.mainPanelClass(this.core, profile);
-      this.mainPanel.editorPanel.change(function(value) {
-        return _this.core.element.val(value);
-      });
+      if ((_ref = this.mainPanel.editorPanel) != null) {
+        _ref.val(this.core.element.val());
+      }
+      if ((_ref1 = this.mainPanel.editorPanel) != null) {
+        _ref1.change(function(value) {
+          return _this.core.element.val(value);
+        });
+      }
       this.toolbar = new Toolbar(this.core);
-      _ref = profile.toolbarButtons;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        button = _ref[_i];
+      _ref2 = profile.toolbarButtons;
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        button = _ref2[_i];
         button = buttonFactory(this.core, button);
         this.toolbar.addButton(button);
       }
       this.statusbar = new Statusbar(this.core);
-      _ref1 = profile.statusbarButtons;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        button = _ref1[_j];
+      _ref3 = profile.statusbarButtons;
+      for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
+        button = _ref3[_j];
         button = buttonFactory(this.core, button);
         this.statusbar.addButton(button);
       }
