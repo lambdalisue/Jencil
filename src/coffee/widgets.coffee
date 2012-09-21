@@ -45,7 +45,7 @@ class MultiplePanel extends Panel
     @snd.init()
 
   _togglePanel: (to, callbackOn, callbackOff) ->
-    return if @_animating
+    return if MultiplePanel._animating
     volume = @splitter.volume()
     callbackDone = null
     if 0 < volume < 1
@@ -56,9 +56,9 @@ class MultiplePanel extends Panel
       end = @splitter._previousVolume or @splitter.defaultVolume
       end = 0.5 if end == to
       _callbackDone = callbackOn
-    @_animating = true
+    MultiplePanel._animating = true
     callbackDone = =>
-      @_animating = false
+      MultiplePanel._animating = false
       _callbackDone?()
     animate
       start: volume
