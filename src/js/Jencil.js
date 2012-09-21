@@ -728,7 +728,7 @@
         'viewerTemplatePath': null,
         'helperTemplatePath': null
       }, options);
-      this.element = textarea;
+      this.element = textarea.hide();
       this.caretaker = new Caretaker();
       this.caretaker.originator = function() {
         return _this.editor();
@@ -865,7 +865,7 @@
     MultiplePanel.prototype._togglePanel = function(to, callbackOn, callbackOff) {
       var callbackDone, end, volume, _callbackDone,
         _this = this;
-      if (this._animating) {
+      if (MultiplePanel._animating) {
         return;
       }
       volume = this.splitter.volume();
@@ -881,9 +881,9 @@
         }
         _callbackDone = callbackOn;
       }
-      this._animating = true;
+      MultiplePanel._animating = true;
       callbackDone = function() {
-        _this._animating = false;
+        MultiplePanel._animating = false;
         return typeof _callbackDone === "function" ? _callbackDone() : void 0;
       };
       return animate({
@@ -1556,6 +1556,7 @@
           this.document.open();
           this.document.write(value);
           this.document.close();
+          $("a", $(this.document)).attr('target', '_blank');
           this.document.documentElement.scrollTop = scrollTop;
           this.width(this.document.scrollLeft);
           this.height(this.document.scrollTop);
@@ -2396,7 +2397,8 @@
         'top': '0',
         'left': '0',
         'width': '100%',
-        'height': '100%'
+        'height': '100%',
+        'z-index': 100
       });
       this.curtain = $('<div>').addClass('curtain');
       this.curtain.css({
@@ -2708,7 +2710,7 @@
     function HtmlHelper(core) {
       var HTML_HELPER_HTML;
       HtmlHelper.__super__.constructor.call(this, core);
-      HTML_HELPER_HTML = "<p><span class=\"key\">Ctrl+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+B</span>" + (Jencil.t("Make selected text property as <b>Bold</b>")) + "<p>\n<p><span class=\"key\">Ctrl+I</span>" + (Jencil.t("Make selected text property as <i>Italic</i>")) + "<p>\n<p><span class=\"key\">Ctrl+U</span>" + (Jencil.t("Underline selected text like <u>Underline</u>")) + "<p>\n<p><span class=\"key\">Ctrl+F</span>" + (Jencil.t("Toggle fullscreen mode")) + "<p>\n<p><span class=\"key\">Ctrl+Q</span>" + (Jencil.t("Toggle quick view")) + "<p>\n<p><span class=\"key\">Ctrl+H</span>" + (Jencil.t("Toggle help")) + "<p>";
+      HTML_HELPER_HTML = "<p><span class=\"key\">Ctrl+Z</span>" + (Jencil.t("Undo")) + "<p>\n<p><span class=\"key\">Ctrl+Shift+Z</span>" + (Jencil.t("Redo")) + "<p>\n<p><span class=\"key\">Ctrl+B</span>" + (Jencil.t("Make selected text property as <b>Bold</b>")) + "<p>\n<p><span class=\"key\">Ctrl+I</span>" + (Jencil.t("Make selected text property as <i>Italic</i>")) + "<p>\n<p><span class=\"key\">Ctrl+U</span>" + (Jencil.t("Underline selected text like <u>Underline</u>")) + "<p>\n<p><span class=\"key\">Ctrl+F</span>" + (Jencil.t("Toggle fullscreen mode")) + "<p>\n<p><span class=\"key\">Ctrl+Q</span>" + (Jencil.t("Toggle quick view")) + "<p>\n<p><span class=\"key\">Ctrl+H</span>" + (Jencil.t("Toggle help")) + "<p>";
       this.element.html(HTML_HELPER_HTML);
     }
 

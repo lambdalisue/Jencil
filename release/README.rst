@@ -60,7 +60,7 @@ Usage
 4.  Check https://github.com/lambdalisue/Jencil/blob/master/src/coffee/core.coffee to find options available in Jencil
 
 :Author: Alisue (lambdalisue@hashnote.net)
-:Version: 0.1.2
+:Version: 0.1.3
 :License: MIT License
 :Required: jQuery, jQuery-UI (Resizable option), i18next (i18n option)
 :Url: http://github.com/lambdalisue/Jencil
