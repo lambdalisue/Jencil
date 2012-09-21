@@ -5,7 +5,7 @@ MARGIN = 30
 PADDING = 20
 BORDER = 10
 
-describe "utils.evolution.evolute", ->
+describe "utils.evolution.evolute(jQueryObj) => object", ->
   it "should return extended jQueryObj", ->
     instance = $(sandbox.createElement('div'))
     instance = evolute(instance)

@@ -42,6 +42,7 @@ TEST_FILES          = [
   'sandbox',
   'utils/evolution.spec',
   'utils/selection.spec',
+  'utils/undo.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',
@@ -372,6 +373,8 @@ task 'minify:css', 'Minify css file', (options) ->
     compose [dst], dst, options
 
 task 'test:mocha', 'Run mocha test', (options) ->
+  invoke 'compile:develop:src'
+  invoke 'compile:develop:lib'
   invoke "compile:test"
   if not TEST_FILES or TEST_FILES.length == 0
     console.log "No test files are specified"

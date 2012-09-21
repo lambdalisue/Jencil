@@ -12,7 +12,7 @@ PADDING = 20;
 
 BORDER = 10;
 
-describe("utils.evolution.evolute", function() {
+describe("utils.evolution.evolute(jQueryObj) => object", function() {
   var instance;
   it("should return extended jQueryObj", function() {
     var instance;
