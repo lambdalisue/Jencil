@@ -46,6 +46,7 @@ animate = (function() {
         return typeof options.callbackDone === "function" ? options.callbackDone() : void 0;
       }
     };
-    return step();
+    step();
+    return null;
   };
 })();
