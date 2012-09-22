@@ -9,9 +9,12 @@ curtainFactory = (element) ->
   curtain.on = ->
     curtain.refresh()
     curtain.show()
+    return @
   curtain.refresh = ->
     curtain.width element.outerWidth(true)
     curtain.height element.outerHeight(true)
+    return @
   curtain.off = ->
     curtain.hide()
+    return @
   return curtain

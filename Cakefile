@@ -45,6 +45,7 @@ TEST_FILES          = [
   'utils/undo.spec',
   'utils/autoindent.spec',
   'utils/animation.spec',
+  'utils/curtain.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',

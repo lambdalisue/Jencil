@@ -1,8 +1,13 @@
 return if not window?
 
 describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', ->
-  textarea = $(sandbox.createElement('textarea'))
-  instance = autoIndentable(textarea)
+  textarea = instance = null
+
+  before ->
+    textarea = $(sandbox.createElement('textarea'))
+    instance = autoIndentable(textarea)
+  after ->
+    sandbox.removeAllChildren()
 
   beforeEach ->
     instance.val '001122\n  bbcc\n    CC'

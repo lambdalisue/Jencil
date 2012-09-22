@@ -5,8 +5,14 @@ if (!(typeof window !== "undefined" && window !== null)) {
 
 describe('utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', function() {
   var instance, textarea;
-  textarea = $(sandbox.createElement('textarea'));
-  instance = autoIndentable(textarea);
+  textarea = instance = null;
+  before(function() {
+    textarea = $(sandbox.createElement('textarea'));
+    return instance = autoIndentable(textarea);
+  });
+  after(function() {
+    return sandbox.removeAllChildren();
+  });
   beforeEach(function() {
     return instance.val('001122\n  bbcc\n    CC');
   });

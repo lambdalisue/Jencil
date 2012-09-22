@@ -12,14 +12,17 @@ curtainFactory = function(element) {
   });
   curtain.on = function() {
     curtain.refresh();
-    return curtain.show();
+    curtain.show();
+    return this;
   };
   curtain.refresh = function() {
     curtain.width(element.outerWidth(true));
-    return curtain.height(element.outerHeight(true));
+    curtain.height(element.outerHeight(true));
+    return this;
   };
   curtain.off = function() {
-    return curtain.hide();
+    curtain.hide();
+    return this;
   };
   return curtain;
 };
