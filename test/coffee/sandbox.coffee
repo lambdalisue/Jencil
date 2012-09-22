@@ -16,6 +16,10 @@ class Sandbox
       document.writeln '<body></body>'
     document.body.appendChild @element
 
+    @hide()
+    Sandbox.instance = @
+
+  hide: ->
     @element.style.visibility = 'hidden'
     @element.style.width = "0px"
     @element.style.height = "0px"
@@ -25,8 +29,6 @@ class Sandbox
     @element.style.border = "none"
     @element.style.padding = "0"
     @element.style.overflow = 'hidden'
-
-    Sandbox.instance = @
 
   createElement: (name) ->
     element = document.createElement name

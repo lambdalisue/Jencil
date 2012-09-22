@@ -20,6 +20,11 @@ Sandbox = (function() {
       document.writeln('<body></body>');
     }
     document.body.appendChild(this.element);
+    this.hide();
+    Sandbox.instance = this;
+  }
+
+  Sandbox.prototype.hide = function() {
     this.element.style.visibility = 'hidden';
     this.element.style.width = "0px";
     this.element.style.height = "0px";
@@ -28,9 +33,8 @@ Sandbox = (function() {
     this.element.style.margin = "0";
     this.element.style.border = "none";
     this.element.style.padding = "0";
-    this.element.style.overflow = 'hidden';
-    Sandbox.instance = this;
-  }
+    return this.element.style.overflow = 'hidden';
+  };
 
   Sandbox.prototype.createElement = function(name) {
     var element;

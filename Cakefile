@@ -43,6 +43,7 @@ TEST_FILES          = [
   'utils/evolution.spec',
   'utils/selection.spec',
   'utils/undo.spec',
+  'utils/autoindent.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',
