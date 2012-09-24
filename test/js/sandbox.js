@@ -26,10 +26,8 @@ Sandbox = (function() {
 
   Sandbox.prototype.hide = function() {
     this.element.style.visibility = 'hidden';
-    this.element.style.width = "0px";
-    this.element.style.height = "0px";
-    this.element.style.maxWidth = "0px";
-    this.element.style.maxHeight = "0px";
+    this.element.style.width = "1024px";
+    this.element.style.height = "1024px";
     this.element.style.margin = "0";
     this.element.style.border = "none";
     this.element.style.padding = "0";

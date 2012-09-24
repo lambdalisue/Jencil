@@ -21,10 +21,8 @@ class Sandbox
 
   hide: ->
     @element.style.visibility = 'hidden'
-    @element.style.width = "0px"
-    @element.style.height = "0px"
-    @element.style.maxWidth = "0px"
-    @element.style.maxHeight = "0px"
+    @element.style.width = "1024px"
+    @element.style.height = "1024px"
     @element.style.margin = "0"
     @element.style.border = "none"
     @element.style.padding = "0"

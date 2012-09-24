@@ -19,14 +19,10 @@ Splitter = (function(_super) {
       var _ref, _ref1;
       _this.mousemove(e);
       if ((_ref = _this.fst.curtain) != null) {
-        if (typeof _ref.refresh === "function") {
-          _ref.refresh();
-        }
+        _ref.refresh();
       }
       if ((_ref1 = _this.snd.curtain) != null) {
-        if (typeof _ref1.refresh === "function") {
-          _ref1.refresh();
-        }
+        _ref1.refresh();
       }
       e.stopPropagation();
       e.stopImmediatePropagation();
@@ -38,14 +34,10 @@ Splitter = (function(_super) {
       $window.unbind('mousemove', mousemove);
       $window.unbind('mouseup', mouseup);
       if ((_ref = _this.fst.curtain) != null) {
-        if (typeof _ref.off === "function") {
-          _ref.off();
-        }
+        _ref.off();
       }
       if ((_ref1 = _this.snd.curtain) != null) {
-        if (typeof _ref1.off === "function") {
-          _ref1.off();
-        }
+        _ref1.off();
       }
       e.stopPropagation();
       e.stopImmediatePropagation();
@@ -57,14 +49,10 @@ Splitter = (function(_super) {
       $window.mousemove(mousemove);
       $window.mouseup(mouseup);
       if ((_ref = _this.fst.curtain) != null) {
-        if (typeof _ref.on === "function") {
-          _ref.on();
-        }
+        _ref.on();
       }
       if ((_ref1 = _this.snd.curtain) != null) {
-        if (typeof _ref1.on === "function") {
-          _ref1.on();
-        }
+        _ref1.on();
       }
       e.stopPropagation();
       e.stopImmediatePropagation();
@@ -73,7 +61,8 @@ Splitter = (function(_super) {
   }
 
   Splitter.prototype.init = function() {
-    return this.container = evolute(this.element.parent());
+    this.container = evolute(this.element.parent());
+    return this;
   };
 
   Splitter.prototype.volume = function(value, skip) {
@@ -159,12 +148,12 @@ VerticalSplitter = (function(_super) {
   VerticalSplitter.prototype.minValue = function() {
     var m1, m2;
     m1 = this.fst.element.minWidth() + this.fst.element.nonContentWidth();
-    m2 = this.snd.element.maxWidth() + this.snd.element.nonContentWidth();
+    m2 = this.snd.element.maxWidth();
     if (m2 != null) {
-      m2 = this.valueWidth() - m2;
+      m2 = this.valueWidth() - (m2 + this.snd.element.nonContentWidth());
     }
     if ((m1 != null) && (m2 != null)) {
-      return Math.min(m1, m2);
+      return Math.max(m1, m2);
     }
     return m1 || m2 || 0;
   };
@@ -172,13 +161,16 @@ VerticalSplitter = (function(_super) {
   VerticalSplitter.prototype.maxValue = function() {
     var m1, m2, valueWidth;
     valueWidth = this.valueWidth();
-    m1 = this.fst.element.maxWidth() + this.fst.element.nonContentWidth();
+    m1 = this.fst.element.maxWidth();
+    if (m1 != null) {
+      m1 = m1 + this.fst.element.nonContentWidth();
+    }
     m2 = this.snd.element.minWidth() + this.snd.element.nonContentWidth();
     if (m2 != null) {
       m2 = valueWidth - m2;
     }
     if ((m1 != null) && (m2 != null)) {
-      return Math.max(m1, m2);
+      return Math.min(m1, m2);
     }
     return m1 || m2 || valueWidth;
   };
@@ -260,12 +252,12 @@ HorizontalSplitter = (function(_super) {
   HorizontalSplitter.prototype.minValue = function() {
     var m1, m2;
     m1 = this.fst.element.minHeight() + this.fst.element.nonContentHeight();
-    m2 = this.snd.element.maxHeight() + this.snd.element.nonContentHeight();
+    m2 = this.snd.element.maxHeight();
     if (m2 != null) {
-      m2 = this.valueWidth() - m2;
+      m2 = this.valueWidth() - (m2 + this.snd.element.nonContentHeight());
     }
     if ((m1 != null) && (m2 != null)) {
-      return Math.min(m1, m2);
+      return Math.max(m1, m2);
     }
     return m1 || m2 || 0;
   };
@@ -273,13 +265,16 @@ HorizontalSplitter = (function(_super) {
   HorizontalSplitter.prototype.maxValue = function() {
     var m1, m2, valueWidth;
     valueWidth = this.valueWidth();
-    m1 = this.fst.element.maxHeight() + this.fst.element.nonContentHeight();
+    m1 = this.fst.element.maxHeight();
+    if (m1 != null) {
+      m1 = m1 + this.fst.element.nonContentHeight();
+    }
     m2 = this.snd.element.minHeight() + this.snd.element.nonContentHeight();
     if (m2 != null) {
       m2 = valueWidth - m2;
     }
     if ((m1 != null) && (m2 != null)) {
-      return Math.max(m1, m2);
+      return Math.min(m1, m2);
     }
     return m1 || m2 || valueWidth;
   };
