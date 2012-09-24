@@ -180,3 +180,49 @@ describe 'Jencil.widgets.VerticalPanel(core, fst, snd, splitter) extends Multipl
       sandbox.mock(instance.snd.element).expects('outerHeight').once()
       sandbox.mock(instance.splitter).expects('adjust').once()
       instance.adjust().should.be.equal(instance)
+
+    it 'should set height of each elements as maximum', ->
+      instance.adjust()
+      height = instance.element.height()
+      fst.element.outerHeight(true).should.be.equal(height)
+      snd.element.outerHeight(true).should.be.equal(height)
+      instance.splitter.element.outerHeight(true).should.be.equal(height)
+
+describe 'Jencil.widgets.HorizontalPanel(core, fst, snd, splitter) extends MultiplePanel -> instance', ->
+  sandbox = fst = snd = splitter = instance = null
+
+  before ->
+    fst = new Panel(null)
+    snd = new Panel(null)
+    instance = new HorizontalPanel(null, fst, snd, splitter)
+    blackbox.add instance.element
+    instance.init()
+    instance.adjust()
+
+  after ->
+    blackbox.clear()
+  beforeEach ->
+    sandbox = sinon.sandbox.create()
+  afterEach ->
+    sandbox.verifyAndRestore()
+
+  it 'should add `horizontal` class to the element', ->
+    instance.element.hasClass('horizontal').should.be.true
+
+  describe '#adjust() -> instance', ->
+    it 'should be an instance property', ->
+      instance.should.have.property('adjust').a('function')
+
+    it 'should call some downstream methods and return the instance', ->
+      sandbox.mock(instance.fst.element).expects('outerWidth').once()
+      sandbox.mock(instance.snd.element).expects('outerWidth').once()
+      sandbox.mock(instance.splitter).expects('adjust').once()
+      instance.adjust().should.be.equal(instance)
+
+    it 'should set width of each elements as maximum', ->
+      instance.adjust()
+      width = instance.element.width()
+      fst.element.outerWidth(true).should.be.equal(width)
+      snd.element.outerWidth(true).should.be.equal(width)
+      instance.splitter.element.outerWidth(true).should.be.equal(width)
+

@@ -218,11 +218,63 @@ describe('Jencil.widgets.VerticalPanel(core, fst, snd, splitter) extends Multipl
     it('should be an instance property', function() {
       return instance.should.have.property('adjust').a('function');
     });
-    return it('should call some downstream methods and return the instance', function() {
+    it('should call some downstream methods and return the instance', function() {
       sandbox.mock(instance.fst.element).expects('outerHeight').once();
       sandbox.mock(instance.snd.element).expects('outerHeight').once();
       sandbox.mock(instance.splitter).expects('adjust').once();
       return instance.adjust().should.be.equal(instance);
+    });
+    return it('should set height of each elements as maximum', function() {
+      var height;
+      instance.adjust();
+      height = instance.element.height();
+      fst.element.outerHeight(true).should.be.equal(height);
+      snd.element.outerHeight(true).should.be.equal(height);
+      return instance.splitter.element.outerHeight(true).should.be.equal(height);
+    });
+  });
+});
+
+describe('Jencil.widgets.HorizontalPanel(core, fst, snd, splitter) extends MultiplePanel -> instance', function() {
+  var fst, instance, sandbox, snd, splitter;
+  sandbox = fst = snd = splitter = instance = null;
+  before(function() {
+    fst = new Panel(null);
+    snd = new Panel(null);
+    instance = new HorizontalPanel(null, fst, snd, splitter);
+    blackbox.add(instance.element);
+    instance.init();
+    return instance.adjust();
+  });
+  after(function() {
+    return blackbox.clear();
+  });
+  beforeEach(function() {
+    return sandbox = sinon.sandbox.create();
+  });
+  afterEach(function() {
+    return sandbox.verifyAndRestore();
+  });
+  it('should add `horizontal` class to the element', function() {
+    return instance.element.hasClass('horizontal').should.be["true"];
+  });
+  return describe('#adjust() -> instance', function() {
+    it('should be an instance property', function() {
+      return instance.should.have.property('adjust').a('function');
+    });
+    it('should call some downstream methods and return the instance', function() {
+      sandbox.mock(instance.fst.element).expects('outerWidth').once();
+      sandbox.mock(instance.snd.element).expects('outerWidth').once();
+      sandbox.mock(instance.splitter).expects('adjust').once();
+      return instance.adjust().should.be.equal(instance);
+    });
+    return it('should set width of each elements as maximum', function() {
+      var width;
+      instance.adjust();
+      width = instance.element.width();
+      fst.element.outerWidth(true).should.be.equal(width);
+      snd.element.outerWidth(true).should.be.equal(width);
+      return instance.splitter.element.outerWidth(true).should.be.equal(width);
     });
   });
 });
