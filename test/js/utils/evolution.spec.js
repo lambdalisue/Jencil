@@ -18,17 +18,17 @@ describe("Jencil.utils.evolution.evolute(jQueryObj) => object", function() {
   var instance;
   it("should return extended jQueryObj", function() {
     var instance;
-    instance = $(sandbox.createElement('div'));
+    instance = blackbox.add();
     instance = evolute(instance);
     return instance.should.be.a["instanceof"](jQuery);
   });
   instance = null;
   before(function() {
-    instance = $(sandbox.createElement('div'));
+    instance = blackbox.add();
     return instance = evolute(instance);
   });
   after(function() {
-    return sandbox.removeAllChildren();
+    return blackbox.clear();
   });
   beforeEach(function() {
     instance.width(WIDTH);

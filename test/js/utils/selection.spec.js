@@ -10,16 +10,16 @@ describe('Jencil.utils.selection.Selection(document, textarea) => object', funct
   var instance, textarea;
   it("should return Selection instance", function() {
     var instance;
-    instance = new Selection(document, sandbox.createElement('textarea'));
+    instance = new Selection(document, blackbox.add('textarea'));
     return instance.should.be.a["instanceof"](Selection);
   });
   textarea = instance = null;
   before(function() {
-    textarea = sandbox.createElement('textarea');
+    textarea = blackbox.add('textarea').get(0);
     return instance = new Selection(document, textarea);
   });
   after(function() {
-    return sandbox.removeAllChildren();
+    return blackbox.clear();
   });
   beforeEach(function() {
     return textarea.value = "000001111122222333334444455555\nAAAAABBBBBCCCCCDDDDDEEEEEFFFFF\naaaaabbbbbcccccdddddeeeeefffff";

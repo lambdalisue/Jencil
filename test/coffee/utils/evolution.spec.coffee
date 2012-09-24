@@ -9,18 +9,18 @@ BORDER = 10
 
 describe "Jencil.utils.evolution.evolute(jQueryObj) => object", ->
   it "should return extended jQueryObj", ->
-    instance = $(sandbox.createElement('div'))
+    instance = blackbox.add()
     instance = evolute(instance)
     instance.should.be.a.instanceof(jQuery)
 
   instance = null
 
   before ->
-    instance = $(sandbox.createElement('div'))
+    instance = blackbox.add()
     instance = evolute(instance)
 
   after ->
-    sandbox.removeAllChildren()
+    blackbox.clear()
 
   beforeEach ->
     # set width/height

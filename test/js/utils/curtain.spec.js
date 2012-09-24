@@ -10,10 +10,10 @@ describe('Jencil.utils.curtain.curtainFactory(element) -> instance', function() 
   var instance;
   instance = null;
   before(function() {
-    return instance = curtainFactory($(sandbox.createElement('div')));
+    return instance = curtainFactory(blackbox.add());
   });
   after(function() {
-    return sandbox.removeAllChildren();
+    return blackbox.clear();
   });
   describe('#on() -> instance', function() {
     it('should be an instance property', function() {

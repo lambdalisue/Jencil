@@ -4,17 +4,18 @@ autoIndentable = Jencil.utils.autoindent.autoIndentable
 Selection = Jencil.utils.selection.Selection
 
 describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', ->
-  textarea = instance = null
+  sandbox = textarea = instance = null
 
   before ->
-    textarea = $(sandbox.createElement('textarea'))
+    textarea = blackbox.add('textarea')
     instance = autoIndentable(textarea)
-
   after ->
-    sandbox.removeAllChildren()
-
+    blackbox.clear()
   beforeEach ->
+    sandbox = sinon.sandbox.create()
     instance.val '001122\n  bbcc\n    CC'
+  afterEach ->
+    sandbox.verifyAndRestore()
 
   it 'should have selection instance', ->
     instance.should.have.property('selection').instanceof(Selection)
@@ -75,9 +76,9 @@ describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoInd
     it 'should be an instance property', ->
       instance.autoIndent.should.have.property('enable').a('function')
 
-    it 'should enable auto indent feature and the instance', sinon.test ->
-      # Create sinon spy
-      mock = @mock(instance).expects('autoIndent').once()
+    it 'should enable auto indent feature and the instance', ->
+      # Create sinon mock
+      sandbox.mock(instance).expects('autoIndent').once()
       # Disable and Enable
       instance.autoIndent.disable()
       instance.autoIndent.enable().should.be.equal(instance)
@@ -86,17 +87,15 @@ describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoInd
       e.which = 13  # RETURN
       # Simulate keydown event
       instance.trigger(e)
-      # autoIndent should have called once with KeyDown event
-      mock.verify()
 
 
   describe '#autoIndent.disable() -> instance', ->
     it 'should be an instance property', ->
       instance.autoIndent.should.have.property('disable').a('function')
 
-    it 'should disable auto indent feature and the instance', sinon.test ->
+    it 'should disable auto indent feature and the instance', ->
       # Create sinon spy
-      mock = @mock(instance).expects('autoIndent').never()
+      sandbox.mock(instance).expects('autoIndent').never()
       # Enable and Disable
       instance.autoIndent.enable()
       instance.autoIndent.disable().should.be.equal(instance)
@@ -105,9 +104,6 @@ describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoInd
       e.which = 13  # RETURN
       # Simulate keydown event
       instance.trigger(e)
-      # autoIndent should have never called with KeyDown event
-      mock.verify()
-      # clean
       instance.autoIndent.enable()
 
 
@@ -122,10 +118,10 @@ describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoInd
       # Note: the line below fail because pre callback is wrapped
       #instance2.autoIndent.pre.should.be.equal(dummy)
 
-    it 'should called before new line and leading spaces are added', sinon.test ->
+    it 'should called before new line and leading spaces are added', ->
       instance2 = autoIndentable(textarea, -> @)
-      pspy = @spy(instance2.autoIndent, 'pre')
-      aspy = @spy(instance2.selection, 'insertAfter')
+      pspy = sandbox.spy(instance2.autoIndent, 'pre')
+      aspy = sandbox.spy(instance2.selection, 'insertAfter')
       # Create Event class to simulate
       e = jQuery.Event('keydown')
       e.which = 13  # RETURN
@@ -144,10 +140,10 @@ describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoInd
       # Note: the line below fail because post callback is wrapped
       #instance2.autoIndent.post.should.be.equal(dummy)
 
-    it 'should called after new line and leading spaces are added', sinon.test ->
+    it 'should called after new line and leading spaces are added', ->
       instance2 = autoIndentable(textarea, null, -> @)
-      aspy = @spy(instance2.selection, 'insertAfter')
-      pspy = @spy(instance2.autoIndent, 'post')
+      aspy = sandbox.spy(instance2.selection, 'insertAfter')
+      pspy = sandbox.spy(instance2.autoIndent, 'post')
       # Create Event class to simulate
       e = jQuery.Event('keydown')
       e.which = 13  # RETURN

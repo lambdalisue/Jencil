@@ -6,9 +6,9 @@ describe 'Jencil.utils.curtain.curtainFactory(element) -> instance', ->
   instance = null
 
   before ->
-    instance = curtainFactory($(sandbox.createElement('div')))
+    instance = curtainFactory(blackbox.add())
   after ->
-    sandbox.removeAllChildren()
+    blackbox.clear()
 
   describe '#on() -> instance', ->
     it 'should be an instance property', ->

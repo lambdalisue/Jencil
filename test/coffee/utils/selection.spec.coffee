@@ -4,17 +4,17 @@ Selection = Jencil.utils.selection.Selection
 
 describe 'Jencil.utils.selection.Selection(document, textarea) => object', ->
   it "should return Selection instance", ->
-    instance = new Selection(document, sandbox.createElement('textarea'))
+    instance = new Selection(document, blackbox.add('textarea'))
     instance.should.be.a.instanceof(Selection)
 
   textarea = instance = null
 
   before ->
-    textarea = sandbox.createElement 'textarea'
+    textarea = blackbox.add('textarea').get(0)
     instance = new Selection(document, textarea)
 
   after ->
-    sandbox.removeAllChildren()
+    blackbox.clear()
 
   beforeEach ->
     textarea.value = """

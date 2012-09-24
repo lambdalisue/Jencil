@@ -39,7 +39,7 @@ LIB_FILES           = [
   'jquery.textarea',
 ]
 TEST_FILES          = [
-  'sandbox',
+  'blackbox',
   'utils/undo.spec',
   'utils/selection.spec',
   'utils/evolution.spec',

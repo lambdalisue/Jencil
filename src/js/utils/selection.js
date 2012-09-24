@@ -5,8 +5,12 @@ Selection = (function() {
   function Selection(document, element) {
     this.document = document;
     this.element = element;
-    this;
-
+    if (this.document instanceof jQuery) {
+      this.document = this.document.get(0);
+    }
+    if (this.element instanceof jQuery) {
+      this.element = this.element.get(0);
+    }
   }
 
   Selection.prototype._getCaret = function() {

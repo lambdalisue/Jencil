@@ -1,5 +1,7 @@
 class Selection
-  constructor: (@document, @element) -> @
+  constructor: (@document, @element) ->
+    @document = @document.get(0) if @document instanceof jQuery
+    @element = @element.get(0) if @element instanceof jQuery
 
   _getCaret: ->
     if @document.selection? # Internet Explorer
