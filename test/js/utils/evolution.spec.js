@@ -1,8 +1,10 @@
-var BORDER, HEIGHT, MARGIN, PADDING, WIDTH;
+var BORDER, HEIGHT, MARGIN, PADDING, WIDTH, evolute;
 
 if (!(typeof window !== "undefined" && window !== null)) {
   return;
 }
+
+evolute = Jencil.utils.evolution.evolute;
 
 WIDTH = HEIGHT = 10;
 
@@ -12,7 +14,7 @@ PADDING = 20;
 
 BORDER = 10;
 
-describe("utils.evolution.evolute(jQueryObj) => object", function() {
+describe("Jencil.utils.evolution.evolute(jQueryObj) => object", function() {
   var instance;
   it("should return extended jQueryObj", function() {
     var instance;

@@ -1,4 +1,4 @@
-HtmlViewer = Jencil.ui.widgets.viewers.TemplateViewer
+HtmlViewer = TemplateViewer
 
-Jencil.utils.namespace 'Jencil.ui.widgets.viewers', (exports) ->
+namespace 'Jencil.ui.widgets.viewers', (exports) ->
   exports.HtmlViewer = HtmlViewer

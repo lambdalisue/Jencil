@@ -97,7 +97,7 @@ TemplateHelper = (function(_super) {
 
 })(BaseHelper);
 
-namespace('Jencil.ui.widgets.helpers', function(exports) {
+namespace('Jencil.helpers', function(exports) {
   exports.BaseHelper = BaseHelper;
   return exports.TemplateHelper = TemplateHelper;
 });

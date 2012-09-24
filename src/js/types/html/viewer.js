@@ -1,7 +1,7 @@
 var HtmlViewer;
 
-HtmlViewer = Jencil.ui.widgets.viewers.TemplateViewer;
+HtmlViewer = TemplateViewer;
 
-Jencil.utils.namespace('Jencil.ui.widgets.viewers', function(exports) {
+namespace('Jencil.ui.widgets.viewers', function(exports) {
   return exports.HtmlViewer = HtmlViewer;
 });

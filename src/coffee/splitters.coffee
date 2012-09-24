@@ -199,7 +199,7 @@ class HorizontalSplitter extends Splitter
     @element.relativeY(value - @element.outerHeight()/2)
     return @
 
-namespace 'Jencil.ui.widgets.splitters', (exports) ->
+namespace 'Jencil.splitters', (exports) ->
   exports.Splitter = Splitter
   exports.VerticalSplitter = VerticalSplitter
   exports.HorizontalSplitter = HorizontalSplitter

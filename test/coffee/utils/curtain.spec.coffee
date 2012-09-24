@@ -1,6 +1,8 @@
 return if not window?
+# Import
+curtainFactory = Jencil.utils.curtain.curtainFactory
 
-describe 'utils.curtain.curtainFactory(element) -> instance', ->
+describe 'Jencil.utils.curtain.curtainFactory(element) -> instance', ->
   instance = null
 
   before ->

@@ -1,9 +1,12 @@
+var Selection;
 
 if (!(typeof window !== "undefined" && window !== null)) {
   return;
 }
 
-describe('utils.selection.Selection(document, textarea) => object', function() {
+Selection = Jencil.utils.selection.Selection;
+
+describe('Jencil.utils.selection.Selection(document, textarea) => object', function() {
   var instance, textarea;
   it("should return Selection instance", function() {
     var instance;

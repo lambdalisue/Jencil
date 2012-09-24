@@ -193,7 +193,7 @@ TextEditor = (function(_super) {
 
 })(BaseEditor);
 
-namespace('Jencil.ui.widgets.editors', function(exports) {
+namespace('Jencil.editors', function(exports) {
   exports.BaseEditor = BaseEditor;
   return exports.TextEditor = TextEditor;
 });

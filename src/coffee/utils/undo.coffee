@@ -2,6 +2,7 @@ class NotImplementedError
   name: 'Not implemeted error'
   message: 'The function has not implemented yet'
 
+
 class Originator
   createMemento: ->
     throw new NotImplementedError
@@ -55,6 +56,7 @@ class Caretaker
 
   canRedo: ->
     return @_redoStack.length > 0
+
 
 if exports?
   exports.NotImplementedError = NotImplementedError

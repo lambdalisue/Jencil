@@ -49,7 +49,7 @@ headerMarkup = do ->
     else
       @enclose "<h#{n}>", "</h#{n}>\n"
 
-class HtmlEditor extends Jencil.ui.widgets.editors.TextEditor
+class HtmlEditor extends TextEditor
   constructor: (core) ->
     super core
     # Use custom autoIndentable in this editor
@@ -97,5 +97,5 @@ class HtmlEditor extends Jencil.ui.widgets.editors.TextEditor
     text.push("</ol>")
     @selection text.join("\n")
 
-Jencil.utils.namespace 'Jencil.ui.widgets.editors', (exports) ->
+namespace 'Jencil.ui.widgets.editors', (exports) ->
   exports.HtmlEditor = HtmlEditor

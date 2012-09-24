@@ -16,6 +16,7 @@ Sandbox = (function() {
     if (!(this.element != null)) {
       this.element = document.createElement('div');
     }
+    this.element.setAttribute('id', 'sandbox');
     if (!(document.body != null)) {
       document.writeln('<body></body>');
     }
@@ -25,6 +26,7 @@ Sandbox = (function() {
   }
 
   Sandbox.prototype.hide = function() {
+    this.element.style.position = 'absolute';
     this.element.style.visibility = 'hidden';
     this.element.style.width = "1024px";
     this.element.style.height = "1024px";

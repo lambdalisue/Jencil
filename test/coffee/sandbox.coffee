@@ -11,6 +11,7 @@ class Sandbox
 
     @element = document.getElementById('sandbox')
     @element = document.createElement('div') if not @element?
+    @element.setAttribute('id', 'sandbox')
 
     if not document.body?
       document.writeln '<body></body>'
@@ -20,6 +21,7 @@ class Sandbox
     Sandbox.instance = @
 
   hide: ->
+    @element.style.position = 'absolute'
     @element.style.visibility = 'hidden'
     @element.style.width = "1024px"
     @element.style.height = "1024px"

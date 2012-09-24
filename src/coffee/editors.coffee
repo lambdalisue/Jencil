@@ -119,6 +119,6 @@ class TextEditor extends BaseEditor
     return @change()
 
 
-namespace 'Jencil.ui.widgets.editors', (exports) ->
+namespace 'Jencil.editors', (exports) ->
   exports.BaseEditor = BaseEditor
   exports.TextEditor = TextEditor

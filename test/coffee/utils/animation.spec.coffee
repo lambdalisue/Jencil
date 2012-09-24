@@ -1,16 +1,10 @@
 return if not window?
+# Import
+animate = Jencil.utils.animation.animate
 
-describe 'utils.animate(options) -> null', ->
-  clock = null
-
-  before ->
-    clock = sinon.useFakeTimers()
-
-  after ->
-    clock.restore()
-
-  it 'should call callback each epoch with args x, epoch', ->
-    callback = sinon.spy()
+describe 'Jencil.utils.animation.animate(options) -> null', ->
+  it 'should call callback each epoch with args x, epoch', sinon.test ->
+    callback = @spy()
     linear = (a, b, c, d, e) -> return d*b+c
     animate(
       callbackEach: callback
@@ -20,15 +14,15 @@ describe 'utils.animate(options) -> null', ->
       end: 100
     )
     for i in [0...10]
-      clock.tick(i*10)
+      @clock.tick(i*10)
       # callback should be called
       callback.called.should.be.true
       # should be called with args
       callback.calledWith(linear(i/1000, i, 0, 100, 1000), i).should.be.true
 
-  it 'should call callback done if callbackDone has specified', ->
-    callback = sinon.spy()
-    callback2 = sinon.spy()
+  it 'should call callback done if callbackDone has specified', sinon.test ->
+    callback = @spy()
+    callback2 = @spy()
     linear = (a, b, c, d, e) -> return d*b+c
     animate(
       callbackEach: callback
@@ -38,7 +32,7 @@ describe 'utils.animate(options) -> null', ->
       start: 0
       end: 100
     )
-    clock.tick(1000)
+    @clock.tick(1000)
     # callback should be called
     callback.called.should.be.true
     callback2.called.should.be.true

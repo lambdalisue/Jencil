@@ -1,4 +1,4 @@
-class HtmlHelper extends Jencil.ui.widgets.helpers.BaseHelper
+class HtmlHelper extends BaseHelper
   constructor: (core) ->
     super core
     HTML_HELPER_HTML = """

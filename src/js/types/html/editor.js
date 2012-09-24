@@ -215,8 +215,8 @@ HtmlEditor = (function(_super) {
 
   return HtmlEditor;
 
-})(Jencil.ui.widgets.editors.TextEditor);
+})(TextEditor);
 
-Jencil.utils.namespace('Jencil.ui.widgets.editors', function(exports) {
+namespace('Jencil.ui.widgets.editors', function(exports) {
   return exports.HtmlEditor = HtmlEditor;
 });

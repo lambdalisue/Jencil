@@ -1,5 +1,5 @@
 HtmlProfile =
-  mainPanelClass: Jencil.ui.widgets.panels.TrimainPanel
+  mainPanelClass: TrimainPanel
   editorClass: HtmlEditor
   viewerClass: HtmlViewer
   helperClass: HtmlHelper
@@ -37,5 +37,5 @@ HtmlProfile =
     'Helper',
   ]
 
-Jencil.utils.namespace 'Jencil.profiles', (exports) ->
+namespace 'Jencil.profiles', (exports) ->
   exports.HtmlProfile = HtmlProfile

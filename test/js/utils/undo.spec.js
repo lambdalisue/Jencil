@@ -2,14 +2,21 @@ var Caretaker, NotImplementedError, Originator, undo,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+undo = null;
+
 if (!(typeof window !== "undefined" && window !== null)) {
   undo = require('../../../src/js/utils/undo.js');
-  NotImplementedError = undo.NotImplementedError;
-  Originator = undo.Originator;
-  Caretaker = undo.Caretaker;
+} else {
+  undo = Jencil.utils.undo;
 }
 
-describe('utils.undo.Originator():Abstract => object', function() {
+NotImplementedError = undo.NotImplementedError;
+
+Originator = undo.Originator;
+
+Caretaker = undo.Caretaker;
+
+describe('Jencil.utils.undo.Originator():Abstract => object', function() {
   var instance;
   instance = new Originator();
   describe('#createMemento() => object', function() {
@@ -30,7 +37,7 @@ describe('utils.undo.Originator():Abstract => object', function() {
   });
 });
 
-describe('utils.undo.Caretaker(originator) => object', function() {
+describe('Jencil.utils.undo.Caretaker(originator) => object', function() {
   var FakeOriginator, instance, originator;
   FakeOriginator = (function(_super) {
 

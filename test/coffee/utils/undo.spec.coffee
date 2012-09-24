@@ -1,10 +1,14 @@
+undo = null
 if not window?
   undo = require '../../../src/js/utils/undo.js'
-  NotImplementedError = undo.NotImplementedError
-  Originator = undo.Originator
-  Caretaker = undo.Caretaker
+else
+  undo = Jencil.utils.undo
+NotImplementedError = undo.NotImplementedError
+Originator = undo.Originator
+Caretaker = undo.Caretaker
 
-describe 'utils.undo.Originator():Abstract => object', ->
+
+describe 'Jencil.utils.undo.Originator():Abstract => object', ->
   instance = new Originator()
 
   describe '#createMemento() => object', ->
@@ -22,7 +26,7 @@ describe 'utils.undo.Originator():Abstract => object', ->
       instance.setMemento.should.throw(NotImplementedError)
 
 
-describe 'utils.undo.Caretaker(originator) => object', ->
+describe 'Jencil.utils.undo.Caretaker(originator) => object', ->
   class FakeOriginator extends Originator
     constructor: ->
       @counter = 0

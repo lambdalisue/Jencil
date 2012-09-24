@@ -21,7 +21,7 @@ SRC_FILES           = [
   'utils/i18n',
   'core',
   'widgets',
-  'splitter',
+  'splitters',
   'editors',
   'viewers',
   'helpers',
@@ -40,14 +40,14 @@ LIB_FILES           = [
 ]
 TEST_FILES          = [
   'sandbox',
-  'utils/evolution.spec',
-  'utils/selection.spec',
   'utils/undo.spec',
-  'utils/autoindent.spec',
-  'utils/animation.spec',
+  'utils/selection.spec',
+  'utils/evolution.spec',
   'utils/curtain.spec',
+  'utils/animation.spec',
+  'utils/autoindent.spec',
   'widgets.spec',
-  'splitter.spec',
+  'splitters.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',

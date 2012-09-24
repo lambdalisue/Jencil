@@ -191,7 +191,7 @@ buttonFactory = (core, value) ->
   # probably value is a class of Button
   return new value(core)
 
-namespace 'Jencil.ui.widgets.buttons', (exports) ->
+namespace 'Jencil.buttons', (exports) ->
   exports.Separator = Separator
   exports.Button = Button
   exports.ActionButton = ActionButton

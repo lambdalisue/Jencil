@@ -60,6 +60,6 @@ class TemplateHelper extends BaseHelper
     return @
 
 
-namespace 'Jencil.ui.widgets.helpers', (exports) ->
+namespace 'Jencil.helpers', (exports) ->
   exports.BaseHelper = BaseHelper
   exports.TemplateHelper = TemplateHelper

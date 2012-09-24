@@ -1,11 +1,15 @@
 return if not window?
+# Imports
+autoIndentable = Jencil.utils.autoindent.autoIndentable
+Selection = Jencil.utils.selection.Selection
 
-describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', ->
+describe 'Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', ->
   textarea = instance = null
 
   before ->
     textarea = $(sandbox.createElement('textarea'))
     instance = autoIndentable(textarea)
+
   after ->
     sandbox.removeAllChildren()
 
@@ -71,9 +75,9 @@ describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
     it 'should be an instance property', ->
       instance.autoIndent.should.have.property('enable').a('function')
 
-    it 'should enable auto indent feature and the instance', ->
+    it 'should enable auto indent feature and the instance', sinon.test ->
       # Create sinon spy
-      mock = sinon.mock(instance).expects('autoIndent').once()
+      mock = @mock(instance).expects('autoIndent').once()
       # Disable and Enable
       instance.autoIndent.disable()
       instance.autoIndent.enable().should.be.equal(instance)
@@ -84,16 +88,15 @@ describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
       instance.trigger(e)
       # autoIndent should have called once with KeyDown event
       mock.verify()
-      instance.autoIndent.restore()
 
 
   describe '#autoIndent.disable() -> instance', ->
     it 'should be an instance property', ->
       instance.autoIndent.should.have.property('disable').a('function')
 
-    it 'should disable auto indent feature and the instance', ->
+    it 'should disable auto indent feature and the instance', sinon.test ->
       # Create sinon spy
-      mock = sinon.mock(instance).expects('autoIndent').never()
+      mock = @mock(instance).expects('autoIndent').never()
       # Enable and Disable
       instance.autoIndent.enable()
       instance.autoIndent.disable().should.be.equal(instance)
@@ -105,7 +108,6 @@ describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
       # autoIndent should have never called with KeyDown event
       mock.verify()
       # clean
-      instance.autoIndent.restore()
       instance.autoIndent.enable()
 
 
@@ -120,19 +122,16 @@ describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
       # Note: the line below fail because pre callback is wrapped
       #instance2.autoIndent.pre.should.be.equal(dummy)
 
-    it 'should called before new line and leading spaces are added', ->
+    it 'should called before new line and leading spaces are added', sinon.test ->
       instance2 = autoIndentable(textarea, -> @)
-      pspy = sinon.spy(instance2.autoIndent, 'pre')
-      aspy = sinon.spy(instance2.selection, 'insertAfter')
+      pspy = @spy(instance2.autoIndent, 'pre')
+      aspy = @spy(instance2.selection, 'insertAfter')
       # Create Event class to simulate
       e = jQuery.Event('keydown')
       e.which = 13  # RETURN
-      # Simulate keydown event
-      instance2.trigger(e)
+      # Simulate autoIndent
+      instance2.autoIndent(e)
       pspy.calledBefore(aspy).should.be.true
-      # clean
-      instance2.autoIndent.pre.restore()
-      instance2.selection.insertAfter.restore()
 
   describe '#autoIndent.post(e, line, indent, insert) -> instance', ->
     it 'should not exists if nothing has specified', ->
@@ -145,16 +144,13 @@ describe 'utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
       # Note: the line below fail because post callback is wrapped
       #instance2.autoIndent.post.should.be.equal(dummy)
 
-    it 'should called after new line and leading spaces are added', ->
+    it 'should called after new line and leading spaces are added', sinon.test ->
       instance2 = autoIndentable(textarea, null, -> @)
-      aspy = sinon.spy(instance2.selection, 'insertAfter')
-      pspy = sinon.spy(instance2.autoIndent, 'post')
+      aspy = @spy(instance2.selection, 'insertAfter')
+      pspy = @spy(instance2.autoIndent, 'post')
       # Create Event class to simulate
       e = jQuery.Event('keydown')
       e.which = 13  # RETURN
       # Simulate keydown event
-      instance2.trigger(e)
+      instance2.autoIndent(e)
       pspy.calledAfter(aspy).should.be.true
-      # clean
-      instance2.autoIndent.post.restore()
-      instance2.selection.insertAfter.restore()

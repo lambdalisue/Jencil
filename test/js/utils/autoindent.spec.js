@@ -1,9 +1,14 @@
+var Selection, autoIndentable;
 
 if (!(typeof window !== "undefined" && window !== null)) {
   return;
 }
 
-describe('utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', function() {
+autoIndentable = Jencil.utils.autoindent.autoIndentable;
+
+Selection = Jencil.utils.selection.Selection;
+
+describe('Jencil.utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentableObj', function() {
   var instance, textarea;
   textarea = instance = null;
   before(function() {
@@ -63,34 +68,32 @@ describe('utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
     it('should be an instance property', function() {
       return instance.autoIndent.should.have.property('enable').a('function');
     });
-    return it('should enable auto indent feature and the instance', function() {
+    return it('should enable auto indent feature and the instance', sinon.test(function() {
       var e, mock;
-      mock = sinon.mock(instance).expects('autoIndent').once();
+      mock = this.mock(instance).expects('autoIndent').once();
       instance.autoIndent.disable();
       instance.autoIndent.enable().should.be.equal(instance);
       e = jQuery.Event('keydown');
       e.which = 13;
       instance.trigger(e);
-      mock.verify();
-      return instance.autoIndent.restore();
-    });
+      return mock.verify();
+    }));
   });
   describe('#autoIndent.disable() -> instance', function() {
     it('should be an instance property', function() {
       return instance.autoIndent.should.have.property('disable').a('function');
     });
-    return it('should disable auto indent feature and the instance', function() {
+    return it('should disable auto indent feature and the instance', sinon.test(function() {
       var e, mock;
-      mock = sinon.mock(instance).expects('autoIndent').never();
+      mock = this.mock(instance).expects('autoIndent').never();
       instance.autoIndent.enable();
       instance.autoIndent.disable().should.be.equal(instance);
       e = jQuery.Event('keydown');
       e.which = 13;
       instance.trigger(e);
       mock.verify();
-      instance.autoIndent.restore();
       return instance.autoIndent.enable();
-    });
+    }));
   });
   describe('#autoIndent.pre(e, line) -> instance', function() {
     it('should not exists if nothing has specified', function() {
@@ -104,20 +107,18 @@ describe('utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
       instance2 = autoIndentable(textarea, dummy);
       return instance2.autoIndent.should.have.property('pre').a('function');
     });
-    return it('should called before new line and leading spaces are added', function() {
+    return it('should called before new line and leading spaces are added', sinon.test(function() {
       var aspy, e, instance2, pspy;
       instance2 = autoIndentable(textarea, function() {
         return this;
       });
-      pspy = sinon.spy(instance2.autoIndent, 'pre');
-      aspy = sinon.spy(instance2.selection, 'insertAfter');
+      pspy = this.spy(instance2.autoIndent, 'pre');
+      aspy = this.spy(instance2.selection, 'insertAfter');
       e = jQuery.Event('keydown');
       e.which = 13;
-      instance2.trigger(e);
-      pspy.calledBefore(aspy).should.be["true"];
-      instance2.autoIndent.pre.restore();
-      return instance2.selection.insertAfter.restore();
-    });
+      instance2.autoIndent(e);
+      return pspy.calledBefore(aspy).should.be["true"];
+    }));
   });
   return describe('#autoIndent.post(e, line, indent, insert) -> instance', function() {
     it('should not exists if nothing has specified', function() {
@@ -131,19 +132,17 @@ describe('utils.autoindent.autoIndentable(textarea, pre, post) -> AutoIndentable
       instance2 = autoIndentable(textarea, null, dummy);
       return instance2.autoIndent.should.have.property('post').a('function');
     });
-    return it('should called after new line and leading spaces are added', function() {
+    return it('should called after new line and leading spaces are added', sinon.test(function() {
       var aspy, e, instance2, pspy;
       instance2 = autoIndentable(textarea, null, function() {
         return this;
       });
-      aspy = sinon.spy(instance2.selection, 'insertAfter');
-      pspy = sinon.spy(instance2.autoIndent, 'post');
+      aspy = this.spy(instance2.selection, 'insertAfter');
+      pspy = this.spy(instance2.autoIndent, 'post');
       e = jQuery.Event('keydown');
       e.which = 13;
-      instance2.trigger(e);
-      pspy.calledAfter(aspy).should.be["true"];
-      instance2.autoIndent.post.restore();
-      return instance2.selection.insertAfter.restore();
-    });
+      instance2.autoIndent(e);
+      return pspy.calledAfter(aspy).should.be["true"];
+    }));
   });
 });

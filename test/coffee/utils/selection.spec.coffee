@@ -1,6 +1,8 @@
 return if not window?
+# Import
+Selection = Jencil.utils.selection.Selection
 
-describe 'utils.selection.Selection(document, textarea) => object', ->
+describe 'Jencil.utils.selection.Selection(document, textarea) => object', ->
   it "should return Selection instance", ->
     instance = new Selection(document, sandbox.createElement('textarea'))
     instance.should.be.a.instanceof(Selection)

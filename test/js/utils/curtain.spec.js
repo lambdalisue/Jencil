@@ -1,9 +1,12 @@
+var curtainFactory;
 
 if (!(typeof window !== "undefined" && window !== null)) {
   return;
 }
 
-describe('utils.curtain.curtainFactory(element) -> instance', function() {
+curtainFactory = Jencil.utils.curtain.curtainFactory;
+
+describe('Jencil.utils.curtain.curtainFactory(element) -> instance', function() {
   var instance;
   instance = null;
   before(function() {
