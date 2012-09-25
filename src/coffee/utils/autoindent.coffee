@@ -51,14 +51,15 @@ autoIndentable = do ->
     # get current line
     line = @selection.line()
     # call pre callback
-    @autoIndent.pre?.call(@, e, line)
-    # get leading white spaces of the line
-    indent = line.replace(/^([\t\s]*).*$/, "$1")
-    # add newline and leading white spaces
-    insert = "\n#{indent}"
-    @selection.insertAfter(insert, false)
+    cancel = @autoIndent.pre?.call(@, e, line) is true
+    if cancel isnt true
+      # get leading white spaces of the line
+      indent = line.replace(/^([\t\s]*).*$/, "$1")
+      # add newline and leading white spaces
+      insert = "\n#{indent}"
+      @selection.insertAfter(insert, false)
     # call post callback
-    @autoIndent.post?.call(@, e, line, indent, insert)
+    @autoIndent.post?.call(@, e, line, indent, insert, cancel)
     # cancel bubbling
     e.stopPropagation()
     e.stopImmediatePropagation()

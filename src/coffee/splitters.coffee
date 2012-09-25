@@ -10,8 +10,8 @@ class Splitter extends Widget
     mousemove = (e) =>
       @mousemove e
       # update curtain div
-      @fst.curtain?.refresh?()
-      @snd.curtain?.refresh?()
+      @fst.curtain?.refresh()
+      @snd.curtain?.refresh()
       # cancel bubbling
       e.stopPropagation()
       e.stopImmediatePropagation()
@@ -22,8 +22,8 @@ class Splitter extends Widget
       $window.unbind 'mousemove', mousemove
       $window.unbind 'mouseup', mouseup
       # hide curtain div
-      @fst.curtain?.off?()
-      @snd.curtain?.off?()
+      @fst.curtain?.off()
+      @snd.curtain?.off()
       # cancel bubbling
       e.stopPropagation()
       e.stopImmediatePropagation()
@@ -34,8 +34,8 @@ class Splitter extends Widget
       $window.mousemove mousemove
       $window.mouseup mouseup
       # show curtain div
-      @fst.curtain?.on?()
-      @snd.curtain?.on?()
+      @fst.curtain?.on()
+      @snd.curtain?.on()
       # cancel bubbling
       e.stopPropagation()
       e.stopImmediatePropagation()
@@ -44,6 +44,7 @@ class Splitter extends Widget
 
   init: ->
     @container = evolute @element.parent()
+    return @
 
   volume: (value, skip=false) ->
     if value?
@@ -90,19 +91,20 @@ class VerticalSplitter extends Splitter
 
   minValue: ->
     m1 = @fst.element.minWidth() + @fst.element.nonContentWidth()
-    m2 = @snd.element.maxWidth() + @snd.element.nonContentWidth()
-    m2 = @valueWidth() - m2 if m2?
+    m2 = @snd.element.maxWidth()
+    m2 = @valueWidth() - (m2 + @snd.element.nonContentWidth()) if m2?
     if m1? and m2?
-      return Math.min(m1, m2)
+      return Math.max(m1, m2)
     return m1 or m2 or 0
 
   maxValue: ->
     valueWidth = @valueWidth()
-    m1 = @fst.element.maxWidth() + @fst.element.nonContentWidth()
+    m1 = @fst.element.maxWidth()
+    m1 = m1 + @fst.element.nonContentWidth() if m1?
     m2 = @snd.element.minWidth() + @snd.element.nonContentWidth()
     m2 = valueWidth - m2 if m2?
     if m1? and m2?
-      return Math.max(m1, m2)
+      return Math.min(m1, m2)
     return m1 or m2 or valueWidth
 
   adjust: ->
@@ -154,19 +156,20 @@ class HorizontalSplitter extends Splitter
 
   minValue: ->
     m1 = @fst.element.minHeight() + @fst.element.nonContentHeight()
-    m2 = @snd.element.maxHeight() + @snd.element.nonContentHeight()
-    m2 = @valueWidth() - m2 if m2?
+    m2 = @snd.element.maxHeight()
+    m2 = @valueWidth() - (m2 + @snd.element.nonContentHeight()) if m2?
     if m1? and m2?
-      return Math.min(m1, m2)
+      return Math.max(m1, m2)
     return m1 or m2 or 0
 
   maxValue: ->
     valueWidth = @valueWidth()
-    m1 = @fst.element.maxHeight() + @fst.element.nonContentHeight()
+    m1 = @fst.element.maxHeight()
+    m1 = m1 + @fst.element.nonContentHeight() if m1?
     m2 = @snd.element.minHeight() + @snd.element.nonContentHeight()
     m2 = valueWidth - m2 if m2?
     if m1? and m2?
-      return Math.max(m1, m2)
+      return Math.min(m1, m2)
     return m1 or m2 or valueWidth
 
   adjust: ->
@@ -196,7 +199,7 @@ class HorizontalSplitter extends Splitter
     @element.relativeY(value - @element.outerHeight()/2)
     return @
 
-namespace 'Jencil.ui.widgets.splitters', (exports) ->
+namespace 'Jencil.splitters', (exports) ->
   exports.Splitter = Splitter
   exports.VerticalSplitter = VerticalSplitter
   exports.HorizontalSplitter = HorizontalSplitter

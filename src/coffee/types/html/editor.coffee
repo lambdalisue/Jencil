@@ -6,7 +6,6 @@ autoIndentableHtml = do ->
   ] for x in ['p', 'li'])
 
   pre = (e, line) ->
-    console.log "@", @
     return if e.shiftKey
     for pattern in PATTERNS
       if pattern[1].test(line) or pattern[2].test(line)
@@ -49,7 +48,7 @@ headerMarkup = do ->
     else
       @enclose "<h#{n}>", "</h#{n}>\n"
 
-class HtmlEditor extends Jencil.ui.widgets.editors.TextEditor
+class HtmlEditor extends TextEditor
   constructor: (core) ->
     super core
     # Use custom autoIndentable in this editor
@@ -96,6 +95,3 @@ class HtmlEditor extends Jencil.ui.widgets.editors.TextEditor
     text.unshift("<ol>")
     text.push("</ol>")
     @selection text.join("\n")
-
-Jencil.utils.namespace 'Jencil.ui.widgets.editors', (exports) ->
-  exports.HtmlEditor = HtmlEditor

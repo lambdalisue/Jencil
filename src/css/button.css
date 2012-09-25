@@ -41,13 +41,16 @@
   padding: 2px;
   outline: none;
   border: 1px solid #f9f9f9;
-  cursor: pointer;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
-.jencil .workspace .toolbar .button:hover,
-.jencil .workspace .statusbar .button:hover {
+.jencil .workspace .toolbar .button:not(.disable),
+.jencil .workspace .statusbar .button:not(.disable) {
+  cursor: pointer;
+}
+.jencil .workspace .toolbar .button:not(.disable):hover,
+.jencil .workspace .statusbar .button:not(.disable):hover {
   background: #eaeaea;
 }
 .jencil .workspace .toolbar .button span,
@@ -65,7 +68,7 @@
   float: right;
 }
 .jencil .workspace .button.hide span,
-.jencil .workspace .button.disabled span {
+.jencil .workspace .button.disable span {
   opacity: 0.5;
 }
 .jencil .workspace .button.undo span {

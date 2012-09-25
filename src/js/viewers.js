@@ -151,7 +151,7 @@ AjaxViewer = (function(_super) {
 
 })(TemplateViewer);
 
-namespace('Jencil.ui.widgets.viewers', function(exports) {
+namespace('Jencil.viewers', function(exports) {
   exports.BaseViewer = BaseViewer;
   exports.TemplateViewer = TemplateViewer;
   return exports.AjaxViewer = AjaxViewer;

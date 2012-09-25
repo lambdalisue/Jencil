@@ -55,7 +55,7 @@ TrimainPanel = (function(_super) {
 
 })(HorizontalPanel);
 
-namespace('Jencil.ui.widgets.panels', function(exports) {
+namespace('Jencil.mainpanels', function(exports) {
   exports.MonomainPanel = MonomainPanel;
   exports.DimainPanel = DimainPanel;
   return exports.TrimainPanel = TrimainPanel;

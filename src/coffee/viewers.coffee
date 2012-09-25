@@ -102,7 +102,7 @@ class AjaxViewer extends TemplateViewer
           return @iframe.write value
 
 
-namespace 'Jencil.ui.widgets.viewers', (exports) ->
+namespace 'Jencil.viewers', (exports) ->
   exports.BaseViewer = BaseViewer
   exports.TemplateViewer = TemplateViewer
   exports.AjaxViewer = AjaxViewer
