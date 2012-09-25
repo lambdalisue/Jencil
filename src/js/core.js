@@ -19,12 +19,13 @@ this.Jencil = (function() {
     DefaultOptions = {
       profile: 'Html',
       profiles: {
-        Html: HtmlProfile
+        Html: HtmlProfile,
+        Markdown: MarkdownProfile
       },
       resizable: true,
       enableTabIndent: true,
       enableAutoIndent: true,
-      tabString: '    ',
+      tabString: '\t',
       defaultVolume: null,
       defaultVolume2: null,
       width: 640,
@@ -73,6 +74,10 @@ namespace('Jencil.profiles', function(exports) {
 
 namespace('Jencil.utils.namespace', function(exports) {
   return exports.namespace = namespace;
+});
+
+namespace('Jencil.utils.strutils', function(exports) {
+  return exports.strutils = strutils;
 });
 
 namespace('Jencil.utils.evolution', function(exports) {

@@ -8,6 +8,7 @@
     <script src="./vender/jquery-1.8.0.min.js"></script>
     <script src="./vender/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
     <script src="./vender/i18next-1.5.6.js"></script>
+    <script src="./vender/markdown.js"></script>
     <script src="./vender/sinon-1.4.2.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
@@ -27,10 +28,11 @@
     <script src="../lib/js/jquery.textarea.js"></script>
     <script src="../lib/js/shortcut.js"></script>
     <script src="../src/js/utils/namespace.js"></script>
+    <script src="../src/js/utils/strutils.js"></script>
+    <script src="../src/js/utils/undo.js"></script>
     <script src="../src/js/utils/evolution.js"></script>
     <script src="../src/js/utils/selection.js"></script>
     <script src="../src/js/utils/curtain.js"></script>
-    <script src="../src/js/utils/undo.js"></script>
     <script src="../src/js/utils/animation.js"></script>
     <script src="../src/js/utils/autoindent.js"></script>
     <script src="../src/js/utils/i18n.js"></script>
@@ -48,15 +50,19 @@
     <script src="../src/js/types/html/viewer.js"></script>
     <script src="../src/js/types/html/helper.js"></script>
     <script src="../src/js/types/html/profile.js"></script>
+    <script src="../src/js/types/markdown/editor.js"></script>
+    <script src="../src/js/types/markdown/viewer.js"></script>
+    <script src="../src/js/types/markdown/profile.js"></script>
     <!--
     <link rel="stylesheet" href="../release/Jencil.0.1.3.min.css">
     <script src="../release/Jencil.0.1.3.min.js"></script>
     -->
 
     <script src="js/blackbox.js"></script>
+    <script src="js/utils/strutils.spec.js"></script>
+    <script src="js/utils/undo.spec.js"></script>
     <script src="js/utils/evolution.spec.js"></script>
     <script src="js/utils/selection.spec.js"></script>
-    <script src="js/utils/undo.spec.js"></script>
     <script src="js/utils/autoindent.spec.js"></script>
     <script src="js/utils/animation.spec.js"></script>
     <script src="js/utils/curtain.spec.js"></script>
@@ -64,10 +70,10 @@
     <script src="js/splitters.spec.js"></script>
     <script>
         $(function() {
-            mocha.run();
+            //mocha.run();
             i18n.init(function(t){
                 $("textarea#demo").jencil({
-                    'profile': 'Html',
+                    'profile': 'Markdown',
                     'width': 700,
                 });
             });

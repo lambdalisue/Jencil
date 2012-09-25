@@ -30,11 +30,13 @@
             padding: 2px;
             outline: none;
             border: 1px solid #f9f9f9;
-            cursor: pointer;
             .border-radius(5px);
 
-            &:hover {
-                background: #eaeaea;
+            &:not(.disable) {
+                cursor: pointer;
+                &:hover {
+                    background: #eaeaea;
+                }
             }
 
             span {
@@ -57,7 +59,7 @@
 
 .jencil .workspace .button {
     &.hide span,
-    &.disabled span {
+    &.disable span {
         opacity: 0.5;
     }
     &.undo span { background-position: -0px 0px; }

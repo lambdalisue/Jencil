@@ -84,6 +84,13 @@ class TextEditor extends BaseEditor
     @textarea.outerHeight @element.height()
     return @
 
+  selectWholeLineIfNoSelectionFound: ->
+    caret = @textarea.selection.caret()
+    if caret[0] == caret[1]
+      # select current line before
+      @textarea.selection.selectWholeCurrentLine()
+    return
+
   selection: (str, keepSelection=true) ->
     if str?
       @textarea.selection.text(str, keepSelection)
@@ -92,28 +99,19 @@ class TextEditor extends BaseEditor
     return @textarea.selection.text()
 
   enclose: (b, a, keepSelection=true) ->
-    caret = @textarea.selection.caret()
-    if caret[0] == caret[1]
-      # select current line before
-      @textarea.selection.selectWholeCurrentLine()
+    @selectWholeLineIfNoSelectionFound()
     @textarea.selection.enclose(b, a, keepSelection)
     @core.caretaker.save()
     return @change()
 
   insertBefore: (str, keepSelection=true) ->
-    caret = @textarea.selection.caret()
-    if caret[0] == caret[1]
-      # select current line before
-      @textarea.selection.selectWholeCurrentLine()
+    @selectWholeLineIfNoSelectionFound()
     @textarea.selection.insertBefore(str, keepSelection)
     @core.caretaker.save()
     return @change()
 
   insertAfter: (str, keepSelection=true) ->
-    caret = @textarea.selection.caret()
-    if caret[0] == caret[1]
-      # select current line before
-      @textarea.selection.selectWholeCurrentLine()
+    @selectWholeLineIfNoSelectionFound()
     @textarea.selection.insertAfter(str, keepSelection)
     @core.caretaker.save()
     return @change()

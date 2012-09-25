@@ -15,11 +15,12 @@ class @Jencil
       profile: 'Html',
       profiles: {
         Html: HtmlProfile
+        Markdown: MarkdownProfile
       },
       resizable: true,
       enableTabIndent: true,
       enableAutoIndent: true,
-      tabString: '    ',
+      tabString: '\t',
       defaultVolume: null,
       defaultVolume2: null,
       width: 640,
@@ -54,6 +55,8 @@ namespace 'Jencil.profiles', (exports) ->
   exports.DefaultProfile = DefaultProfile
 namespace 'Jencil.utils.namespace', (exports) ->
   exports.namespace = namespace
+namespace 'Jencil.utils.strutils', (exports) ->
+  exports.strutils = strutils
 namespace 'Jencil.utils.evolution', (exports) ->
   exports.evolute = evolute
 namespace 'Jencil.utils.selection', (exports) ->

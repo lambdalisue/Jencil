@@ -6,7 +6,6 @@ autoIndentableHtml = do ->
   ] for x in ['p', 'li'])
 
   pre = (e, line) ->
-    console.log "@", @
     return if e.shiftKey
     for pattern in PATTERNS
       if pattern[1].test(line) or pattern[2].test(line)
@@ -96,6 +95,3 @@ class HtmlEditor extends TextEditor
     text.unshift("<ol>")
     text.push("</ol>")
     @selection text.join("\n")
-
-namespace 'Jencil.ui.widgets.editors', (exports) ->
-  exports.HtmlEditor = HtmlEditor

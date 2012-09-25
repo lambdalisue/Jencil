@@ -131,8 +131,8 @@ class Selection
     e = value.length if e == -1
     return [s, e]
 
-  _getLine: ->
-    [s, e] = @lineCaret()
+  _getLine: (pos) ->
+    [s, e] = @lineCaret(pos)
     return @element.value.substring s, e
   _setLine: (line, keepSelection) ->
     scrollTop = @element.scrollTop

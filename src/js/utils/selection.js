@@ -177,9 +177,9 @@ Selection = (function() {
     return [s, e];
   };
 
-  Selection.prototype._getLine = function() {
+  Selection.prototype._getLine = function(pos) {
     var e, s, _ref;
-    _ref = this.lineCaret(), s = _ref[0], e = _ref[1];
+    _ref = this.lineCaret(pos), s = _ref[0], e = _ref[1];
     return this.element.value.substring(s, e);
   };
 

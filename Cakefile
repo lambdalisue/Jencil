@@ -12,6 +12,7 @@ STYLE_LIB_PATH      = $ {root: "./lib", src: "less", dst: "css"}
 RELEASE_PATH        = "./release"
 SRC_FILES           = [
   'utils/namespace',
+  'utils/strutils',
   'utils/undo',
   'utils/selection',
   'utils/evolution',
@@ -33,6 +34,9 @@ SRC_FILES           = [
   'types/html/viewer',
   'types/html/helper',
   'types/html/profile',
+  'types/markdown/editor',
+  'types/markdown/viewer',
+  'types/markdown/profile',
 ]
 LIB_FILES           = [
   'shortcut',
@@ -40,6 +44,7 @@ LIB_FILES           = [
 ]
 TEST_FILES          = [
   'blackbox',
+  'utils/strutils.spec',
   'utils/undo.spec',
   'utils/selection.spec',
   'utils/evolution.spec',
