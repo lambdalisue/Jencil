@@ -16,7 +16,6 @@ autoIndentableHtml = (function() {
   })();
   pre = function(e, line) {
     var lineCaret, pattern, _i, _len;
-    console.log("@", this);
     if (e.shiftKey) {
       return;
     }
@@ -215,8 +214,4 @@ HtmlEditor = (function(_super) {
 
   return HtmlEditor;
 
-})(Jencil.ui.widgets.editors.TextEditor);
-
-Jencil.utils.namespace('Jencil.ui.widgets.editors', function(exports) {
-  return exports.HtmlEditor = HtmlEditor;
-});
+})(TextEditor);

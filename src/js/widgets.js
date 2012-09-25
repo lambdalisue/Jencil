@@ -182,11 +182,8 @@ HorizontalPanel = (function(_super) {
 
 })(MultiplePanel);
 
-namespace('Jencil.ui.widgets', function(exports) {
-  return exports.Widget = Widget;
-});
-
-namespace('Jencil.ui.widgets.panels', function(exports) {
+namespace('Jencil.widgets', function(exports) {
+  exports.Widget = Widget;
   exports.Panel = Panel;
   exports.MultiplePanel = MultiplePanel;
   exports.VerticalPanel = VerticalPanel;

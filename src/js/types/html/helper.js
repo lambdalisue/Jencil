@@ -15,8 +15,4 @@ HtmlHelper = (function(_super) {
 
   return HtmlHelper;
 
-})(Jencil.ui.widgets.helpers.BaseHelper);
-
-namespace('Jencil.ui.widgets.helpers', function(exports) {
-  return exports.HtmlHelper = HtmlHelper;
-});
+})(BaseHelper);

@@ -12,6 +12,7 @@ STYLE_LIB_PATH      = $ {root: "./lib", src: "less", dst: "css"}
 RELEASE_PATH        = "./release"
 SRC_FILES           = [
   'utils/namespace',
+  'utils/strutils',
   'utils/undo',
   'utils/selection',
   'utils/evolution',
@@ -21,7 +22,7 @@ SRC_FILES           = [
   'utils/i18n',
   'core',
   'widgets',
-  'splitter',
+  'splitters',
   'editors',
   'viewers',
   'helpers',
@@ -33,12 +34,26 @@ SRC_FILES           = [
   'types/html/viewer',
   'types/html/helper',
   'types/html/profile',
+  'types/markdown/editor',
+  'types/markdown/viewer',
+  'types/markdown/profile',
 ]
 LIB_FILES           = [
   'shortcut',
   'jquery.textarea',
 ]
-TEST_FILES          = []
+TEST_FILES          = [
+  'blackbox',
+  'utils/strutils.spec',
+  'utils/undo.spec',
+  'utils/selection.spec',
+  'utils/evolution.spec',
+  'utils/curtain.spec',
+  'utils/animation.spec',
+  'utils/autoindent.spec',
+  'widgets.spec',
+  'splitters.spec',
+]
 STYLE_SRC_FILES     = [
   'layout',
   'button',
@@ -280,9 +295,12 @@ task 'compile:develop:src', 'Compile src CoffeeScript files to bare javascript f
   compileCS SRC_PATH, SRC_FILES, options
 task 'compile:develop:lib', 'Compile lib CoffeeScript files to bare javascript files', (options) ->
   compileCS LIB_PATH, LIB_FILES, options
+task 'compile:test', 'Compile test CoffeeScript files to bare javascript files', (options) ->
+  compileCS TEST_PATH, TEST_FILES, options
 task 'compile:develop', 'Compile CoffeeScript/LESS files to javascript/css files', (options) ->
   invoke 'compile:develop:src'
   invoke 'compile:develop:lib'
+  invoke 'compile:test'
   invoke 'compile:style:src'
   invoke 'compile:style:lib'
 
@@ -365,6 +383,9 @@ task 'minify:css', 'Minify css file', (options) ->
     compose [dst], dst, options
 
 task 'test:mocha', 'Run mocha test', (options) ->
+  invoke 'compile:develop:src'
+  invoke 'compile:develop:lib'
+  invoke "compile:test"
   if not TEST_FILES or TEST_FILES.length == 0
     console.log "No test files are specified"
     return

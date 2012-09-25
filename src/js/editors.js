@@ -135,6 +135,14 @@ TextEditor = (function(_super) {
     return this;
   };
 
+  TextEditor.prototype.selectWholeLineIfNoSelectionFound = function() {
+    var caret;
+    caret = this.textarea.selection.caret();
+    if (caret[0] === caret[1]) {
+      this.textarea.selection.selectWholeCurrentLine();
+    }
+  };
+
   TextEditor.prototype.selection = function(str, keepSelection) {
     if (keepSelection == null) {
       keepSelection = true;
@@ -148,42 +156,30 @@ TextEditor = (function(_super) {
   };
 
   TextEditor.prototype.enclose = function(b, a, keepSelection) {
-    var caret;
     if (keepSelection == null) {
       keepSelection = true;
     }
-    caret = this.textarea.selection.caret();
-    if (caret[0] === caret[1]) {
-      this.textarea.selection.selectWholeCurrentLine();
-    }
+    this.selectWholeLineIfNoSelectionFound();
     this.textarea.selection.enclose(b, a, keepSelection);
     this.core.caretaker.save();
     return this.change();
   };
 
   TextEditor.prototype.insertBefore = function(str, keepSelection) {
-    var caret;
     if (keepSelection == null) {
       keepSelection = true;
     }
-    caret = this.textarea.selection.caret();
-    if (caret[0] === caret[1]) {
-      this.textarea.selection.selectWholeCurrentLine();
-    }
+    this.selectWholeLineIfNoSelectionFound();
     this.textarea.selection.insertBefore(str, keepSelection);
     this.core.caretaker.save();
     return this.change();
   };
 
   TextEditor.prototype.insertAfter = function(str, keepSelection) {
-    var caret;
     if (keepSelection == null) {
       keepSelection = true;
     }
-    caret = this.textarea.selection.caret();
-    if (caret[0] === caret[1]) {
-      this.textarea.selection.selectWholeCurrentLine();
-    }
+    this.selectWholeLineIfNoSelectionFound();
     this.textarea.selection.insertAfter(str, keepSelection);
     this.core.caretaker.save();
     return this.change();
@@ -193,7 +189,7 @@ TextEditor = (function(_super) {
 
 })(BaseEditor);
 
-namespace('Jencil.ui.widgets.editors', function(exports) {
+namespace('Jencil.editors', function(exports) {
   exports.BaseEditor = BaseEditor;
   return exports.TextEditor = TextEditor;
 });

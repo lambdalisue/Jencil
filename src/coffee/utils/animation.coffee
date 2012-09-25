@@ -40,3 +40,4 @@ animate = do ->
         options.callbackDone?()
     # start animation
     step()
+    return null

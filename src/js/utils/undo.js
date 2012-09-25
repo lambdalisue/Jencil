@@ -1,15 +1,27 @@
-var Caretaker, Originator;
+var Caretaker, NotImplementedError, Originator;
+
+NotImplementedError = (function() {
+
+  function NotImplementedError() {}
+
+  NotImplementedError.prototype.name = 'Not implemeted error';
+
+  NotImplementedError.prototype.message = 'The function has not implemented yet';
+
+  return NotImplementedError;
+
+})();
 
 Originator = (function() {
 
   function Originator() {}
 
   Originator.prototype.createMemento = function() {
-    throw new Error("NotImplementedError");
+    throw new NotImplementedError;
   };
 
   Originator.prototype.setMemento = function(memento) {
-    throw new Error("NotImplementedError");
+    throw new NotImplementedError;
   };
 
   return Originator;
@@ -29,13 +41,14 @@ Caretaker = (function() {
       this._originator = originator;
       return this;
     }
-    return originator;
+    return this._originator;
   };
 
   Caretaker.prototype.save = function(memento) {
     memento = memento || this.originator().createMemento();
     this._undoStack.push(memento);
-    return this._redoStack = [];
+    this._redoStack = [];
+    return this;
   };
 
   Caretaker.prototype.undo = function() {
@@ -77,3 +90,9 @@ Caretaker = (function() {
   return Caretaker;
 
 })();
+
+if (typeof exports !== "undefined" && exports !== null) {
+  exports.NotImplementedError = NotImplementedError;
+  exports.Originator = Originator;
+  exports.Caretaker = Caretaker;
+}

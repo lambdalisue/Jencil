@@ -38,7 +38,6 @@ class MultiplePanel extends Panel
     @snd.hide = hide
     @splitter.element.dblclick => @snd.toggle()
 
-
   init: ->
     @splitter.init()
     @fst.init()
@@ -57,7 +56,7 @@ class MultiplePanel extends Panel
       end = 0.5 if end == to
       _callbackDone = callbackOn
     MultiplePanel._animating = true
-    callbackDone = =>
+    callbackDone = ->
       MultiplePanel._animating = false
       _callbackDone?()
     animate
@@ -97,10 +96,8 @@ class HorizontalPanel extends MultiplePanel
     @splitter.adjust()
     return @
 
-namespace 'Jencil.ui.widgets', (exports) ->
+namespace 'Jencil.widgets', (exports) ->
   exports.Widget = Widget
-
-namespace 'Jencil.ui.widgets.panels', (exports) ->
   exports.Panel = Panel
   exports.MultiplePanel = MultiplePanel
   exports.VerticalPanel = VerticalPanel

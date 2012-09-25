@@ -1,9 +1,14 @@
+class NotImplementedError
+  name: 'Not implemeted error'
+  message: 'The function has not implemented yet'
+
+
 class Originator
   createMemento: ->
-    throw new Error("NotImplementedError")
+    throw new NotImplementedError
 
   setMemento: (memento) ->
-    throw new Error("NotImplementedError")
+    throw new NotImplementedError
 
 
 class Caretaker
@@ -16,12 +21,13 @@ class Caretaker
     if originator?
       @_originator = originator
       return @
-    return originator
+    return @_originator
 
   save: (memento) ->
     memento = memento or @originator().createMemento()
     @_undoStack.push memento
     @_redoStack = []
+    return @
 
   undo: ->
     return false if not @canUndo()
@@ -50,3 +56,9 @@ class Caretaker
 
   canRedo: ->
     return @_redoStack.length > 0
+
+
+if exports?
+  exports.NotImplementedError = NotImplementedError
+  exports.Originator = Originator
+  exports.Caretaker = Caretaker

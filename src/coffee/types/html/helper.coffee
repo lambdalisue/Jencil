@@ -1,4 +1,4 @@
-class HtmlHelper extends Jencil.ui.widgets.helpers.BaseHelper
+class HtmlHelper extends BaseHelper
   constructor: (core) ->
     super core
     HTML_HELPER_HTML = """
@@ -13,6 +13,3 @@ class HtmlHelper extends Jencil.ui.widgets.helpers.BaseHelper
     """
     # Add content
     @element.html HTML_HELPER_HTML
-
-namespace 'Jencil.ui.widgets.helpers', (exports) ->
-  exports.HtmlHelper = HtmlHelper

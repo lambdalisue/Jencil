@@ -344,7 +344,7 @@ buttonFactory = function(core, value) {
   return new value(core);
 };
 
-namespace('Jencil.ui.widgets.buttons', function(exports) {
+namespace('Jencil.buttons', function(exports) {
   exports.Separator = Separator;
   exports.Button = Button;
   exports.ActionButton = ActionButton;

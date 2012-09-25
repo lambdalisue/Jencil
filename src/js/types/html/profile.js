@@ -1,7 +1,7 @@
 var HtmlProfile;
 
 HtmlProfile = {
-  mainPanelClass: Jencil.ui.widgets.panels.TrimainPanel,
+  mainPanelClass: TrimainPanel,
   editorClass: HtmlEditor,
   viewerClass: HtmlViewer,
   helperClass: HtmlHelper,
@@ -11,6 +11,6 @@ HtmlProfile = {
   statusbarButtons: ['Viewer', 'Helper']
 };
 
-Jencil.utils.namespace('Jencil.profiles', function(exports) {
+namespace('Jencil.profiles', function(exports) {
   return exports.HtmlProfile = HtmlProfile;
 });

@@ -25,7 +25,7 @@ class TrimainPanel extends HorizontalPanel
     # Connect editorPanel and viewerPanel
     @editorPanel.change (value) => @viewerPanel.update(value)
 
-namespace 'Jencil.ui.widgets.panels', (exports) ->
+namespace 'Jencil.mainpanels', (exports) ->
   exports.MonomainPanel = MonomainPanel
   exports.DimainPanel = DimainPanel
   exports.TrimainPanel = TrimainPanel

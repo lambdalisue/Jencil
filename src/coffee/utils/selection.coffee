@@ -1,5 +1,7 @@
 class Selection
-  constructor: (@document, @element) -> @
+  constructor: (@document, @element) ->
+    @document = @document.get(0) if @document instanceof jQuery
+    @element = @element.get(0) if @element instanceof jQuery
 
   _getCaret: ->
     if @document.selection? # Internet Explorer
@@ -13,7 +15,6 @@ class Selection
       s = @element.selectionStart
       e = @element.selectionEnd
     caret = [s, e]
-    caret.isCollapse = s == e
     return caret
   _setCaret: (start, end) ->
     scrollTop = @element.scrollTop
@@ -31,7 +32,7 @@ class Selection
     return @
 
   caret: (start, end) ->
-    if start? and typeof start is 'array'
+    if start? and start instanceof Array
       end = start[1]
       start = start[0]
     if start? and not end?
@@ -44,7 +45,7 @@ class Selection
     caret = @caret()
     return @caret(caret[0]+offset)
 
-  _replace: (str, start, end) ->
+  replace: (str, start, end) ->
     scrollTop = @element.scrollTop
     b = @element.value.substring 0, start
     a = @element.value.substring end
@@ -64,7 +65,7 @@ class Selection
   _setText: (str, keepSelection) ->
     scrollTop = @element.scrollTop
     [s, e] = @caret()
-    @_replace str, s, e
+    @replace str, s, e
     # set new selection
     e = s + str.length
     s = e if not keepSelection
@@ -82,7 +83,7 @@ class Selection
     scrollTop = @element.scrollTop
     [s, e] = @caret()
     text = @text()
-    @_replace str + text, s, e
+    @replace str + text, s, e
     # set new selection
     e = s + str.length
     s = e if not keepSelection
@@ -95,7 +96,7 @@ class Selection
     scrollTop = @element.scrollTop
     [s, e] = @caret()
     text = @text()
-    @_replace text + str, s, e
+    @replace text + str, s, e
     # set new selection
     s = e
     e = e + str.length
@@ -114,7 +115,7 @@ class Selection
       @text str, keepSelection
     else
       [s, e] = @caret()
-      @_replace lhs + text + rhs, s, e
+      @replace lhs + text + rhs, s, e
       e = s + lhs.length + text.length + rhs.length
       s = e if not keepSelection
       @caret s, e
@@ -122,22 +123,21 @@ class Selection
     @element.scrollTop = scrollTop
     return @
 
-  _getLineCaretOfCaret: (caret) ->
+  lineCaret: (pos) ->
+    pos = pos or @caret()[0]
     value = @element.value
-    s = value.lastIndexOf("\n", caret - 1) + 1
-    e = value.indexOf("\n", caret)
+    s = value.lastIndexOf("\n", pos - 1) + 1
+    e = value.indexOf("\n", pos)
     e = value.length if e == -1
     return [s, e]
-  _getLineCaret: ->
-    return @_getLineCaretOfCaret(@caret()[0])
 
-  _getLine: ->
-    [s, e] = @_getLineCaret()
+  _getLine: (pos) ->
+    [s, e] = @lineCaret(pos)
     return @element.value.substring s, e
   _setLine: (line, keepSelection) ->
     scrollTop = @element.scrollTop
-    [s, e] = @_getLineCaret()
-    @_replace line, s, e
+    [s, e] = @lineCaret()
+    @replace line, s, e
     e = s + line.length
     s = e if not keepSelection
     @caret s, e
@@ -150,10 +150,9 @@ class Selection
       return @_setLine(value, keepSelection)
     return @_getLine()
 
-  selectWholeLine: (caret) ->
-    [s, e] = @_getLineCaretOfCaret(caret)
+  selectWholeLine: (pos) ->
+    [s, e] = @lineCaret(pos)
     return @caret s, e
 
   selectWholeCurrentLine: ->
-    [s, e] = @_getLineCaretOfCaret(@caret()[0])
-    return @caret s, e
+    return @selectWholeLine(null)

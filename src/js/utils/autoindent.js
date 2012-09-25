@@ -50,19 +50,19 @@ var autoIndentable;
 autoIndentable = (function() {
   var autoIndent;
   autoIndent = function(e) {
-    var indent, insert, line, _ref, _ref1;
+    var cancel, indent, insert, line, _ref, _ref1;
     if (e.which !== 13) {
       return;
     }
     line = this.selection.line();
-    if ((_ref = this.autoIndent.pre) != null) {
-      _ref.call(this, e, line);
+    cancel = ((_ref = this.autoIndent.pre) != null ? _ref.call(this, e, line) : void 0) === true;
+    if (cancel !== true) {
+      indent = line.replace(/^([\t\s]*).*$/, "$1");
+      insert = "\n" + indent;
+      this.selection.insertAfter(insert, false);
     }
-    indent = line.replace(/^([\t\s]*).*$/, "$1");
-    insert = "\n" + indent;
-    this.selection.insertAfter(insert, false);
     if ((_ref1 = this.autoIndent.post) != null) {
-      _ref1.call(this, e, line, indent, insert);
+      _ref1.call(this, e, line, indent, insert, cancel);
     }
     e.stopPropagation();
     e.stopImmediatePropagation();
