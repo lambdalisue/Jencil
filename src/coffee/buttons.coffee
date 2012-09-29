@@ -15,18 +15,25 @@ class Button extends Widget
 
   enable: ->
     @element.removeClass 'disable'
+    return @
 
   disable: ->
     @element.addClass 'disable'
+    return @
 
-  validate: -> @
+  init: ->
+    @validate()
+    return @
+
+  validate: -> return @
 
 
 class ActionButton extends Button
   constructor: (core, name, text, title, callback, @shortcut) ->
     super core, name, text, title
     @callback = =>
-      callback() if not @element.hasClass('disable')
+      @callback.raw() if not @element.hasClass('disable')
+      return @
     @callback.raw = callback
     @element.click => @callback()
 
@@ -43,13 +50,10 @@ class CommandButton extends ActionButton
       editor[command].call(editor)
     super core, name, text, title, callback, shortcut
 
-  init: ->
-    @validate()
 
   validate: ->
     editor = @core.editor()
-    if not editor[@command]?
-      @disable()
+    @disable() if not editor[@command]?
     return @
 
   @factory: (core, args) ->

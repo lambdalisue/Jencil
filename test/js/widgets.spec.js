@@ -15,6 +15,9 @@ VerticalPanel = Jencil.widgets.VerticalPanel;
 HorizontalPanel = Jencil.widgets.HorizontalPanel;
 
 describe('Jencil.widgets.Widget(core, selector="<div>", context) -> instance', function() {
+  it('should be found on `Jencil.widgets.Widget`', function() {
+    return Widget.should.be.equal(Jencil.widgets.Widget);
+  });
   it('should have element instance which is evoluted jQueryObj', function() {
     var instance;
     instance = new Widget(null);
@@ -45,6 +48,9 @@ describe('Jencil.widgets.Widget(core, selector="<div>", context) -> instance', f
 });
 
 describe('Jencil.widgets.Panel(core, selector="<div>", context) extends Widget -> instance', function() {
+  it('should be found on `Jencil.widgets.Panel`', function() {
+    return Panel.should.be.equal(Jencil.widgets.Panel);
+  });
   return it('should add `panel` class to the element', function() {
     var instance;
     instance = new Panel(null);
@@ -74,6 +80,9 @@ describe('Jencil.widgets.MultiplePanel(core, fst, snd, splitter) extends Panel -
   });
   afterEach(function() {
     return sandbox.verifyAndRestore();
+  });
+  it('should be found on `Jencil.widgets.MultiplePanel`', function() {
+    return MultiplePanel.should.be.equal(Jencil.widgets.MultiplePanel);
   });
   it('should add `multiple` class to the element', function() {
     return instance.element.hasClass('multiple').should.be["true"];
@@ -211,6 +220,9 @@ describe('Jencil.widgets.VerticalPanel(core, fst, snd, splitter) extends Multipl
   afterEach(function() {
     return sandbox.verifyAndRestore();
   });
+  it('should be found on `Jencil.widgets.VerticalPanel`', function() {
+    return VerticalPanel.should.be.equal(Jencil.widgets.VerticalPanel);
+  });
   it('should add `vertical` class to the element', function() {
     return instance.element.hasClass('vertical').should.be["true"];
   });
@@ -254,6 +266,9 @@ describe('Jencil.widgets.HorizontalPanel(core, fst, snd, splitter) extends Multi
   });
   afterEach(function() {
     return sandbox.verifyAndRestore();
+  });
+  it('should be found on `Jencil.widgets.HorizontalPanel`', function() {
+    return HorizontalPanel.should.be.equal(Jencil.widgets.HorizontalPanel);
   });
   it('should add `horizontal` class to the element', function() {
     return instance.element.hasClass('horizontal').should.be["true"];

@@ -53,6 +53,7 @@ TEST_FILES          = [
   'utils/autoindent.spec',
   'widgets.spec',
   'splitters.spec',
+  'buttons.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',

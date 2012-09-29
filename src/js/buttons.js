@@ -32,11 +32,18 @@ Button = (function(_super) {
   }
 
   Button.prototype.enable = function() {
-    return this.element.removeClass('disable');
+    this.element.removeClass('disable');
+    return this;
   };
 
   Button.prototype.disable = function() {
-    return this.element.addClass('disable');
+    this.element.addClass('disable');
+    return this;
+  };
+
+  Button.prototype.init = function() {
+    this.validate();
+    return this;
   };
 
   Button.prototype.validate = function() {
@@ -57,8 +64,9 @@ ActionButton = (function(_super) {
     ActionButton.__super__.constructor.call(this, core, name, text, title);
     this.callback = function() {
       if (!_this.element.hasClass('disable')) {
-        return callback();
+        _this.callback.raw();
       }
+      return _this;
     };
     this.callback.raw = callback;
     this.element.click(function() {
@@ -90,10 +98,6 @@ CommandButton = (function(_super) {
     };
     CommandButton.__super__.constructor.call(this, core, name, text, title, callback, shortcut);
   }
-
-  CommandButton.prototype.init = function() {
-    return this.validate();
-  };
 
   CommandButton.prototype.validate = function() {
     var editor;

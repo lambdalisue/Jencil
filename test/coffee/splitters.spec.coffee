@@ -22,6 +22,9 @@ describe 'Jencil.splitters.Splitter(core, fst, snd, defaultVolume=0.5) -> instan
   afterEach ->
     sandbox.verifyAndRestore()
 
+  it 'should be found on `Jencil.splitters.Splitter`', ->
+    Splitter.should.be.equal(Jencil.splitters.Splitter)
+
   it 'should have `splitter` class', ->
     instance.element.hasClass('splitter').should.be.true
 
@@ -101,6 +104,9 @@ describe 'Jencil.splitters.VerticalSplitter(core, fst, snd, defaultVolume=0.5) -
     sandbox = sinon.sandbox.create()
   afterEach ->
     sandbox.verifyAndRestore()
+
+  it 'should be found on `Jencil.splitters.VerticalSplitter`', ->
+    VerticalSplitter.should.be.equal(Jencil.splitters.VerticalSplitter)
 
   it 'should have `vertical` class', ->
     instance.element.hasClass('vertical').should.be.true
@@ -240,6 +246,9 @@ describe 'Jencil.splitters.HorizontalSplitter(core, fst, snd, defaultVolume=0.5)
     sandbox = sinon.sandbox.create()
   afterEach ->
     sandbox.verifyAndRestore()
+
+  it 'should be found on `Jencil.splitters.HorizontalSplitter`', ->
+    HorizontalSplitter.should.be.equal(Jencil.splitters.HorizontalSplitter)
 
   it 'should have `horizontal` class', ->
     instance.element.hasClass('horizontal').should.be.true

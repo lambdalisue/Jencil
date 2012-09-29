@@ -59,6 +59,7 @@
     -->
 
     <script src="js/blackbox.js"></script>
+    <!--
     <script src="js/utils/strutils.spec.js"></script>
     <script src="js/utils/undo.spec.js"></script>
     <script src="js/utils/evolution.spec.js"></script>
@@ -68,9 +69,11 @@
     <script src="js/utils/curtain.spec.js"></script>
     <script src="js/widgets.spec.js"></script>
     <script src="js/splitters.spec.js"></script>
+    -->
+    <script src="js/buttons.spec.js"></script>
     <script>
         $(function() {
-            //mocha.run();
+            mocha.run();
             i18n.init(function(t){
                 $("textarea#demo").jencil({
                     'profile': 'Markdown',

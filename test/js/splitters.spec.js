@@ -29,6 +29,9 @@ describe('Jencil.splitters.Splitter(core, fst, snd, defaultVolume=0.5) -> instan
   afterEach(function() {
     return sandbox.verifyAndRestore();
   });
+  it('should be found on `Jencil.splitters.Splitter`', function() {
+    return Splitter.should.be.equal(Jencil.splitters.Splitter);
+  });
   it('should have `splitter` class', function() {
     return instance.element.hasClass('splitter').should.be["true"];
   });
@@ -114,6 +117,9 @@ describe('Jencil.splitters.VerticalSplitter(core, fst, snd, defaultVolume=0.5) -
   });
   afterEach(function() {
     return sandbox.verifyAndRestore();
+  });
+  it('should be found on `Jencil.splitters.VerticalSplitter`', function() {
+    return VerticalSplitter.should.be.equal(Jencil.splitters.VerticalSplitter);
   });
   it('should have `vertical` class', function() {
     return instance.element.hasClass('vertical').should.be["true"];
@@ -291,6 +297,9 @@ describe('Jencil.splitters.HorizontalSplitter(core, fst, snd, defaultVolume=0.5)
   });
   afterEach(function() {
     return sandbox.verifyAndRestore();
+  });
+  it('should be found on `Jencil.splitters.HorizontalSplitter`', function() {
+    return HorizontalSplitter.should.be.equal(Jencil.splitters.HorizontalSplitter);
   });
   it('should have `horizontal` class', function() {
     return instance.element.hasClass('horizontal').should.be["true"];
