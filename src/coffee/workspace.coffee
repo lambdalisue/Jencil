@@ -7,7 +7,7 @@ class Wrapper extends Panel
     @workspace = new Workspace(@core)
     @workspace.element.appendTo @element
 
-  init: ->
+  init: (profileNameOrInstance) ->
     # if `resizable` of jQuery-UI is available
     if @element.resizable? and @core.options.resizable is true
       @element.resizable
@@ -25,6 +25,7 @@ class Wrapper extends Panel
           @core.viewer()?.curtain?.off()
           @core.helper()?.curtain?.off()
           @adjust()
+    @workspace.profile(profileNameOrInstance)
     @workspace.init()
 
   adjust: ->
@@ -37,14 +38,13 @@ class Workspace extends Panel
   constructor: (core) ->
     super core
     @element.addClass 'workspace'
-    @profile(core.options.profile)
 
-  profile: (profile) ->
-    if profile?
-      if typeof profile is 'string'
-        profile = @core.options.profiles[profile]
+  profile: (profileNameOrInstance) ->
+    if profileNameOrInstance?
+      if typeof profileNameOrInstance is 'string'
+        profileNameOrInstance = @core.options.profiles[profileNameOrInstance]
       # extend
-      profile = jQuery.extend(DefaultProfile, profile)
+      profile = jQuery.extend(true, DefaultProfile, profileNameOrInstance)
       profile.defaultVolume = @core.options.defaultVolume or profile.defaultVolume
       profile.defaultVolume2 = @core.options.defaultVolume2 or profile.defaultVolume2
       @element.empty()

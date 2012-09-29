@@ -30,6 +30,11 @@ DimainPanel = (function(_super) {
     });
   }
 
+  DimainPanel.prototype.init = function() {
+    DimainPanel.__super__.init.call(this);
+    return this.viewerPanel.update(this.editorPanel.val());
+  };
+
   return DimainPanel;
 
 })(VerticalPanel);
@@ -50,6 +55,11 @@ TrimainPanel = (function(_super) {
       return _this.viewerPanel.update(value);
     });
   }
+
+  TrimainPanel.prototype.init = function() {
+    TrimainPanel.__super__.init.call(this);
+    return this.viewerPanel.update(this.editorPanel.val());
+  };
 
   return TrimainPanel;
 
