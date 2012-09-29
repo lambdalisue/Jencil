@@ -15,7 +15,7 @@ Wrapper = (function(_super) {
     this.workspace.element.appendTo(this.element);
   }
 
-  Wrapper.prototype.init = function() {
+  Wrapper.prototype.init = function(profileNameOrInstance) {
     var _this = this;
     if ((this.element.resizable != null) && this.core.options.resizable === true) {
       this.element.resizable({
@@ -73,6 +73,7 @@ Wrapper = (function(_super) {
         }
       });
     }
+    this.workspace.profile(profileNameOrInstance);
     return this.workspace.init();
   };
 
@@ -94,17 +95,16 @@ Workspace = (function(_super) {
   function Workspace(core) {
     Workspace.__super__.constructor.call(this, core);
     this.element.addClass('workspace');
-    this.profile(core.options.profile);
   }
 
-  Workspace.prototype.profile = function(profile) {
-    var button, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3,
+  Workspace.prototype.profile = function(profileNameOrInstance) {
+    var button, profile, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3,
       _this = this;
-    if (profile != null) {
-      if (typeof profile === 'string') {
-        profile = this.core.options.profiles[profile];
+    if (profileNameOrInstance != null) {
+      if (typeof profileNameOrInstance === 'string') {
+        profileNameOrInstance = this.core.options.profiles[profileNameOrInstance];
       }
-      profile = jQuery.extend(DefaultProfile, profile);
+      profile = jQuery.extend(true, DefaultProfile, profileNameOrInstance);
       profile.defaultVolume = this.core.options.defaultVolume || profile.defaultVolume;
       profile.defaultVolume2 = this.core.options.defaultVolume2 || profile.defaultVolume2;
       this.element.empty();

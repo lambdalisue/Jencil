@@ -43,9 +43,7 @@ this.Jencil = (function() {
     this.wrapper = new Wrapper(this, this.options.width, this.options.height);
     this.fullscreen = new Fullscreen(this);
     this.element.after(this.wrapper.element).after(this.fullscreen.element);
-    this.wrapper.init();
-    this.wrapper.adjust();
-    this.caretaker.save();
+    this.profile(this.options.profile);
   }
 
   Jencil.prototype.editor = function() {
@@ -60,12 +58,22 @@ this.Jencil = (function() {
     return this.wrapper.workspace.mainPanel.helperPanel || null;
   };
 
+  Jencil.prototype.profile = function(profileNameOrInstance) {
+    this.wrapper.init(profileNameOrInstance);
+    this.wrapper.adjust();
+    return this.caretaker.save();
+  };
+
   return Jencil;
 
 })();
 
 $.fn.jencil = function(options) {
-  return new Jencil($(this), options);
+  return $(this).each(function() {
+    var self;
+    self = $(this);
+    return self.data('jencil', new Jencil(self, options));
+  });
 };
 
 namespace('Jencil.profiles', function(exports) {

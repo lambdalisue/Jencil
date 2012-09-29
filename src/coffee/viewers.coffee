@@ -61,6 +61,7 @@ class TemplateViewer extends BaseViewer
     @iframe.init()
 
   update: (value, force) ->
+    return if not @element.is(':visible') and not force
     if @iframe._template?
       value = @iframe._template.replace("{{content}}", value)
     else if @templatePath?

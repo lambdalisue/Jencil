@@ -91,6 +91,9 @@ TemplateViewer = (function(_super) {
   };
 
   TemplateViewer.prototype.update = function(value, force) {
+    if (!this.element.is(':visible') && !force) {
+      return;
+    }
     if (this.iframe._template != null) {
       value = this.iframe._template.replace("{{content}}", value);
     } else if (this.templatePath != null) {
