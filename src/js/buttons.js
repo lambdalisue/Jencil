@@ -163,7 +163,7 @@ UndoButton = (function(_super) {
     var check,
       _this = this;
     check = function() {
-      if (!_this.core.caretaker.canUndo()) {
+      if (_this.core.caretaker.canUndo() === false) {
         _this.disable();
       } else {
         _this.enable();
@@ -194,7 +194,7 @@ RedoButton = (function(_super) {
     var check,
       _this = this;
     check = function() {
-      if (!_this.core.caretaker.canRedo()) {
+      if (_this.core.caretaker.canRedo() === false) {
         _this.disable();
       } else {
         _this.enable();
@@ -225,7 +225,7 @@ FullscreenButton = (function(_super) {
     var check,
       _this = this;
     check = function() {
-      if (_this.core.fullscreen.element.is(':visible')) {
+      if (_this.core.fullscreen.element.is(':visible') === true) {
         _this.element.addClass('hide');
       } else {
         _this.element.removeClass('hide');
@@ -253,7 +253,7 @@ ViewerButton = (function(_super) {
   }
 
   ViewerButton.prototype.validate = function() {
-    if (!this.core.viewer()) {
+    if (!(this.core.viewer() != null)) {
       this.disable();
       return false;
     }
@@ -357,5 +357,6 @@ namespace('Jencil.buttons', function(exports) {
   exports.RedoButton = RedoButton;
   exports.FullscreenButton = FullscreenButton;
   exports.ViewerButton = ViewerButton;
-  return exports.HelperButton = HelperButton;
+  exports.HelperButton = HelperButton;
+  return exports.buttonFactory = buttonFactory;
 });

@@ -86,13 +86,12 @@ class CommandButton extends ActionButton
 
 class UndoButton extends ActionButton
   constructor: (core) ->
-    callback = (e) =>
-      @core.caretaker.undo()
+    callback = (e) => @core.caretaker.undo()
     super core, 'undo', 'Undo', 'Undo', callback, 'Ctrl+Z'
 
   init: ->
     check = =>
-      if not @core.caretaker.canUndo()
+      if @core.caretaker.canUndo() is false
         @disable()
       else
         @enable()
@@ -108,7 +107,7 @@ class RedoButton extends ActionButton
 
   init: ->
     check = =>
-      if not @core.caretaker.canRedo()
+      if @core.caretaker.canRedo() is false
         @disable()
       else
         @enable()
@@ -124,7 +123,7 @@ class FullscreenButton extends ActionButton
 
   init: ->
     check = =>
-      if @core.fullscreen.element.is(':visible')
+      if @core.fullscreen.element.is(':visible') is true
         @element.addClass 'hide'
       else
         @element.removeClass 'hide'
@@ -139,7 +138,7 @@ class ViewerButton extends ActionButton
     super core, 'viewer', 'Quick view', 'Quick view', callback, 'Ctrl+Q' # Quick view
 
   validate: ->
-    if not @core.viewer()
+    if not @core.viewer()?
       @disable()
       return false
     return true
@@ -177,6 +176,7 @@ class HelperButton extends ActionButton
       setTimeout check, 100
     check()
 
+
 buttonFactory = (core, value) ->
   if value instanceof Array
     # CommandButton
@@ -195,6 +195,7 @@ buttonFactory = (core, value) ->
   # probably value is a class of Button
   return new value(core)
 
+
 namespace 'Jencil.buttons', (exports) ->
   exports.Separator = Separator
   exports.Button = Button
@@ -205,3 +206,4 @@ namespace 'Jencil.buttons', (exports) ->
   exports.FullscreenButton = FullscreenButton
   exports.ViewerButton = ViewerButton
   exports.HelperButton = HelperButton
+  exports.buttonFactory = buttonFactory
