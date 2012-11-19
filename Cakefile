@@ -28,6 +28,7 @@ SRC_FILES           = [
   'helpers',
   'buttons',
   'workspace',
+  'multipanels',
   'mainpanels',
   'fullscreen',
   'types/html/editor',
@@ -418,45 +419,53 @@ task 'clean', 'Clean files', (options) ->
   exec "rm -r #{SRC_PATH.dst}"
   exec "rm -r #{STYLE_SRC_PATH.dst}"
 
-listen = (port=8000) ->
-  root = process.cwd()
-  loadStaticFile = (uri, response) ->
-    tmp = uri.split(".")
-    type = tmp[tmp.length-1]
-    filename = path.join(root, uri)
+task 'demo', 'Start demo server', (options) ->
+  console.log "Start demo server..."
+  console.log "Access http://localhost:8000/"
+  server = createStaticServer("#{process.cwd()}/demo/")
+  server.listen(process.env.PORT || 8000)
 
+CONTENT_TYPES = {
+  '.html': 'text/html',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.gif': 'image/gif',
+}
+createStaticServer = (root, prefix="") ->
+  url = require 'url'
+  http = require 'http'
+  loadStaticFile = (request, response) ->
+    findContentType = (uri) ->
+      ext = path.extname(uri)
+      for type, contentType of CONTENT_TYPES
+        return contentType if type is ext
+      return 'text/plain'
+    uri = url.parse(request.url).pathname
+    uri = 'index.html' if uri is '/'
+    filename = path.join(prefix, root, uri)
     path.exists(filename, (exists) ->
       if not exists
+        console.log "404", "Not Found", uri if uri isnt '/favicon.ico'
         response.writeHead(404, {'Content-Type': 'text/plain'})
         response.write("404 Not found\n#{filename}\n")
         response.end()
         return
-
-      fs.readFile(filename, 'binary', (err, file) ->
+      fs.readFile(filename, 'binary', (err, content) ->
         if err?
+          console.log "500", "Server error", uri
           response.writeHead(500, {'Content-Type': 'text/plain'})
           response.write(err + "\n#{filename}\n")
           response.end()
           return
-
-        switch type
-          when 'html' then response.writeHead(200, {'Content-Type': 'text/html'})
-          when 'js' then response.writeHead(200, {'Content-Type': 'text/javascript'})
-          when 'css' then response.writeHead(200, {'Content-Type': 'text/css'})
-          else response.writeHead(200, {'Content-Type': 'text/html'})
-
-        response.write(file, 'binary')
+        console.log "200", "OK", uri
+        response.writeHead(200, {'Content-Type': findContentType(uri)})
+        response.write(content, 'binary')
         response.end()
       )
     )
-  http = require 'http'
-  url = require 'url'
-  server = http.createServer (req, res) ->
-    uri = url.parse(req.url).pathname
-    loadStaticFile uri, res
-  server.listen(process.env.PORT || port)
+  return http.createServer loadStaticFile
 
-task 'demo', 'Start demo server', (options) ->
-  console.log "Start demo server..."
-  console.log "Access http://localhost:8000/test/runner.html"
-  listen(8000)
+

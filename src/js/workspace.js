@@ -7,12 +7,72 @@ Wrapper = (function(_super) {
   __extends(Wrapper, _super);
 
   function Wrapper(core, width, height) {
+    var _this = this;
     Wrapper.__super__.constructor.call(this, core);
     this.element.addClass('jencil wrapper');
     this.element.width(width);
     this.element.height(height);
     this.workspace = new Workspace(this.core);
     this.workspace.element.appendTo(this.element);
+    this.curtain = {
+      on: function() {
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+        if ((_ref = _this.core.editor()) != null) {
+          if ((_ref1 = _ref.curtain) != null) {
+            _ref1.on();
+          }
+        }
+        if ((_ref2 = _this.core.viewer()) != null) {
+          if ((_ref3 = _ref2.curtain) != null) {
+            _ref3.on();
+          }
+        }
+        if ((_ref4 = _this.core.helper()) != null) {
+          if ((_ref5 = _ref4.curtain) != null) {
+            _ref5.on();
+          }
+        }
+        return _this.adjust();
+      },
+      refresh: function() {
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+        if ((_ref = _this.core.editor()) != null) {
+          if ((_ref1 = _ref.curtain) != null) {
+            _ref1.refresh();
+          }
+        }
+        if ((_ref2 = _this.core.viewer()) != null) {
+          if ((_ref3 = _ref2.curtain) != null) {
+            _ref3.refresh();
+          }
+        }
+        if ((_ref4 = _this.core.helper()) != null) {
+          if ((_ref5 = _ref4.curtain) != null) {
+            _ref5.refresh();
+          }
+        }
+        return _this.adjust();
+      },
+      off: function() {
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+        if ((_ref = _this.core.editor()) != null) {
+          if ((_ref1 = _ref.curtain) != null) {
+            _ref1.off();
+          }
+        }
+        if ((_ref2 = _this.core.viewer()) != null) {
+          if ((_ref3 = _ref2.curtain) != null) {
+            _ref3.off();
+          }
+        }
+        if ((_ref4 = _this.core.helper()) != null) {
+          if ((_ref5 = _ref4.curtain) != null) {
+            _ref5.off();
+          }
+        }
+        return _this.adjust();
+      }
+    };
   }
 
   Wrapper.prototype.init = function(profileNameOrInstance) {
@@ -20,61 +80,19 @@ Wrapper = (function(_super) {
     if ((this.element.resizable != null) && this.core.options.resizable === true) {
       this.element.resizable({
         start: function() {
-          var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-          if ((_ref = _this.core.editor()) != null) {
-            if ((_ref1 = _ref.curtain) != null) {
-              _ref1.on();
-            }
-          }
-          if ((_ref2 = _this.core.viewer()) != null) {
-            if ((_ref3 = _ref2.curtain) != null) {
-              _ref3.on();
-            }
-          }
-          return (_ref4 = _this.core.helper()) != null ? (_ref5 = _ref4.curtain) != null ? _ref5.on() : void 0 : void 0;
+          return _this.curtain.on();
         },
         resize: function() {
-          var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-          if ((_ref = _this.core.editor()) != null) {
-            if ((_ref1 = _ref.curtain) != null) {
-              _ref1.refresh();
-            }
-          }
-          if ((_ref2 = _this.core.viewer()) != null) {
-            if ((_ref3 = _ref2.curtain) != null) {
-              _ref3.refresh();
-            }
-          }
-          if ((_ref4 = _this.core.helper()) != null) {
-            if ((_ref5 = _ref4.curtain) != null) {
-              _ref5.refresh();
-            }
-          }
-          return _this.adjust();
+          return _this.curtain.refresh();
         },
         stop: function() {
-          var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-          if ((_ref = _this.core.editor()) != null) {
-            if ((_ref1 = _ref.curtain) != null) {
-              _ref1.off();
-            }
-          }
-          if ((_ref2 = _this.core.viewer()) != null) {
-            if ((_ref3 = _ref2.curtain) != null) {
-              _ref3.off();
-            }
-          }
-          if ((_ref4 = _this.core.helper()) != null) {
-            if ((_ref5 = _ref4.curtain) != null) {
-              _ref5.off();
-            }
-          }
-          return _this.adjust();
+          return _this.curtain.off();
         }
       });
     }
     this.workspace.profile(profileNameOrInstance);
-    return this.workspace.init();
+    this.workspace.init();
+    return this;
   };
 
   Wrapper.prototype.adjust = function() {
@@ -225,3 +243,11 @@ Statusbar = (function(_super) {
   return Statusbar;
 
 })(Bar);
+
+namespace('Jencil.workspace', function(exports) {
+  exports.Wrapper = Wrapper;
+  exports.Workspace = Workspace;
+  exports.Bar = Bar;
+  exports.Toolbar = Toolbar;
+  return exports.Statusbar = Statusbar;
+});

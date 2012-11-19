@@ -6,27 +6,34 @@ class Wrapper extends Panel
     @element.height height
     @workspace = new Workspace(@core)
     @workspace.element.appendTo @element
+    # Add curtain fake object
+    @curtain = 
+      on: =>
+        @core.editor()?.curtain?.on()
+        @core.viewer()?.curtain?.on()
+        @core.helper()?.curtain?.on()
+        @adjust()
+      refresh: =>
+        @core.editor()?.curtain?.refresh()
+        @core.viewer()?.curtain?.refresh()
+        @core.helper()?.curtain?.refresh()
+        @adjust()
+      off: =>
+        @core.editor()?.curtain?.off()
+        @core.viewer()?.curtain?.off()
+        @core.helper()?.curtain?.off()
+        @adjust()
 
   init: (profileNameOrInstance) ->
     # if `resizable` of jQuery-UI is available
     if @element.resizable? and @core.options.resizable is true
       @element.resizable
-        start: =>
-          @core.editor()?.curtain?.on()
-          @core.viewer()?.curtain?.on()
-          @core.helper()?.curtain?.on()
-        resize: =>
-          @core.editor()?.curtain?.refresh()
-          @core.viewer()?.curtain?.refresh()
-          @core.helper()?.curtain?.refresh()
-          @adjust()
-        stop: =>
-          @core.editor()?.curtain?.off()
-          @core.viewer()?.curtain?.off()
-          @core.helper()?.curtain?.off()
-          @adjust()
+        start: => @curtain.on()
+        resize: => @curtain.refresh()
+        stop: => @curtain.off()
     @workspace.profile(profileNameOrInstance)
     @workspace.init()
+    return @
 
   adjust: ->
     @workspace.element.outerWidth true, @element.width()
@@ -119,3 +126,9 @@ class Statusbar extends Bar
     super core
     @element.addClass 'statusbar'
 
+namespace 'Jencil.workspace', (exports) ->
+  exports.Wrapper = Wrapper
+  exports.Workspace = Workspace
+  exports.Bar = Bar
+  exports.Toolbar = Toolbar
+  exports.Statusbar = Statusbar
