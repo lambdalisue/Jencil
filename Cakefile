@@ -55,6 +55,8 @@ TEST_FILES          = [
   'widgets.spec',
   'splitters.spec',
   'buttons.spec',
+  'workspace.spec',
+  'multipanels.spec',
 ]
 STYLE_SRC_FILES     = [
   'layout',
@@ -298,7 +300,7 @@ task 'compile:develop:src', 'Compile src CoffeeScript files to bare javascript f
 task 'compile:develop:lib', 'Compile lib CoffeeScript files to bare javascript files', (options) ->
   compileCS LIB_PATH, LIB_FILES, options
 task 'compile:test', 'Compile test CoffeeScript files to bare javascript files', (options) ->
-  compileCS TEST_PATH, TEST_FILES, options
+  compileCS TEST_PATH, TEST_FILES, {'bare': false}
 task 'compile:develop', 'Compile CoffeeScript/LESS files to javascript/css files', (options) ->
   invoke 'compile:develop:src'
   invoke 'compile:develop:lib'
