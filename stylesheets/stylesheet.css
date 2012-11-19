@@ -128,7 +128,7 @@ aside#sidebar p.repo-owner a {
   margin-bottom: 40px;
 }
 
-a.button {
+a.largeButton {
   width: 134px;
   height: 58px;
   line-height: 1.2;
@@ -138,17 +138,17 @@ a.button {
   padding-top: 22px;
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
 }
-a.button small {
+a.largeButton small {
   display: block;
   font-size: 11px;
 }
-header a.button {
+header a.largeButton {
   position: absolute;
   right: 0;
   top: 0;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
 }
-aside a.button {
+aside a.largeButton {
   width: 138px;
   padding-left: 64px;
   display: block;

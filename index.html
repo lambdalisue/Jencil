@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="master/release/Jencil.0.1.5.min.css" />
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -21,7 +22,7 @@
       <div class="inner">
         <h1>Jencil</h1>
         <h2>JavaScript Multipanel Text editor</h2>
-        <a href="https://github.com/lambdalisue/Jencil" class="button"><small>View project on</small>GitHub</a>
+        <a href="https://github.com/lambdalisue/Jencil" class="largeButton"><small>View project on</small>GitHub</a>
       </div>
     </header>
 
@@ -38,6 +39,11 @@ $ git checkout gh-pages
 </code></pre>
 
 <p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+
+<h3>Demo</h3>
+
+<p>This is a working demo</p>
+<textarea id="demo"></textarea>
 
 <h3>Designer Templates</h3>
 
@@ -57,11 +63,15 @@ $ git checkout gh-pages
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/lambdalisue/Jencil/zipball/master" class="button">
+          <a href="test.html" class="largeButton unittest">
+            <small>Unittest</small>
+            Mocha
+          </a>
+          <a href="https://github.com/lambdalisue/Jencil/zipball/master" class="largeButton">
             <small>Download</small>
             .zip file
           </a>
-          <a href="https://github.com/lambdalisue/Jencil/tarball/master" class="button">
+          <a href="https://github.com/lambdalisue/Jencil/tarball/master" class="largeButton">
             <small>Download</small>
             .tar.gz file
           </a>
@@ -72,7 +82,15 @@ $ git checkout gh-pages
         </aside>
       </div>
     </div>
-
-  
+    <script src="vender/jquery-1.8.0.min.js"></script>
+    <script src="vender/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="vender/i18next-1.5.6.js"></script>
+    <script src="vender/markdown.js"></script>
+    <script src="master/release/Jencil.0.1.5.min.js"></script>
+    <script>
+        $(function(){
+            $('#demo').jencil();
+        });
+    </script>
   </body>
 </html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Jencil</title>
+    <link rel="stylesheet" href="vender/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
+    <link rel="stylesheet" href="vender/mocha.css">
+    <link rel="stylesheet" href="vender/reporter.css">
+    <link rel="stylesheet" href="master/src/css/layout.css">
+    <link rel="stylesheet" href="master/src/css/button.css">
+    <link rel="stylesheet" href="master/src/css/helper.css">
+    <link rel="stylesheet" href="master/src/css/splitter.css">
+</head>
+<body>
+    <div id="mocha"></div>
+    <div id="coverage"></div>
+    <div id="menu"></div>
+    <script src="vender/jquery-1.8.0.min.js"></script>
+    <script src="vender/underscore-min.js"></script>
+    <script src="vender/backbone-min.js"></script>
+    <script src="vender/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="vender/i18next-1.5.6.js"></script>
+    <script src="vender/markdown.js"></script>
+    <script src="vender/sinon-1.4.2.js"></script>
+    <script src="vender/sinon-timers-ie-1.5.0.js"></script>
+    <script src="vender/chai.js"></script>
+    <script src="vender/mocha.js"></script>
+    <script src="vender/reporter.js"></script>
+    <script src="vender/JSCovReporter.js"></script>
+    <script src="master/lib/js/jquery.textarea.js"></script>
+    <script src="master/lib/js/shortcut.js"></script>
+    <script src="master/src/js/utils/namespace.js"></script>
+    <script src="master/src/js/utils/strutils.js"></script>
+    <script src="master/src/js/utils/undo.js"></script>
+    <script src="master/src/js/utils/evolution.js"></script>
+    <script src="master/src/js/utils/selection.js"></script>
+    <script src="master/src/js/utils/curtain.js"></script>
+    <script src="master/src/js/utils/animation.js"></script>
+    <script src="master/src/js/utils/autoindent.js"></script>
+    <script src="master/src/js/utils/i18n.js"></script>
+    <script src="master/src/js/core.js"></script>
+    <script src="master/src/js/widgets.js"></script>
+    <script src="master/src/js/multipanels.js"></script>
+    <script src="master/src/js/mainpanels.js"></script>
+    <script src="master/src/js/splitters.js"></script>
+    <script src="master/src/js/editors.js"></script>
+    <script src="master/src/js/viewers.js"></script>
+    <script src="master/src/js/helpers.js"></script>
+    <script src="master/src/js/buttons.js"></script>
+    <script src="master/src/js/workspace.js"></script>
+    <script src="master/src/js/fullscreen.js"></script>
+    <script src="master/src/js/types/html/editor.js"></script>
+    <script src="master/src/js/types/html/viewer.js"></script>
+    <script src="master/src/js/types/html/helper.js"></script>
+    <script src="master/src/js/types/html/profile.js"></script>
+    <script src="master/src/js/types/markdown/editor.js"></script>
+    <script src="master/src/js/types/markdown/viewer.js"></script>
+    <script src="master/src/js/types/markdown/profile.js"></script>
+    <!-- Instrumented -->
+    <script src="master/instrumented/js/utils/namespace.js"></script>
+    <script src="master/instrumented/js/utils/strutils.js"></script>
+    <script src="master/instrumented/js/utils/undo.js"></script>
+    <script src="master/instrumented/js/utils/evolution.js"></script>
+    <script src="master/instrumented/js/utils/selection.js"></script>
+    <script src="master/instrumented/js/utils/curtain.js"></script>
+    <script src="master/instrumented/js/utils/animation.js"></script>
+    <script src="master/instrumented/js/utils/autoindent.js"></script>
+    <script src="master/instrumented/js/utils/i18n.js"></script>
+    <script src="master/instrumented/js/core.js"></script>
+    <script src="master/instrumented/js/widgets.js"></script>
+    <script src="master/instrumented/js/multipanels.js"></script>
+    <script src="master/instrumented/js/mainpanels.js"></script>
+    <script src="master/instrumented/js/splitters.js"></script>
+    <script src="master/instrumented/js/editors.js"></script>
+    <script src="master/instrumented/js/viewers.js"></script>
+    <script src="master/instrumented/js/helpers.js"></script>
+    <script src="master/instrumented/js/buttons.js"></script>
+    <script src="master/instrumented/js/workspace.js"></script>
+    <script src="master/instrumented/js/fullscreen.js"></script>
+    <script src="master/instrumented/js/types/html/editor.js"></script>
+    <script src="master/instrumented/js/types/html/viewer.js"></script>
+    <script src="master/instrumented/js/types/html/helper.js"></script>
+    <script src="master/instrumented/js/types/html/profile.js"></script>
+    <script src="master/instrumented/js/types/markdown/editor.js"></script>
+    <script src="master/instrumented/js/types/markdown/viewer.js"></script>
+    <script src="master/instrumented/js/types/markdown/profile.js"></script>
+    <!-- Initialize mocha/chai -->
+    <script>
+        expect = chai.expect;
+        assert = chai.assert;
+        should = chai.should();
+        mocha.setup({
+            ui: 'bdd',
+            ignoreLeaks: true
+        });
+    </script>
+    <!-- Load test specs -->
+    <script src="master/test/js/blackbox.js"></script>
+    <script src="master/test/js/utils/strutils.spec.js"></script>
+    <script src="master/test/js/utils/undo.spec.js"></script>
+    <script src="master/test/js/utils/evolution.spec.js"></script>
+    <script src="master/test/js/utils/selection.spec.js"></script>
+    <script src="master/test/js/utils/autoindent.spec.js"></script>
+    <script src="master/test/js/utils/animation.spec.js"></script>
+    <script src="master/test/js/utils/curtain.spec.js"></script>
+    <script src="master/test/js/widgets.spec.js"></script>
+    <script src="master/test/js/multipanels.spec.js"></script>
+    <script src="master/test/js/splitters.spec.js"></script>
+    <script src="master/test/js/buttons.spec.js"></script>
+    <script src="master/test/js/workspace.spec.js"></script>
+    <script>
+        $(function() {
+            mocha.run(function () {
+                if (typeof window.__$coverObject !== 'undefined') {
+                    var reporter = new JSCovReporter({ coverObject: window.__$coverObject });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
