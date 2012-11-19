@@ -7,7 +7,7 @@ class Wrapper extends Panel
     @workspace = new Workspace(@core)
     @workspace.element.appendTo @element
     # Add curtain fake object
-    @curtain = 
+    @curtain =
       on: =>
         @core.editor()?.curtain?.on()
         @core.viewer()?.curtain?.on()

@@ -3,13 +3,14 @@ $ = (_) -> _.src = "#{_.root}/#{_.src}"; _.dst = "#{_.root}/#{_.dst}"; return _
 ### Config ###
 ###########################################################################
 NAME                = "Jencil"
-VERSION             = "0.1.4"
+VERSION             = "0.1.5"
 SRC_PATH            = $ {root: "./src", src: "coffee", dst: "js"}
 LIB_PATH            = $ {root: "./lib", src: "coffee", dst: "js"}
 TEST_PATH           = $ {root: "./test", src: "coffee", dst: "js"}
 STYLE_SRC_PATH      = $ {root: "./src", src: "less", dst: "css"}
 STYLE_LIB_PATH      = $ {root: "./lib", src: "less", dst: "css"}
 RELEASE_PATH        = "./release"
+COVERAGE_PATH       = "./instrumented"
 SRC_FILES           = [
   'utils/namespace',
   'utils/strutils',
@@ -69,6 +70,7 @@ YUI_COMPRESSOR      = "~/.yuicompressor/build/yuicompressor-2.4.7.jar"
 NODE_MODULES        = [
   'coffee-script',
   'coffeelint',
+  'coverjs',
   'less',
   'mkdirp',
   'exec-sync',
@@ -169,6 +171,11 @@ minify = (src, dst, options, callback) ->
 
 lint = (src, options) ->
   exec "./node_modules/coffeelint/bin/coffeelint -f #{COFFEELINT_CONFIG_FILE} #{src}", (err, stdout, stderr) ->
+    console.log stdout if stdout
+    console.log stderr if stderr
+
+coverjs = (src, dst, options) ->
+  exec "./node_modules/coverjs/bin/cover.js --recursive #{src} --output #{dst}", (err, stdout, stderr) ->
     console.log stdout if stdout
     console.log stderr if stderr
 
@@ -301,6 +308,9 @@ task 'compile:develop:lib', 'Compile lib CoffeeScript files to bare javascript f
   compileCS LIB_PATH, LIB_FILES, options
 task 'compile:test', 'Compile test CoffeeScript files to bare javascript files', (options) ->
   compileCS TEST_PATH, TEST_FILES, {'bare': false}
+  # Instrument by CoverJS
+  coverjs SRC_PATH.dst, COVERAGE_PATH, options
+
 task 'compile:develop', 'Compile CoffeeScript/LESS files to javascript/css files', (options) ->
   invoke 'compile:develop:src'
   invoke 'compile:develop:lib'

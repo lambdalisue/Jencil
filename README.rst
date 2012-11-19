@@ -27,7 +27,7 @@ Usage
 1.  Include jQuery and Jencil javascript files::
 
         <script src="js/jquery-1.8.0.min.js"></script>
-        <script src="js/Jencil.0.1.4.min.js"></script>
+        <script src="js/Jencil.0.1.5.min.js"></script>
 
     .. Note::
         If you want to enable Resizable feature, include jQuery-UI.
@@ -60,7 +60,7 @@ Usage
 4.  Check https://github.com/lambdalisue/Jencil/blob/master/src/coffee/core.coffee to find options available in Jencil
 
 :Author: Alisue (lambdalisue@hashnote.net)
-:Version: 0.1.4
+:Version: 0.1.5
 :License: MIT License
 :Required: jQuery, jQuery-UI (Resizable option), i18next (i18n option)
 :Url: http://github.com/lambdalisue/Jencil
