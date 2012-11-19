@@ -14,6 +14,11 @@ class DimainPanel extends VerticalPanel
     # Connect editorPanel and viewerPanel
     @editorPanel.change (value) => @viewerPanel.update(value)
 
+  init: ->
+    super()
+    # set viewerPanel value
+    @viewerPanel.update(@editorPanel.val())
+
 class TrimainPanel extends HorizontalPanel
   constructor: (core, profile) ->
     @editorPanel = new profile.editorClass(core)
@@ -24,6 +29,10 @@ class TrimainPanel extends HorizontalPanel
     @element.addClass 'mainPanel'
     # Connect editorPanel and viewerPanel
     @editorPanel.change (value) => @viewerPanel.update(value)
+  init: ->
+    super()
+    # set viewerPanel value
+    @viewerPanel.update(@editorPanel.val())
 
 namespace 'Jencil.mainpanels', (exports) ->
   exports.MonomainPanel = MonomainPanel

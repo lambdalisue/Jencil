@@ -30,25 +30,29 @@ class @Jencil
       helperTemplatePath: null,
     @options = jQuery.extend(DefaultOptions, options)
     @element = textarea.hide()
-
     @caretaker = new Caretaker()
     @caretaker.originator = => @editor()
-
     @wrapper = new Wrapper(@, @options.width, @options.height)
     @fullscreen = new Fullscreen(@)
-
+    # Build DOM tree
     @element.after(@wrapper.element).after(@fullscreen.element)
-
-    @wrapper.init()
-    @wrapper.adjust()
-    @caretaker.save()
+    # Set profile and init/adjust Jencil
+    @profile @options.profile
 
   editor: -> @wrapper.workspace.mainPanel.editorPanel or null
   viewer: -> @wrapper.workspace.mainPanel.viewerPanel or null
   helper: -> @wrapper.workspace.mainPanel.helperPanel or null
 
+  profile: (profileNameOrInstance) ->
+    @wrapper.init(profileNameOrInstance)
+    @wrapper.adjust()
+    @caretaker.save()
 
-$.fn.jencil = (options) -> new Jencil($(this), options)
+
+$.fn.jencil = (options) ->
+  $(this).each ->
+    self = $(this)
+    self.data('jencil', new Jencil(self, options))
 
 
 namespace 'Jencil.profiles', (exports) ->

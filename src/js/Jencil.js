@@ -1,5 +1,5 @@
 (function() {
-  var ActionButton, AjaxViewer, Bar, BaseEditor, BaseHelper, BaseViewer, Button, Caretaker, CommandButton, DefaultProfile, DimainPanel, Fullscreen, FullscreenButton, HelperButton, HorizontalPanel, HorizontalSplitter, HtmlEditor, HtmlHelper, HtmlProfile, HtmlViewer, MarkdownEditor, MarkdownJsViewer, MarkdownProfile, MonomainPanel, MultiplePanel, NotImplementedError, Originator, Panel, RedoButton, Selection, Separator, Splitter, Statusbar, TemplateHelper, TemplateViewer, TextEditor, Toolbar, TrimainPanel, UndoButton, VerticalPanel, VerticalSplitter, ViewerButton, Widget, Workspace, Wrapper, animate, apply, autoIndentable, autoIndentableHtml, autoIndentableMarkdown, buttonFactory, curtainFactory, evolute, headerMarkup, namespace, strutils, translate,
+  var ActionButton, AjaxViewer, Bar, BaseEditor, BaseHelper, BaseViewer, Button, Caretaker, CommandButton, DefaultProfile, DimainPanel, Fullscreen, FullscreenButton, HelperButton, HorizontalPanel, HorizontalSplitter, HtmlEditor, HtmlHelper, HtmlProfile, HtmlViewer, MarkdownEditor, MarkdownJsViewer, MarkdownProfile, MonomainPanel, MultiPanel, MultiplePanel, NotImplementedError, Originator, Panel, RedoButton, Selection, Separator, Splitter, Statusbar, TemplateHelper, TemplateViewer, TextEditor, Toolbar, TrimainPanel, UndoButton, VerticalPanel, VerticalSplitter, ViewerButton, Widget, Workspace, Wrapper, animate, apply, autoIndentable, autoIndentableHtml, autoIndentableMarkdown, buttonFactory, curtainFactory, evolute, headerMarkup, namespace, strutils, translate,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -818,9 +818,7 @@
       this.wrapper = new Wrapper(this, this.options.width, this.options.height);
       this.fullscreen = new Fullscreen(this);
       this.element.after(this.wrapper.element).after(this.fullscreen.element);
-      this.wrapper.init();
-      this.wrapper.adjust();
-      this.caretaker.save();
+      this.profile(this.options.profile);
     }
 
     Jencil.prototype.editor = function() {
@@ -835,12 +833,22 @@
       return this.wrapper.workspace.mainPanel.helperPanel || null;
     };
 
+    Jencil.prototype.profile = function(profileNameOrInstance) {
+      this.wrapper.init(profileNameOrInstance);
+      this.wrapper.adjust();
+      return this.caretaker.save();
+    };
+
     return Jencil;
 
   })();
 
   $.fn.jencil = function(options) {
-    return new Jencil($(this), options);
+    return $(this).each(function() {
+      var self;
+      self = $(this);
+      return self.data('jencil', new Jencil(self, options));
+    });
   };
 
   namespace('Jencil.profiles', function(exports) {
@@ -1685,6 +1693,9 @@
     };
 
     TemplateViewer.prototype.update = function(value, force) {
+      if (!this.element.is(':visible') && !force) {
+        return;
+      }
       if (this.iframe._template != null) {
         value = this.iframe._template.replace("{{content}}", value);
       } else if (this.templatePath != null) {
@@ -1881,11 +1892,18 @@
     }
 
     Button.prototype.enable = function() {
-      return this.element.removeClass('disable');
+      this.element.removeClass('disable');
+      return this;
     };
 
     Button.prototype.disable = function() {
-      return this.element.addClass('disable');
+      this.element.addClass('disable');
+      return this;
+    };
+
+    Button.prototype.init = function() {
+      this.validate();
+      return this;
     };
 
     Button.prototype.validate = function() {
@@ -1906,8 +1924,9 @@
       ActionButton.__super__.constructor.call(this, core, name, text, title);
       this.callback = function() {
         if (!_this.element.hasClass('disable')) {
-          return callback();
+          _this.callback.raw();
         }
+        return _this;
       };
       this.callback.raw = callback;
       this.element.click(function() {
@@ -1939,10 +1958,6 @@
       };
       CommandButton.__super__.constructor.call(this, core, name, text, title, callback, shortcut);
     }
-
-    CommandButton.prototype.init = function() {
-      return this.validate();
-    };
 
     CommandButton.prototype.validate = function() {
       var editor;
@@ -2008,7 +2023,7 @@
       var check,
         _this = this;
       check = function() {
-        if (!_this.core.caretaker.canUndo()) {
+        if (_this.core.caretaker.canUndo() === false) {
           _this.disable();
         } else {
           _this.enable();
@@ -2039,7 +2054,7 @@
       var check,
         _this = this;
       check = function() {
-        if (!_this.core.caretaker.canRedo()) {
+        if (_this.core.caretaker.canRedo() === false) {
           _this.disable();
         } else {
           _this.enable();
@@ -2070,7 +2085,7 @@
       var check,
         _this = this;
       check = function() {
-        if (_this.core.fullscreen.element.is(':visible')) {
+        if (_this.core.fullscreen.element.is(':visible') === true) {
           _this.element.addClass('hide');
         } else {
           _this.element.removeClass('hide');
@@ -2098,7 +2113,7 @@
     }
 
     ViewerButton.prototype.validate = function() {
-      if (!this.core.viewer()) {
+      if (!(this.core.viewer() != null)) {
         this.disable();
         return false;
       }
@@ -2202,7 +2217,8 @@
     exports.RedoButton = RedoButton;
     exports.FullscreenButton = FullscreenButton;
     exports.ViewerButton = ViewerButton;
-    return exports.HelperButton = HelperButton;
+    exports.HelperButton = HelperButton;
+    return exports.buttonFactory = buttonFactory;
   });
 
   Wrapper = (function(_super) {
@@ -2210,73 +2226,92 @@
     __extends(Wrapper, _super);
 
     function Wrapper(core, width, height) {
+      var _this = this;
       Wrapper.__super__.constructor.call(this, core);
       this.element.addClass('jencil wrapper');
       this.element.width(width);
       this.element.height(height);
       this.workspace = new Workspace(this.core);
       this.workspace.element.appendTo(this.element);
+      this.curtain = {
+        on: function() {
+          var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+          if ((_ref = _this.core.editor()) != null) {
+            if ((_ref1 = _ref.curtain) != null) {
+              _ref1.on();
+            }
+          }
+          if ((_ref2 = _this.core.viewer()) != null) {
+            if ((_ref3 = _ref2.curtain) != null) {
+              _ref3.on();
+            }
+          }
+          if ((_ref4 = _this.core.helper()) != null) {
+            if ((_ref5 = _ref4.curtain) != null) {
+              _ref5.on();
+            }
+          }
+          return _this.adjust();
+        },
+        refresh: function() {
+          var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+          if ((_ref = _this.core.editor()) != null) {
+            if ((_ref1 = _ref.curtain) != null) {
+              _ref1.refresh();
+            }
+          }
+          if ((_ref2 = _this.core.viewer()) != null) {
+            if ((_ref3 = _ref2.curtain) != null) {
+              _ref3.refresh();
+            }
+          }
+          if ((_ref4 = _this.core.helper()) != null) {
+            if ((_ref5 = _ref4.curtain) != null) {
+              _ref5.refresh();
+            }
+          }
+          return _this.adjust();
+        },
+        off: function() {
+          var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+          if ((_ref = _this.core.editor()) != null) {
+            if ((_ref1 = _ref.curtain) != null) {
+              _ref1.off();
+            }
+          }
+          if ((_ref2 = _this.core.viewer()) != null) {
+            if ((_ref3 = _ref2.curtain) != null) {
+              _ref3.off();
+            }
+          }
+          if ((_ref4 = _this.core.helper()) != null) {
+            if ((_ref5 = _ref4.curtain) != null) {
+              _ref5.off();
+            }
+          }
+          return _this.adjust();
+        }
+      };
     }
 
-    Wrapper.prototype.init = function() {
+    Wrapper.prototype.init = function(profileNameOrInstance) {
       var _this = this;
       if ((this.element.resizable != null) && this.core.options.resizable === true) {
         this.element.resizable({
           start: function() {
-            var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-            if ((_ref = _this.core.editor()) != null) {
-              if ((_ref1 = _ref.curtain) != null) {
-                _ref1.on();
-              }
-            }
-            if ((_ref2 = _this.core.viewer()) != null) {
-              if ((_ref3 = _ref2.curtain) != null) {
-                _ref3.on();
-              }
-            }
-            return (_ref4 = _this.core.helper()) != null ? (_ref5 = _ref4.curtain) != null ? _ref5.on() : void 0 : void 0;
+            return _this.curtain.on();
           },
           resize: function() {
-            var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-            if ((_ref = _this.core.editor()) != null) {
-              if ((_ref1 = _ref.curtain) != null) {
-                _ref1.refresh();
-              }
-            }
-            if ((_ref2 = _this.core.viewer()) != null) {
-              if ((_ref3 = _ref2.curtain) != null) {
-                _ref3.refresh();
-              }
-            }
-            if ((_ref4 = _this.core.helper()) != null) {
-              if ((_ref5 = _ref4.curtain) != null) {
-                _ref5.refresh();
-              }
-            }
-            return _this.adjust();
+            return _this.curtain.refresh();
           },
           stop: function() {
-            var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-            if ((_ref = _this.core.editor()) != null) {
-              if ((_ref1 = _ref.curtain) != null) {
-                _ref1.off();
-              }
-            }
-            if ((_ref2 = _this.core.viewer()) != null) {
-              if ((_ref3 = _ref2.curtain) != null) {
-                _ref3.off();
-              }
-            }
-            if ((_ref4 = _this.core.helper()) != null) {
-              if ((_ref5 = _ref4.curtain) != null) {
-                _ref5.off();
-              }
-            }
-            return _this.adjust();
+            return _this.curtain.off();
           }
         });
       }
-      return this.workspace.init();
+      this.workspace.profile(profileNameOrInstance);
+      this.workspace.init();
+      return this;
     };
 
     Wrapper.prototype.adjust = function() {
@@ -2297,17 +2332,16 @@
     function Workspace(core) {
       Workspace.__super__.constructor.call(this, core);
       this.element.addClass('workspace');
-      this.profile(core.options.profile);
     }
 
-    Workspace.prototype.profile = function(profile) {
-      var button, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3,
+    Workspace.prototype.profile = function(profileNameOrInstance) {
+      var button, profile, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3,
         _this = this;
-      if (profile != null) {
-        if (typeof profile === 'string') {
-          profile = this.core.options.profiles[profile];
+      if (profileNameOrInstance != null) {
+        if (typeof profileNameOrInstance === 'string') {
+          profileNameOrInstance = this.core.options.profiles[profileNameOrInstance];
         }
-        profile = jQuery.extend(DefaultProfile, profile);
+        profile = jQuery.extend(true, DefaultProfile, profileNameOrInstance);
         profile.defaultVolume = this.core.options.defaultVolume || profile.defaultVolume;
         profile.defaultVolume2 = this.core.options.defaultVolume2 || profile.defaultVolume2;
         this.element.empty();
@@ -2429,6 +2463,157 @@
 
   })(Bar);
 
+  namespace('Jencil.workspace', function(exports) {
+    exports.Wrapper = Wrapper;
+    exports.Workspace = Workspace;
+    exports.Bar = Bar;
+    exports.Toolbar = Toolbar;
+    return exports.Statusbar = Statusbar;
+  });
+
+  MultiPanel = (function(_super) {
+
+    __extends(MultiPanel, _super);
+
+    function MultiPanel(core, fst, snd, splitter) {
+      var hide, show,
+        _this = this;
+      this.fst = fst;
+      this.snd = snd;
+      this.splitter = splitter;
+      MultiPanel.__super__.constructor.call(this, core);
+      this.element.addClass('multi');
+      this.element.append(this.fst.element);
+      this.element.append(this.splitter.element);
+      this.element.append(this.snd.element);
+      show = function(callback) {
+        if (!this.element.is(':visible')) {
+          return this.toggle(callback, null);
+        }
+      };
+      hide = function(callback) {
+        if (this.element.is(':visible')) {
+          return this.toggle(null, callback);
+        }
+      };
+      this.fst.toggle = function(callbackOn, callbackOff) {
+        return _this._togglePanel(0, callbackOn, callbackOff);
+      };
+      this.fst.show = show;
+      this.fst.hide = hide;
+      this.snd.toggle = function(callbackOn, callbackOff) {
+        return _this._togglePanel(1, callbackOn, callbackOff);
+      };
+      this.snd.show = show;
+      this.snd.hide = hide;
+      this.splitter.element.dblclick(function() {
+        return _this.snd.toggle();
+      });
+    }
+
+    MultiPanel.prototype.init = function() {
+      this.splitter.init();
+      this.fst.init();
+      return this.snd.init();
+    };
+
+    MultiPanel.prototype._togglePanel = function(to, callbackOn, callbackOff) {
+      var callbackDone, end, volume, _callbackDone,
+        _this = this;
+      if (MultiPanel._animating) {
+        return;
+      }
+      volume = this.splitter.volume();
+      callbackDone = null;
+      if ((0 < volume && volume < 1)) {
+        end = to;
+        this.splitter._previousVolume = volume;
+        _callbackDone = callbackOff;
+      } else {
+        end = this.splitter._previousVolume || this.splitter.defaultVolume;
+        if (end === to) {
+          end = 0.5;
+        }
+        _callbackDone = callbackOn;
+      }
+      MultiPanel._animating = true;
+      callbackDone = function() {
+        MultiPanel._animating = false;
+        return typeof _callbackDone === "function" ? _callbackDone() : void 0;
+      };
+      return animate({
+        start: volume,
+        end: end,
+        duration: 500,
+        callbackEach: function(value, epoch) {
+          return _this.splitter.volume(value);
+        },
+        callbackDone: callbackDone
+      });
+    };
+
+    return MultiPanel;
+
+  })(Panel);
+
+  VerticalPanel = (function(_super) {
+
+    __extends(VerticalPanel, _super);
+
+    function VerticalPanel(core, fst, snd, defaultVolume) {
+      var splitter;
+      if (defaultVolume == null) {
+        defaultVolume = 0.5;
+      }
+      splitter = new VerticalSplitter(core, fst, snd, defaultVolume);
+      VerticalPanel.__super__.constructor.call(this, core, fst, snd, splitter);
+      this.element.addClass('vertical');
+    }
+
+    VerticalPanel.prototype.adjust = function() {
+      this.fst.element.outerHeight(true, this.element.height());
+      this.snd.element.outerHeight(true, this.element.height());
+      this.splitter.element.outerHeight(true, this.element.height());
+      this.splitter.adjust();
+      return this;
+    };
+
+    return VerticalPanel;
+
+  })(MultiPanel);
+
+  HorizontalPanel = (function(_super) {
+
+    __extends(HorizontalPanel, _super);
+
+    function HorizontalPanel(core, fst, snd, defaultVolume) {
+      var splitter;
+      if (defaultVolume == null) {
+        defaultVolume = 0.5;
+      }
+      splitter = new HorizontalSplitter(core, fst, snd, defaultVolume);
+      HorizontalPanel.__super__.constructor.call(this, core, fst, snd, splitter);
+      this.element.addClass('horizontal');
+    }
+
+    HorizontalPanel.prototype.adjust = function() {
+      this.fst.element.outerWidth(true, this.element.width());
+      this.snd.element.outerWidth(true, this.element.width());
+      this.splitter.element.outerWidth(true, this.element.width());
+      this.splitter.adjust();
+      return this;
+    };
+
+    return HorizontalPanel;
+
+  })(MultiPanel);
+
+  namespace('Jencil.multipanels', function(exports) {
+    exports.MultiPanel = MultiPanel;
+    exports.VerticalPanel = VerticalPanel;
+    return exports.HorizontalPanel = HorizontalPanel;
+  });
+
   MonomainPanel = (function() {
 
     function MonomainPanel(core, profile) {
@@ -2457,6 +2642,11 @@
       });
     }
 
+    DimainPanel.prototype.init = function() {
+      DimainPanel.__super__.init.call(this);
+      return this.viewerPanel.update(this.editorPanel.val());
+    };
+
     return DimainPanel;
 
   })(VerticalPanel);
@@ -2477,6 +2667,11 @@
         return _this.viewerPanel.update(value);
       });
     }
+
+    TrimainPanel.prototype.init = function() {
+      TrimainPanel.__super__.init.call(this);
+      return this.viewerPanel.update(this.editorPanel.val());
+    };
 
     return TrimainPanel;
 

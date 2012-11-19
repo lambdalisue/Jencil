@@ -41,7 +41,7 @@ class Blackbox
     @element.empty()
     return @
 
-root = this
+root = window
 prev = {}
 prev.Blackbox = root.Blackbox
 root.Blackbox = Blackbox
@@ -53,3 +53,4 @@ root.blackbox = new Blackbox()
 root.blackbox.noConflict = ->
   root.blackbox = prev.blackbox
   return new Blackbox()
+blackbox = root.blackbox

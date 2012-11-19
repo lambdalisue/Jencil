@@ -32,11 +32,18 @@ Button = (function(_super) {
   }
 
   Button.prototype.enable = function() {
-    return this.element.removeClass('disable');
+    this.element.removeClass('disable');
+    return this;
   };
 
   Button.prototype.disable = function() {
-    return this.element.addClass('disable');
+    this.element.addClass('disable');
+    return this;
+  };
+
+  Button.prototype.init = function() {
+    this.validate();
+    return this;
   };
 
   Button.prototype.validate = function() {
@@ -57,8 +64,9 @@ ActionButton = (function(_super) {
     ActionButton.__super__.constructor.call(this, core, name, text, title);
     this.callback = function() {
       if (!_this.element.hasClass('disable')) {
-        return callback();
+        _this.callback.raw();
       }
+      return _this;
     };
     this.callback.raw = callback;
     this.element.click(function() {
@@ -90,10 +98,6 @@ CommandButton = (function(_super) {
     };
     CommandButton.__super__.constructor.call(this, core, name, text, title, callback, shortcut);
   }
-
-  CommandButton.prototype.init = function() {
-    return this.validate();
-  };
 
   CommandButton.prototype.validate = function() {
     var editor;
@@ -159,7 +163,7 @@ UndoButton = (function(_super) {
     var check,
       _this = this;
     check = function() {
-      if (!_this.core.caretaker.canUndo()) {
+      if (_this.core.caretaker.canUndo() === false) {
         _this.disable();
       } else {
         _this.enable();
@@ -190,7 +194,7 @@ RedoButton = (function(_super) {
     var check,
       _this = this;
     check = function() {
-      if (!_this.core.caretaker.canRedo()) {
+      if (_this.core.caretaker.canRedo() === false) {
         _this.disable();
       } else {
         _this.enable();
@@ -221,7 +225,7 @@ FullscreenButton = (function(_super) {
     var check,
       _this = this;
     check = function() {
-      if (_this.core.fullscreen.element.is(':visible')) {
+      if (_this.core.fullscreen.element.is(':visible') === true) {
         _this.element.addClass('hide');
       } else {
         _this.element.removeClass('hide');
@@ -249,7 +253,7 @@ ViewerButton = (function(_super) {
   }
 
   ViewerButton.prototype.validate = function() {
-    if (!this.core.viewer()) {
+    if (!(this.core.viewer() != null)) {
       this.disable();
       return false;
     }
@@ -353,5 +357,6 @@ namespace('Jencil.buttons', function(exports) {
   exports.RedoButton = RedoButton;
   exports.FullscreenButton = FullscreenButton;
   exports.ViewerButton = ViewerButton;
-  return exports.HelperButton = HelperButton;
+  exports.HelperButton = HelperButton;
+  return exports.buttonFactory = buttonFactory;
 });

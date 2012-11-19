@@ -7,6 +7,9 @@ VerticalPanel = Jencil.widgets.VerticalPanel
 HorizontalPanel = Jencil.widgets.HorizontalPanel
 
 describe 'Jencil.widgets.Widget(core, selector="<div>", context) -> instance', ->
+  it 'should be found on `Jencil.widgets.Widget`', ->
+    Widget.should.be.equal(Jencil.widgets.Widget)
+
   it 'should have element instance which is evoluted jQueryObj', ->
     instance = new Widget(null)
     instance.should.have.property('element').instanceof(jQuery)
@@ -33,6 +36,9 @@ describe 'Jencil.widgets.Widget(core, selector="<div>", context) -> instance', -
       instance.adjust().should.equal(instance)
 
 describe 'Jencil.widgets.Panel(core, selector="<div>", context) extends Widget -> instance', ->
+  it 'should be found on `Jencil.widgets.Panel`', ->
+    Panel.should.be.equal(Jencil.widgets.Panel)
+
   it 'should add `panel` class to the element', ->
     instance = new Panel(null)
     instance.element.hasClass('panel').should.be.true
@@ -54,6 +60,9 @@ describe 'Jencil.widgets.MultiplePanel(core, fst, snd, splitter) extends Panel -
     sandbox = sinon.sandbox.create({useFakeTimers: true})
   afterEach ->
     sandbox.verifyAndRestore()
+
+  it 'should be found on `Jencil.widgets.MultiplePanel`', ->
+    MultiplePanel.should.be.equal(Jencil.widgets.MultiplePanel)
 
   it 'should add `multiple` class to the element', ->
     instance.element.hasClass('multiple').should.be.true
@@ -168,6 +177,9 @@ describe 'Jencil.widgets.VerticalPanel(core, fst, snd, splitter) extends Multipl
   afterEach ->
     sandbox.verifyAndRestore()
 
+  it 'should be found on `Jencil.widgets.VerticalPanel`', ->
+    VerticalPanel.should.be.equal(Jencil.widgets.VerticalPanel)
+
   it 'should add `vertical` class to the element', ->
     instance.element.hasClass('vertical').should.be.true
 
@@ -205,6 +217,9 @@ describe 'Jencil.widgets.HorizontalPanel(core, fst, snd, splitter) extends Multi
     sandbox = sinon.sandbox.create()
   afterEach ->
     sandbox.verifyAndRestore()
+
+  it 'should be found on `Jencil.widgets.HorizontalPanel`', ->
+    HorizontalPanel.should.be.equal(Jencil.widgets.HorizontalPanel)
 
   it 'should add `horizontal` class to the element', ->
     instance.element.hasClass('horizontal').should.be.true
